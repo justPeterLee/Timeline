@@ -16,3 +16,16 @@
   position: absolute;
   z-index: 1000;
 }
+
+.todayContainer {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 10px solid rgb(100, 100, 100);
+  border-radius: 100px;
+
+  transform: translate(-50%, -110%);
+  z-index: 1001;
+}
