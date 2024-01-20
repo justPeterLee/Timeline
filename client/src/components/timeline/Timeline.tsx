@@ -29,8 +29,14 @@ export default function Timeline() {
   return (
     <>
       <div className={styles.timeline}>
-        {Object.keys(monthDate).map((instance: string, index: number) => {
-          return <TimelineMonth key={index} monthData={monthDate[index]} />;
+        {Object.keys(monthDate).map((_instance: string, index: number) => {
+          return (
+            <TimelineMonth
+              key={index}
+              monthData={monthDate[index]}
+              index={index}
+            />
+          );
         })}
         {/* <TimelineMonth /> */}
       </div>
