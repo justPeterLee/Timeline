@@ -28,6 +28,28 @@ const monthDate: MonthDate = {
 };
 
 export default function Timeline() {
+  return (
+    <>
+      <div className={styles.container}>
+        <div className={styles.timeline} />
+
+        <TodayTracker />
+
+        {Object.keys(monthDate).map((_instance: string, index: number) => {
+          return (
+            <TimelineMonth
+              key={index}
+              monthData={monthDate[index]}
+              index={index}
+            />
+          );
+        })}
+      </div>
+    </>
+  );
+}
+
+function TodayTracker() {
   function getDayOfYear(date: Date): number {
     const start = new Date(date.getFullYear(), 0, 0);
     const diff = date.getTime() - start.getTime();
@@ -41,25 +63,8 @@ export default function Timeline() {
   const todayPercent = (100 / 365) * dayOfYear;
 
   return (
-    <>
-      <div className={styles.container}>
-        <div className={styles.timeline} />
-
-        <div
-          className={styles.todayContainer}
-          style={{ left: `${todayPercent}%` }}
-        />
-
-        {Object.keys(monthDate).map((_instance: string, index: number) => {
-          return (
-            <TimelineMonth
-              key={index}
-              monthData={monthDate[index]}
-              index={index}
-            />
-          );
-        })}
-      </div>
-    </>
+    <div className={styles.todayContainer} style={{ left: `${todayPercent}%` }}>
+      <div className={styles.today}></div>
+    </div>
   );
 }

@@ -19,13 +19,39 @@
 
 .todayContainer {
   position: absolute;
+  z-index: 1001;
+  top: -20px;
+  transform: translateX(-50%);
+  width: 15px;
+  height: 25px;
+
+  /* background-color: rgb(200, 200, 200, 0.6); */
+  /* display: flex;
+  justify-content: center;
+  align-items: center; */
+}
+.todayContainer:hover {
+  cursor: pointer;
+}
+
+.today {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  transition: border-top ease 0.3s;
+  transition: transform ease 0.1s;
+
   width: 0;
   height: 0;
   border-left: 5px solid transparent;
   border-right: 5px solid transparent;
   border-top: 10px solid rgb(100, 100, 100);
   border-radius: 100px;
+}
 
-  transform: translate(-50%, -110%);
-  z-index: 1001;
+.todayContainer:hover .today {
+  border-top: 10px solid rgb(150, 150, 150);
+  transform: translate(-50%, -100%);
 }
