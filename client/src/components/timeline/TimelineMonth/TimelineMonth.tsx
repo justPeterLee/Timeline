@@ -12,6 +12,21 @@ export default function TimelineMonth({
       className={styles.container}
       style={{ width: `${monthData.day * 0.274}%` }}
     >
+      <span className={styles.monthAbr}>
+        <div
+          className={styles.monthAbrContainer}
+          style={{
+            transform:
+              index % 2 === 0
+                ? "translate(-50%, 100%)"
+                : "translate(-50%, -100%)",
+            alignItems: index % 2 === 0 ? "flex-end" : "flex-start",
+          }}
+        >
+          <p>{monthData.month}</p>
+        </div>
+      </span>
+
       <div
         className={styles.month}
         style={{ justifyContent: index % 2 <= 0 ? "flex-end" : "flex-start" }}

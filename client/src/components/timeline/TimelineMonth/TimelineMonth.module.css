@@ -12,14 +12,15 @@
   cursor: pointer;
 }
 
+.container:hover .monthAbr p {
+  opacity: 80%;
+}
 .month {
   height: 100%;
   display: flex;
   flex-direction: column;
 
   position: absolute;
-  /* width: 1px;
-  background-color: rgb(150, 150, 150); */
 }
 
 .monthLine {
@@ -30,11 +31,25 @@
   z-index: 100;
 }
 
+.monthAbr {
+  position: absolute;
+  left: 0%;
+}
+.monthAbrContainer {
+  position: absolute;
+  height: 30px;
+  display: flex;
+}
+.monthAbrContainer p {
+  margin: 0;
+  font-size: 12px;
+  opacity: 30%;
+  transition: opacity 0.3s;
+}
 .weekLineContainer {
   display: flex;
   width: 100%;
   gap: 25%;
-  /* background-color: aqua; */
 
   position: absolute;
 }
@@ -42,6 +57,5 @@
   height: 10px;
   width: 1px;
   background-color: rgb(200, 200, 200);
-  /* top: 50%; */
   transform: translateY(100%);
 }

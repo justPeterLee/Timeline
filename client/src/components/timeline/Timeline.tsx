@@ -13,18 +13,18 @@ type MonthDate = {
 };
 
 const monthDate: MonthDate = {
-  0: { month: "January", day: 31, weeks: Math.floor(31 / 7) },
-  1: { month: "February", day: 28, weeks: Math.floor(28 / 7) }, // Assuming a non-leap year for simplicity
-  2: { month: "March", day: 31, weeks: Math.floor(31 / 7) },
-  3: { month: "April", day: 30, weeks: Math.floor(30 / 7) },
-  4: { month: "May", day: 31, weeks: Math.floor(31 / 7) },
-  5: { month: "June", day: 30, weeks: Math.floor(30 / 7) },
-  6: { month: "July", day: 31, weeks: Math.floor(31 / 7) },
-  7: { month: "August", day: 31, weeks: Math.floor(31 / 7) },
-  8: { month: "September", day: 30, weeks: Math.floor(30 / 7) },
-  9: { month: "October", day: 31, weeks: Math.floor(31 / 7) },
-  10: { month: "November", day: 30, weeks: Math.floor(30 / 7) },
-  11: { month: "December", day: 31, weeks: Math.floor(31 / 7) },
+  0: { month: "jan", day: 31, weeks: Math.floor(31 / 7) },
+  1: { month: "feb", day: 28, weeks: Math.floor(28 / 7) }, // Assuming a non-leap year for simplicity
+  2: { month: "mar", day: 31, weeks: Math.floor(31 / 7) },
+  3: { month: "apr", day: 30, weeks: Math.floor(30 / 7) },
+  4: { month: "may", day: 31, weeks: Math.floor(31 / 7) },
+  5: { month: "jun", day: 30, weeks: Math.floor(30 / 7) },
+  6: { month: "jul", day: 31, weeks: Math.floor(31 / 7) },
+  7: { month: "aug", day: 31, weeks: Math.floor(31 / 7) },
+  8: { month: "sep", day: 30, weeks: Math.floor(30 / 7) },
+  9: { month: "oct", day: 31, weeks: Math.floor(31 / 7) },
+  10: { month: "nov", day: 30, weeks: Math.floor(30 / 7) },
+  11: { month: "dec", day: 31, weeks: Math.floor(31 / 7) },
 };
 
 export default function Timeline() {
