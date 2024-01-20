@@ -62,9 +62,23 @@ function TodayTracker() {
   const dayOfYear = getDayOfYear(currentDate);
   const todayPercent = (100 / 365) * dayOfYear;
 
+  const date = new Date();
+
+  const options: Intl.DateTimeFormatOptions = {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+  };
+
+  const dateFormatter = new Intl.DateTimeFormat("en-US", options);
+  const formattedDate = dateFormatter.format(date);
+
   return (
     <div className={styles.todayContainer} style={{ left: `${todayPercent}%` }}>
       <div className={styles.today}></div>
+      <span className={styles.todayDate}>
+        <p>{formattedDate}</p>
+      </span>
     </div>
   );
 }
