@@ -1,7 +1,13 @@
 import "./App.css";
 
+import Timeline from "./components/timeline/Timeline";
+
 function App() {
-  return <></>;
+  return (
+    <>
+      <Timeline />
+    </>
+  );
 }
 
 export default App;
