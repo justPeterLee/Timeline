@@ -31,8 +31,7 @@ export default function Timeline() {
   return (
     <>
       <div className={styles.container}>
-        <div className={styles.timeline} />
-
+        <TimelineSVG />
         <TodayTracker />
 
         {Object.keys(monthDate).map((_instance: string, index: number) => {
@@ -80,5 +79,19 @@ function TodayTracker() {
         <p>{formattedDate}</p>
       </span>
     </div>
+  );
+}
+
+function TimelineSVG() {
+  return (
+    <svg className={styles.timelineSVG}>
+      <line
+        x1="0"
+        y1="50%"
+        x2="100%"
+        y2="50%"
+        style={{ stroke: "rgb(150,150,150)", strokeWidth: "2" }}
+      />
+    </svg>
   );
 }

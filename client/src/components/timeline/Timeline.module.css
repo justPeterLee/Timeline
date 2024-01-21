@@ -6,11 +6,16 @@
   transform: translate(-50%, -50%);
   position: absolute;
   display: flex;
+
+  transition: width 0.2s ease-in;
 }
 
+/* .container:hover {
+  width: 100%;
+} */
+
 /* timeline style */
-.timeline {
-  background-color: rgb(150, 150, 150);
+.timelineSVG {
   width: 100%;
   height: 100%;
 

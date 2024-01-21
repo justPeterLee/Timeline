@@ -39,12 +39,14 @@
   position: absolute;
   height: 30px;
   display: flex;
+  /* width: 20px; */
 }
 .monthAbrContainer p {
   margin: 0;
   font-size: 12px;
   opacity: 30%;
   transition: opacity 0.3s;
+  user-select: none;
 }
 .weekLineContainer {
   display: flex;
