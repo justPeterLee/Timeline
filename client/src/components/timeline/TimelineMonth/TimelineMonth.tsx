@@ -1,4 +1,5 @@
 import styles from "./TimelineMonth.module.css";
+import { useNavigate } from "react-router-dom";
 
 export default function TimelineMonth({
   monthData,
@@ -7,10 +8,15 @@ export default function TimelineMonth({
   monthData: { month: string; day: number; weeks: number };
   index: number;
 }) {
+  const navigate = useNavigate();
+
   return (
     <div
       className={styles.container}
       style={{ width: `${monthData.day * 0.274}%` }}
+      onClick={() => {
+        navigate(`/${index + 1}`);
+      }}
     >
       <span className={styles.monthAbr}>
         <div
@@ -22,6 +28,8 @@ export default function TimelineMonth({
                 : "translate(-50%, -100%)",
             alignItems: index % 2 === 0 ? "flex-end" : "flex-start",
           }}
+
+          //   onClick={()=>{navigate(`/${index + 1 }`)}}
         >
           <p>{monthData.month}</p>
         </div>
