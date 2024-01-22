@@ -6,7 +6,8 @@
   transform: translate(-50%, -50%);
   position: absolute;
   display: flex;
-
+  align-items: center;
+  justify-content: center;
   transition: width 0.2s ease-in;
 }
 

@@ -12,49 +12,51 @@ export default function TimelineMonth({
 
   return (
     <div
-      className={styles.container}
+      className={styles.extentionContainer}
       style={{ width: `${monthData.day * 0.274}%` }}
       onClick={() => {
         navigate(`/${index + 1}`);
       }}
     >
-      <span className={styles.monthAbr}>
+      <div className={styles.container}>
         <div
-          className={styles.monthAbrContainer}
-          style={{
-            transform:
-              index % 2 === 0
-                ? "translate(-50%, 100%)"
-                : "translate(-50%, -100%)",
-            alignItems: index % 2 === 0 ? "flex-end" : "flex-start",
-          }}
-
-          //   onClick={()=>{navigate(`/${index + 1 }`)}}
+          className={styles.month}
+          style={{ justifyContent: index % 2 <= 0 ? "flex-end" : "flex-start" }}
         >
-          <p>{monthData.month}</p>
+          <div className={styles.monthLine}>
+            <span className={styles.monthAbr}>
+              <div
+                className={styles.monthAbrContainer}
+                style={{
+                  transform:
+                    index % 2 === 0
+                      ? "translate(-50%, 50%)"
+                      : "translate(-50%, -100%)",
+                  alignItems: index % 2 === 0 ? "flex-end" : "flex-start",
+                }}
+
+                //   onClick={()=>{navigate(`/${index + 1 }`)}}
+              >
+                <p>{monthData.month}</p>
+              </div>
+            </span>
+          </div>
         </div>
-      </span>
 
-      <div
-        className={styles.month}
-        style={{ justifyContent: index % 2 <= 0 ? "flex-end" : "flex-start" }}
-      >
-        <div className={styles.monthLine}></div>
-      </div>
-
-      <div className={styles.weekLineContainer}>
-        {Array.from({ length: monthData.weeks }, (_, index) => {
-          return (
-            <div
-              className={styles.weekLine}
-              key={index}
-              style={{
-                backgroundColor:
-                  index === 0 ? "transparent" : "rgb(200, 200, 200)",
-              }}
-            ></div>
-          );
-        })}
+        <div className={styles.weekLineContainer}>
+          {Array.from({ length: monthData.weeks }, (_, index) => {
+            return (
+              <div
+                className={styles.weekLine}
+                key={index}
+                style={{
+                  backgroundColor:
+                    index === 0 ? "transparent" : "rgb(200, 200, 200)",
+                }}
+              ></div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

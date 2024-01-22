@@ -4,3 +4,29 @@
   padding: 2rem;
   text-align: center;
 }
+
+.linkButton {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  justify-content: center;
+  align-items: center;
+
+  position: absolute;
+  top: 80%;
+  left: 50%;
+
+  transform: translateX(-50%);
+}
+.Link {
+  color: rgb(150, 150, 150);
+  font-size: 14px;
+  font-weight: 400;
+
+  transition: color 0.2s;
+}
+
+.Link:hover {
+  /* background-color: rgb(180, 180, 180); */
+  color: rgb(200, 200, 200);
+}

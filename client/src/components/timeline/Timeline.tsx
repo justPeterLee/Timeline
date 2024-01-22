@@ -27,24 +27,27 @@ const monthDate: MonthDate = {
   11: { month: "dec", day: 31, weeks: Math.floor(31 / 7) },
 };
 
-export default function Timeline() {
-  return (
-    <>
-      <div className={styles.container}>
-        <TimelineSVG />
-        <TodayTracker />
+import { Link, useParams } from "react-router-dom";
 
-        {Object.keys(monthDate).map((_instance: string, index: number) => {
-          return (
-            <TimelineMonth
-              key={index}
-              monthData={monthDate[index]}
-              index={index}
-            />
-          );
-        })}
-      </div>
-    </>
+export default function Timeline() {
+  const { month } = useParams();
+
+  console.log(month);
+  return (
+    <div className={styles.container}>
+      <TimelineSVG />
+      <TodayTracker />
+
+      {Object.keys(monthDate).map((_instance: string, index: number) => {
+        return (
+          <TimelineMonth
+            key={index}
+            monthData={monthDate[index]}
+            index={index}
+          />
+        );
+      })}
+    </div>
   );
 }
 

@@ -1,20 +1,29 @@
+.extentionContainer {
+  padding-top: 30px;
+  padding-bottom: 30px;
+  height: 0px;
+}
+
+.extentionContainer:hover .container {
+  background-color: rgb(220, 220, 220, 0.3);
+  cursor: pointer;
+}
+.extentionContainer:hover .monthAbr p {
+  opacity: 80%;
+}
+
+.extentionContainer:hover {
+  cursor: pointer;
+}
 .container {
   background-color: transparent;
   height: 30px;
 
-  transform: translateY(-48%);
+  transform: translateY(-50%);
   transition: background-color 0.2s ease;
-
   position: relative;
 }
-.container:hover {
-  background-color: rgb(220, 220, 220, 0.3);
-  cursor: pointer;
-}
 
-.container:hover .monthAbr p {
-  opacity: 80%;
-}
 .month {
   height: 100%;
   display: flex;
@@ -24,7 +33,7 @@
 }
 
 .monthLine {
-  height: 15px;
+  height: 50%;
   width: 2px;
   background-color: rgb(150, 150, 150);
 
@@ -40,6 +49,7 @@
   height: 30px;
   display: flex;
   /* width: 20px; */
+  /* transform: translateX(-500%); */
 }
 .monthAbrContainer p {
   margin: 0;
@@ -48,10 +58,14 @@
   transition: opacity 0.3s;
   user-select: none;
 }
+
 .weekLineContainer {
   display: flex;
-  width: 100%;
+  align-items: center;
   gap: 25%;
+
+  width: 100%;
+  height: 100%;
 
   position: absolute;
 }
@@ -59,5 +73,5 @@
   height: 10px;
   width: 1px;
   background-color: rgb(200, 200, 200);
-  transform: translateY(100%);
+  /* transform: translateY(100%); */
 }
