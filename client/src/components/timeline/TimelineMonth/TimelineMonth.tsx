@@ -1,5 +1,5 @@
 import styles from "./TimelineMonth.module.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 export default function TimelineMonth({
   monthData,
@@ -9,13 +9,14 @@ export default function TimelineMonth({
   index: number;
 }) {
   const navigate = useNavigate();
-
+  const { year, mode } = useParams();
+  const currentYear = new Date().getFullYear();
   return (
     <div
       className={styles.extentionContainer}
       style={{ width: `${monthData.day * 0.274}%` }}
       onClick={() => {
-        navigate(`/${index + 1}`);
+        navigate(`/${year || currentYear}/${index + 1}/${mode || "view"}`);
       }}
     >
       <div className={styles.container}>

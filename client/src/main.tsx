@@ -11,7 +11,7 @@ const router = createBrowserRouter([
     element: <App />,
     children: [
       {
-        path: "/:month",
+        path: "/:year/:month/:mode",
         element: <App />,
       },
     ],

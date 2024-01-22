@@ -3,17 +3,26 @@ import "./App.css";
 import Timeline from "./components/timeline/Timeline";
 
 function App() {
-  const { month } = useParams();
+  const { year, month, mode } = useParams();
+  const currentYear = new Date().getFullYear();
 
   return (
     <>
       <Timeline />
       <div className="linkButton">
-        <Link to={"/"} className="viewAllLink Link">
-          mode : create
+        <Link
+          to={`/${year || currentYear}/${month || 0}/${
+            mode === "view" ? "create" : "view"
+          }`}
+          className="viewAllLink Link"
+        >
+          mode : {mode}
         </Link>
         {month && (
-          <Link to={"/"} className="viewAllLink Link">
+          <Link
+            to={`/${year || currentYear}/0/${mode}`}
+            className="viewAllLink Link"
+          >
             view all
           </Link>
         )}

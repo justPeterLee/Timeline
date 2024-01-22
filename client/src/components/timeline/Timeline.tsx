@@ -27,7 +27,7 @@ const monthDate: MonthDate = {
   11: { month: "dec", day: 31, weeks: Math.floor(31 / 7) },
 };
 
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 export default function Timeline() {
   const { month } = useParams();
