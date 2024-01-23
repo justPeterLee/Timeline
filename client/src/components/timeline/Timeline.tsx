@@ -2,6 +2,7 @@ import styles from "./Timeline.module.css";
 
 import TimelineMonth from "./TimelineMonth/TimelineMonth";
 import { MonthLine } from "./TimelineMonth/TimelineMonth";
+import { useState } from "react";
 
 type MonthDate = Record<
   number,
@@ -23,12 +24,15 @@ const monthDate: MonthDate = {
   11: { month: "dec", day: 31, weeks: Math.floor(31 / 7), startDay: 334 },
 };
 
-import { useParams } from "react-router-dom";
+// import { useParams } from "react-router-dom";
 
 export default function Timeline() {
-  const { month } = useParams();
+  // const { month } = useParams();
+  const [monthSelected, setMonthSelected] = useState<number>(-1);
 
-  console.log(month);
+  const setSelectedMonth = (index: number) => {
+    setMonthSelected(() => index);
+  };
   return (
     <div className={styles.container}>
       <TimelineSVG />
@@ -41,6 +45,8 @@ export default function Timeline() {
               key={index}
               monthData={monthDate[index]}
               index={index}
+              selectMonth={setSelectedMonth}
+              selectedMonth={monthSelected}
             />
           );
         })}
@@ -49,10 +55,15 @@ export default function Timeline() {
       <div>
         {Object.keys(monthDate).map((_: string, index: number) => {
           return (
-            <MonthLine key={index} monthData={monthDate[index]} index={index} />
+            <MonthLine
+              key={index}
+              monthData={monthDate[index]}
+              index={index}
+              selectMonth={setSelectedMonth}
+              selectedMonth={monthSelected}
+            />
           );
         })}
-        {/* <MonthLine /> */}
       </div>
     </div>
   );
