@@ -1,8 +1,9 @@
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import "./App.css";
 import Timeline from "./components/timeline/Timeline";
 
 function App() {
+  const navigate = useNavigate();
   const { year, month, mode } = useParams();
   const currentYear = new Date().getFullYear();
 
@@ -10,21 +11,31 @@ function App() {
     <>
       <Timeline />
       <div className="linkButton">
-        <Link
-          to={`/${year || currentYear}/${month || 0}/${
-            mode === "view" ? "create" : "view"
-          }`}
+        <button
+          onClick={() => {
+            navigate(
+              `/${year || currentYear}/${month || 0}/${
+                mode === undefined
+                  ? "create"
+                  : mode === "view"
+                  ? "create"
+                  : "view"
+              }`
+            );
+          }}
           className="viewAllLink Link"
         >
-          mode : {mode}
-        </Link>
-        {month && (
-          <Link
-            to={`/${year || currentYear}/0/${mode}`}
+          mode : {mode || "view"}
+        </button>
+        {month !== "0" && (
+          <button
+            onClick={() => {
+              navigate(`/${year || currentYear}/0/${mode}`);
+            }}
             className="viewAllLink Link"
           >
             view all
-          </Link>
+          </button>
         )}
       </div>
     </>
