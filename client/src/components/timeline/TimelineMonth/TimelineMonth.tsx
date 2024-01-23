@@ -23,26 +23,7 @@ export default function TimelineMonth({
         <div
           className={styles.month}
           style={{ justifyContent: index % 2 <= 0 ? "flex-end" : "flex-start" }}
-        >
-          <div className={styles.monthLine}>
-            <span className={styles.monthAbr}>
-              <div
-                className={styles.monthAbrContainer}
-                style={{
-                  transform:
-                    index % 2 === 0
-                      ? "translate(-50%, 50%)"
-                      : "translate(-50%, -100%)",
-                  alignItems: index % 2 === 0 ? "flex-end" : "flex-start",
-                }}
-
-                //   onClick={()=>{navigate(`/${index + 1 }`)}}
-              >
-                <p>{monthData.month}</p>
-              </div>
-            </span>
-          </div>
-        </div>
+        ></div>
 
         <div className={styles.weekLineContainer}>
           {Array.from({ length: monthData.weeks }, (_, index) => {
@@ -58,6 +39,39 @@ export default function TimelineMonth({
             );
           })}
         </div>
+      </div>
+    </div>
+  );
+}
+
+export function MonthLine({
+  monthData,
+  index,
+}: {
+  monthData: { month: string; day: number; weeks: number; startDay: number };
+  index: number;
+}) {
+  return (
+    <div
+      className={styles.month}
+      style={{
+        top: index % 2 <= 0 ? "0%" : "-13px",
+        left: `${monthData.startDay * 0.27397260274}%`,
+      }}
+    >
+      <div
+        className={styles.monthLine}
+        style={{ left: "8.49315%", top: "50%" }}
+      ></div>
+
+      <div
+        className={styles.monthAbrContainer}
+        style={{
+          alignItems: `${index % 2 === 0 ? "flex-end" : "flex-start"}`,
+          bottom: `${index % 2 === 0 ? "" : "0"}`,
+        }}
+      >
+        <p>{monthData.month}</p>
       </div>
     </div>
   );
