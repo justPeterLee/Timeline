@@ -76,3 +76,10 @@
   background-color: rgb(200, 200, 200);
   /* transform: translateY(100%); */
 }
+
+.timeLineMonthContainer {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  /* transform: translate(-50%); */
+}

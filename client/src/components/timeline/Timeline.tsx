@@ -1,63 +1,93 @@
 import styles from "./Timeline.module.css";
 
-import TimelineMonth from "./TimelineMonth/TimelineMonth";
+import {
+  TimelineYearView,
+  TimelineMonthView,
+} from "./TimelineMonth/TimelineMonth";
+
 import { MonthLine } from "./TimelineMonth/TimelineMonth";
-import { useState } from "react";
-
-type MonthDate = Record<
-  number,
-  { month: string; day: number; weeks: number; startDay: number }
->;
-
-const monthDate: MonthDate = {
-  0: { month: "jan", day: 31, weeks: Math.floor(31 / 7), startDay: 0 },
-  1: { month: "feb", day: 28, weeks: Math.floor(28 / 7), startDay: 31 }, // Assuming a non-leap year for simplicity
-  2: { month: "mar", day: 31, weeks: Math.floor(31 / 7), startDay: 59 },
-  3: { month: "apr", day: 30, weeks: Math.floor(30 / 7), startDay: 90 },
-  4: { month: "may", day: 31, weeks: Math.floor(31 / 7), startDay: 120 },
-  5: { month: "jun", day: 30, weeks: Math.floor(30 / 7), startDay: 151 },
-  6: { month: "jul", day: 31, weeks: Math.floor(31 / 7), startDay: 181 },
-  7: { month: "aug", day: 31, weeks: Math.floor(31 / 7), startDay: 212 },
-  8: { month: "sep", day: 30, weeks: Math.floor(30 / 7), startDay: 243 },
-  9: { month: "oct", day: 31, weeks: Math.floor(31 / 7), startDay: 273 },
-  10: { month: "nov", day: 30, weeks: Math.floor(30 / 7), startDay: 304 },
-  11: { month: "dec", day: 31, weeks: Math.floor(31 / 7), startDay: 334 },
-};
-
-// import { useParams } from "react-router-dom";
-
+import { useEffect, useState } from "react";
+import { month_data, current } from "../../tools/data";
+import { useAnimationTransition } from "../../tools/hooks/useTransition";
+import { useParams, useLocation } from "react-router-dom";
 export default function Timeline() {
-  // const { month } = useParams();
+  useAnimationTransition();
+
+  const location = useLocation();
+  const { month } = useParams();
+
   const [monthSelected, setMonthSelected] = useState<number>(-1);
 
   const setSelectedMonth = (index: number) => {
     setMonthSelected(() => index);
   };
+
+  const [monthSelectedData, setMonthSelectedData] = useState<null | {
+    current: {
+      month: string;
+      day: number;
+      weeks: number;
+      startDay: number;
+      index: number;
+    };
+    previous: {
+      month: string;
+      day: number;
+      weeks: number;
+      startDay: number;
+      index: number;
+    };
+    following: {
+      month: string;
+      day: number;
+      weeks: number;
+      startDay: number;
+      index: number;
+    };
+  }>(null);
+  const selectedMonthData = () => {
+    const monthInt = month ? parseInt(month) : -1;
+    const current = monthInt - 1;
+    const following = monthInt < 11 ? monthInt : 0;
+    const previous = monthInt > 1 ? monthInt - 2 : 11;
+
+    setMonthSelectedData(() => {
+      return {
+        previous: month_data[previous],
+        current: month_data[current],
+        following: month_data[following],
+      };
+    });
+  };
+
+  useEffect(() => {
+    setSelectedMonth(-1);
+    selectedMonthData();
+    // console.log(selectedMonthData());
+  }, [location.pathname]);
+
   return (
     <div className={styles.container}>
       <TimelineSVG />
       <TodayTracker />
 
-      <div className={styles.timeLineMonthContainer}>
-        {Object.keys(monthDate).map((_instance: string, index: number) => {
-          return (
-            <TimelineMonth
-              key={index}
-              monthData={monthDate[index]}
-              index={index}
-              selectMonth={setSelectedMonth}
-              selectedMonth={monthSelected}
-            />
-          );
-        })}
-      </div>
+      {!month || month === "0" ? (
+        <TimelineYearView
+          selectMonth={setSelectedMonth}
+          selectedMonth={monthSelected}
+        />
+      ) : monthSelectedData ? (
+        <TimelineMonthView viewMonth={monthSelectedData} />
+      ) : (
+        <></>
+      )}
 
-      <div>
-        {Object.keys(monthDate).map((_: string, index: number) => {
+      <div className={styles.timeLineMonthLine}>
+        {Object.keys(month_data).map((_: string, index: number) => {
           return (
             <MonthLine
               key={index}
-              monthData={monthDate[index]}
+              monthData={month_data[index]}
               index={index}
               selectMonth={setSelectedMonth}
               selectedMonth={monthSelected}
@@ -70,34 +100,14 @@ export default function Timeline() {
 }
 
 function TodayTracker() {
-  function getDayOfYear(date: Date): number {
-    const start = new Date(date.getFullYear(), 0, 0);
-    const diff = date.getTime() - start.getTime();
-    const oneDay = 24 * 60 * 60 * 1000;
-
-    return Math.floor(diff / oneDay);
-  }
-
-  const currentDate = new Date();
-  const dayOfYear = getDayOfYear(currentDate);
-  const todayPercent = (100 / 365) * dayOfYear;
-
-  const date = new Date();
-
-  const options: Intl.DateTimeFormatOptions = {
-    weekday: "long",
-    month: "long",
-    day: "numeric",
-  };
-
-  const dateFormatter = new Intl.DateTimeFormat("en-US", options);
-  const formattedDate = dateFormatter.format(date);
-
   return (
-    <div className={styles.todayContainer} style={{ left: `${todayPercent}%` }}>
+    <div
+      className={styles.todayContainer}
+      style={{ left: `${current.today.percent}%` }}
+    >
       <div className={styles.today}></div>
       <span className={styles.todayDate}>
-        <p>{formattedDate}</p>
+        <p>{current.today.date_format}</p>
       </span>
     </div>
   );

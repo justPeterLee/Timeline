@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App.tsx";
+import App from "./pages/year/App.tsx";
 import "./index.css";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
@@ -14,6 +14,10 @@ const router = createBrowserRouter([
         path: "/:year/:month/:mode",
         element: <App />,
       },
+      // {
+      //   path: "/:year/0/:moode",
+      //   element: <App />,
+      // },
     ],
   },
 ]);
