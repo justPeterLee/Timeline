@@ -11,13 +11,3 @@
 
   transition: width 0.2s ease-in;
 }
-
-/* timeline style */
-.timelineSVG {
-  width: 100%;
-  height: 100%;
-
-  position: absolute;
-  z-index: 1000;
-  pointer-events: none;
-}
