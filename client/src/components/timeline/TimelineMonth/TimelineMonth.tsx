@@ -1,7 +1,7 @@
 import styles from "./TimelineMonth.module.css";
 import { month_data } from "../../../tools/data";
 import { useParams } from "react-router-dom";
-interface ViewMonth {
+interface MonthsData {
   current: {
     month: string;
     day: number;
@@ -33,17 +33,57 @@ type MonthDataSection = {
   index: number;
 };
 
+export default function TimelineMonthPage() {
+  const { month } = useParams();
+
+  const selectedMonthData = () => {
+    const monthInt = month ? parseInt(month) : -1;
+    const current = monthInt - 1;
+    const following = monthInt < 12 ? monthInt : 0;
+    const previous = monthInt > 1 ? monthInt - 2 : 11;
+    return {
+      previous: month_data[previous],
+      current: month_data[current],
+      following: month_data[following],
+    };
+  };
+
+  const data = selectedMonthData();
+
+  return (
+    <>
+      <MonthDivMonthContainer monthsData={data} />
+      <MonthMarkersMonthContainer monthsData={data} />
+    </>
+  );
+}
+
+/**
+ *
+ * @param param0
+ *
+ *
+ *
+ *
+ *
+ * @returns
+ */
+
 // Month Divs Container (month)
-export function TimelineMonthView({ viewMonth }: { viewMonth: ViewMonth }) {
+export function MonthDivMonthContainer({
+  monthsData,
+}: {
+  monthsData: MonthsData;
+}) {
   return (
     <div className={styles.timeLineMonthContainer}>
       {/* {JSON.stringify(viewMonth)} */}
-      {Object.keys(viewMonth).map((month: string, index: number) => {
+      {Object.keys(monthsData).map((month: string, index: number) => {
         return (
-          <MonthViewDiv
+          <MonthDivMonth
             key={index}
             state={month}
-            data={viewMonth[month as keyof ViewMonth]}
+            data={monthsData[month as keyof MonthsData]}
           />
         );
       })}
@@ -52,7 +92,7 @@ export function TimelineMonthView({ viewMonth }: { viewMonth: ViewMonth }) {
 }
 
 // Month Div (month)
-function MonthViewDiv({
+function MonthDivMonth({
   state,
 }: {
   state: string;
@@ -76,32 +116,31 @@ function MonthViewDiv({
   );
 }
 
+/**
+ *
+ * @returns
+ *
+ *
+ *
+ *
+ *
+ *
+ */
+
 // Month Markers Container (month)
-export function MonthMarkersMonthContainer() {
-  const { month } = useParams();
-
-  const selectedMonthData = () => {
-    const monthInt = month ? parseInt(month) : -1;
-    const current = monthInt - 1;
-    const following = monthInt < 12 ? monthInt : 0;
-    const previous = monthInt > 1 ? monthInt - 2 : 11;
-    return {
-      previous: month_data[previous],
-      current: month_data[current],
-      following: month_data[following],
-    };
-  };
-
-  const data = selectedMonthData();
-
+export function MonthMarkersMonthContainer({
+  monthsData,
+}: {
+  monthsData: MonthsData;
+}) {
   return (
     <div className={styles.timeLineMonthLine}>
-      {Object.keys(data).map((_state: string, index: number) => {
+      {Object.keys(monthsData).map((_state: string, index: number) => {
         return (
           <MonthMarker
             key={index}
             state={_state}
-            data={data[_state as keyof ViewMonth]}
+            data={monthsData[_state as keyof MonthsData]}
           />
         );
       })}

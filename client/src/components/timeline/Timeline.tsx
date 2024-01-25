@@ -7,13 +7,10 @@ import {
 } from "./timeline_components/TimelineComponents";
 
 // year page
-import {
-  MonthMarkersYearContainer,
-  MonthDivYearContainer,
-} from "./TimelineYear/TimelineYear";
+import TimelineYearPage from "./TimelineYear/TimelineYear";
 
 // month page
-import { MonthMarkersMonthContainer } from "./TimelineMonth/TimelineMonth";
+import TimelineMonthPage from "./TimelineMonth/TimelineMonth";
 
 // other
 import { useAnimationTransition } from "../../tools/hooks/useTransition";
@@ -42,22 +39,12 @@ export default function Timeline() {
       <TodayTrackerYear />
 
       {!month || month === "0" ? (
-        <MonthDivYearContainer
-          selectMonth={setSelectedMonth}
-          selectedMonth={monthSelected}
-        />
-      ) : (
-        <></>
-        // <TimelineMonthView viewMonth={{}} />
-      )}
-
-      {!month || month === "0" ? (
-        <MonthMarkersYearContainer
+        <TimelineYearPage
           selectMonth={setMonthSelected}
           selectedMonth={monthSelected}
         />
       ) : (
-        <MonthMarkersMonthContainer />
+        <TimelineMonthPage />
       )}
     </div>
   );

@@ -2,6 +2,27 @@ import styles from "./TimelineYear.module.css";
 import { useParams, useNavigate } from "react-router-dom";
 import { month_data, current } from "../../../tools/data";
 
+export default function TimelineYearPage({
+  selectMonth,
+  selectedMonth,
+}: {
+  selectMonth: (index: number) => void;
+  selectedMonth: number;
+}) {
+  return (
+    <>
+      <MonthDivYearContainer
+        selectMonth={selectMonth}
+        selectedMonth={selectedMonth}
+      />
+      <MonthMarkersYearContainer
+        selectMonth={selectMonth}
+        selectedMonth={selectedMonth}
+      />
+    </>
+  );
+}
+
 // Month Markers (year page)
 export function MonthMarkersYearContainer({
   selectMonth,
