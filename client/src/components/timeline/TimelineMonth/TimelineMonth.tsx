@@ -2,7 +2,31 @@ import styles from "./TimelineMonth.module.css";
 import { useNavigate, useParams } from "react-router-dom";
 import { current, month_data } from "../../../tools/data";
 
-export default function TimelineMonth({
+export function TimelineYearView({
+  selectMonth,
+  selectedMonth,
+}: {
+  selectMonth: (index: number) => void;
+  selectedMonth: number;
+}) {
+  return (
+    <div className={styles.timeLineMonthContainer}>
+      {Object.keys(month_data).map((_instance: string, index: number) => {
+        return (
+          <TimelineMonth
+            key={index}
+            monthData={month_data[index]}
+            index={index}
+            selectMonth={selectMonth}
+            selectedMonth={selectedMonth}
+          />
+        );
+      })}
+    </div>
+  );
+}
+
+function TimelineMonth({
   monthData,
   index,
   selectMonth,
@@ -125,6 +149,21 @@ export function MonthLine({
   );
 }
 
+/**
+ *
+ * @param param0
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ * @returns
+ */
+
 interface ViewMonth {
   current: {
     month: string;
@@ -148,9 +187,10 @@ interface ViewMonth {
     index: number;
   };
 }
+
 export function TimelineMonthView({ viewMonth }: { viewMonth: ViewMonth }) {
   return (
-    <div>
+    <div className={styles.timeLineMonthContainer}>
       {/* {JSON.stringify(viewMonth)} */}
       {Object.keys(viewMonth).map((month: string, index: number) => {
         return (
@@ -167,7 +207,6 @@ export function TimelineMonthView({ viewMonth }: { viewMonth: ViewMonth }) {
 
 function MonthViewDiv({
   state,
-  data,
 }: {
   state: string;
   data: {
@@ -179,32 +218,58 @@ function MonthViewDiv({
   };
 }) {
   return (
-    <div>
-      {state} {JSON.stringify(data)}
+    <div
+      className={styles.monthViewDiv}
+      style={{
+        width: state === "current" ? "83.0136986301%" : "8.49315068493%",
+      }}
+    >
+      {/* {state} {JSON.stringify(data)} */}
     </div>
   );
 }
 
-export function TimelineYearView({
-  selectMonth,
-  selectedMonth,
-}: {
-  selectMonth: (index: number) => void;
-  selectedMonth: number;
+type MonthDataSection = {
+  month: string;
+  day: number;
+  weeks: number;
+  startDay: number;
+  index: number;
+};
+export function MonthLineViewLine({
+  state,
+  data,
+}: // index,
+{
+  state: string;
+  data: MonthDataSection;
+  // index: number;
 }) {
   return (
-    <div className={styles.timeLineMonthContainer}>
-      {Object.keys(month_data).map((_instance: string, index: number) => {
-        return (
-          <TimelineMonth
-            key={index}
-            monthData={month_data[index]}
-            index={index}
-            selectMonth={selectMonth}
-            selectedMonth={selectedMonth}
-          />
-        );
-      })}
+    <div
+      id={`${data.index - 1}`}
+      className={styles.month}
+      style={{
+        top: (data.index - 1) % 2 <= 0 ? "0%" : "-15px",
+        left:
+          state === "previous"
+            ? "0%"
+            : state === "following"
+            ? "91.5068493151%"
+            : "8.49315068493%",
+      }}
+    >
+      <div className={styles.monthLine}></div>
+
+      <div
+        className={styles.monthAbrContainer}
+        style={{
+          alignItems: `${data.index % 2 !== 0 ? "flex-end" : "flex-start"}`,
+          bottom: `${data.index % 2 !== 0 ? "" : "0"}`,
+        }}
+      >
+        <p>{data.month}</p>
+      </div>
     </div>
   );
 }
