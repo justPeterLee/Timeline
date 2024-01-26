@@ -1,23 +1,28 @@
 import styles from "./TimelineYear.module.css";
 import { useParams, useNavigate } from "react-router-dom";
 import { month_data, current } from "../../../tools/data";
+import { TodayTrackerYear } from "../timeline_components/TimelineComponents";
+import { useEffect, useState } from "react";
+export default function TimelineYearPage() {
+  const [monthSelected, setMonthSelected] = useState<number>(-1);
 
-export default function TimelineYearPage({
-  selectMonth,
-  selectedMonth,
-}: {
-  selectMonth: (index: number) => void;
-  selectedMonth: number;
-}) {
+  const setSelectedMonth = (index: number) => {
+    setMonthSelected(() => index);
+  };
+
+  useEffect(() => {
+    setSelectedMonth(-1);
+  }, [location.pathname]);
   return (
     <>
+      <TodayTrackerYear accurate={false} />
       <MonthDivYearContainer
-        selectMonth={selectMonth}
-        selectedMonth={selectedMonth}
+        selectMonth={setSelectedMonth}
+        selectedMonth={monthSelected}
       />
       <MonthMarkersYearContainer
-        selectMonth={selectMonth}
-        selectedMonth={selectedMonth}
+        selectMonth={setSelectedMonth}
+        selectedMonth={monthSelected}
       />
     </>
   );
@@ -62,6 +67,10 @@ export function MonthMarkerYear({
 }) {
   const navigate = useNavigate();
   const { year, mode } = useParams();
+
+  const monthRoute = `/month/${year || current.year}/${index + 1}/${
+    mode || "view"
+  }`;
   return (
     <div
       id={`${index}`}
@@ -77,7 +86,7 @@ export function MonthMarkerYear({
         selectMonth(-1);
       }}
       onClick={() => {
-        navigate(`/${year || current.year}/${index + 1}/${mode || "view"}`);
+        navigate(monthRoute);
       }}
     >
       <div className={styles.monthLine}></div>
@@ -98,7 +107,7 @@ export function MonthMarkerYear({
         <p
           style={{ opacity: selectedMonth === index ? "80%" : "30%" }}
           onClick={() => {
-            navigate(`/${year || current.year}/${index + 1}/${mode || "view"}`);
+            navigate(monthRoute);
           }}
         >
           {monthData.month}
@@ -158,6 +167,10 @@ function MonthDivYear({
 }) {
   const navigate = useNavigate();
   const { year, mode } = useParams();
+
+  const monthRoute = `/month/${year || current.year}/${index + 1}/${
+    mode || "view"
+  }`;
   return (
     <div
       className={styles.extentionContainer}
@@ -165,7 +178,7 @@ function MonthDivYear({
         width: `${monthData.day * 0.274}%`,
       }}
       onClick={() => {
-        navigate(`/${year || current.year}/${index + 1}/${mode || "view"}`);
+        navigate(monthRoute);
       }}
       onMouseOver={() => {
         selectMonth(index);
