@@ -1,6 +1,6 @@
 import styles from "./TimelineMonth.module.css";
 import { month_data, current } from "../../../tools/data";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { TodayTrackerYear } from "../timeline_components/TimelineComponents";
 
 interface MonthsData {
@@ -89,11 +89,19 @@ function MonthDivMonth({
     index: number;
   };
 }) {
+  const navigate = useNavigate();
+  const { year, mode } = useParams();
+
   return (
     <div
       className={styles.monthViewDiv}
       style={{
         width: state === "current" ? "83.0136986301%" : "8.49315068493%",
+      }}
+      onClick={() => {
+        if (state === "previous" || state === "following") {
+          navigate(`/${year}/${data.index}/${mode}`);
+        }
       }}
     >
       {/* {state} {JSON.stringify(data)} */}
