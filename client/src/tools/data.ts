@@ -126,6 +126,7 @@ type Current = {
     date: Date;
     date_format: string;
     percent: number;
+    month: number;
   };
 };
 
@@ -135,5 +136,6 @@ export const current: Current = {
     date: current_date,
     date_format: formattedDate,
     percent: todayPercent,
+    month: current_date.getMonth(),
   },
 };

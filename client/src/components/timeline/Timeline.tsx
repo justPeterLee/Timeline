@@ -36,13 +36,15 @@ export default function Timeline() {
   return (
     <div className={styles.container}>
       <TimelineSVG />
-      <TodayTrackerYear />
 
       {!month || month === "0" ? (
-        <TimelineYearPage
-          selectMonth={setMonthSelected}
-          selectedMonth={monthSelected}
-        />
+        <>
+          <TodayTrackerYear accurate={false} />
+          <TimelineYearPage
+            selectMonth={setMonthSelected}
+            selectedMonth={monthSelected}
+          />
+        </>
       ) : (
         <TimelineMonthPage />
       )}

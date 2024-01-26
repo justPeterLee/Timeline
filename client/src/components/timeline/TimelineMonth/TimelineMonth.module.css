@@ -76,3 +76,24 @@
   display: flex;
   gap: 2px;
 }
+
+/* week marker */
+.weekMarker {
+  height: 40%;
+  width: 1px;
+  /* background-color: red; */
+  background-color: rgb(200, 200, 200);
+  position: absolute;
+}
+
+.weekMarkerContainer {
+  display: flex;
+  align-items: center;
+  /* gap: 4%; */
+
+  width: 100%;
+  height: 100%;
+
+  /* background-color: red; */
+  position: relative;
+}

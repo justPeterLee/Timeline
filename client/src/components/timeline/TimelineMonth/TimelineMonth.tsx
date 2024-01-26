@@ -1,28 +1,12 @@
 import styles from "./TimelineMonth.module.css";
-import { month_data } from "../../../tools/data";
+import { month_data, current } from "../../../tools/data";
 import { useParams } from "react-router-dom";
+import { TodayTrackerYear } from "../timeline_components/TimelineComponents";
+
 interface MonthsData {
-  current: {
-    month: string;
-    day: number;
-    weeks: number;
-    startDay: number;
-    index: number;
-  };
-  previous: {
-    month: string;
-    day: number;
-    weeks: number;
-    startDay: number;
-    index: number;
-  };
-  following: {
-    month: string;
-    day: number;
-    weeks: number;
-    startDay: number;
-    index: number;
-  };
+  current: MonthDataSection;
+  previous: MonthDataSection;
+  following: MonthDataSection;
 }
 
 type MonthDataSection = {
@@ -94,6 +78,7 @@ export function MonthDivMonthContainer({
 // Month Div (month)
 function MonthDivMonth({
   state,
+  data,
 }: {
   state: string;
   data: {
@@ -112,6 +97,16 @@ function MonthDivMonth({
       }}
     >
       {/* {state} {JSON.stringify(data)} */}
+      {state === "current" && <AccurateWeekMarkersContainer data={data} />}
+      {state === "current" ? (
+        data.index - 1 === current.today.month ? (
+          <TodayTrackerYear accurate={true} />
+        ) : (
+          <></>
+        )
+      ) : (
+        <></>
+      )}
     </div>
   );
 }
@@ -184,5 +179,32 @@ function MonthMarker({
         <p>{data.month}</p>
       </div>
     </div>
+  );
+}
+
+export function AccurateWeekMarkersContainer({
+  data,
+}: {
+  data: MonthDataSection;
+}) {
+  return (
+    <div
+      className={styles.weekMarkerContainer}
+      // style={{ left: `${data.day / 100}%` }}
+    >
+      {Array.from({ length: data.day - 1 }, (_, index) => {
+        return <WeekMarker key={index} index={index + 1} day={data.day} />;
+      })}
+    </div>
+  );
+}
+
+export function WeekMarker({ index, day }: { index: number; day: number }) {
+  return (
+    <div
+      className={styles.weekMarker}
+      id={`${index + 1}`}
+      style={{ left: `${(100 / day) * index}%` }}
+    ></div>
   );
 }

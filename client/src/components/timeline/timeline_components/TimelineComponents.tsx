@@ -1,12 +1,16 @@
 import styles from "./TimelineComponents.module.css";
-import { current } from "../../../tools/data";
+import { current, month_data } from "../../../tools/data";
 
 // identifies todays date (on YEAR timeline)
-export function TodayTrackerYear() {
+export function TodayTrackerYear({ accurate }: { accurate: boolean }) {
+  const days = month_data[current.today.month];
+  const dayPercent = (100 / days.day) * (current.today.date.getDate() - 1);
   return (
     <div
       className={styles.todayContainer}
-      style={{ left: `${current.today.percent}%` }}
+      style={{
+        left: accurate ? `${dayPercent}%` : `${current.today.percent}%`,
+      }}
     >
       <div className={styles.today}></div>
       <span className={styles.todayDate}>
