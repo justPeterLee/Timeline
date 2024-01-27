@@ -1,7 +1,10 @@
 import styles from "./TimelineYear.module.css";
 import { useParams, useNavigate } from "react-router-dom";
 import { month_data, current } from "../../../tools/data";
-import { TodayTrackerYear } from "../timeline_components/TimelineComponents";
+import {
+  TodayTrackerYear,
+  CreateTimeline,
+} from "../timeline_components/TimelineComponents";
 import { useEffect, useState } from "react";
 export default function TimelineYearPage() {
   const [monthSelected, setMonthSelected] = useState<number>(-1);
@@ -16,10 +19,11 @@ export default function TimelineYearPage() {
   return (
     <>
       <TodayTrackerYear accurate={false} />
-      <MonthDivYearContainer
+      {/* <MonthDivYearContainer
         selectMonth={setSelectedMonth}
         selectedMonth={monthSelected}
-      />
+      /> */}
+      <CreateTimeline />
       <MonthMarkersYearContainer
         selectMonth={setSelectedMonth}
         selectedMonth={monthSelected}

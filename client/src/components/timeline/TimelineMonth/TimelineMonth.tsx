@@ -100,7 +100,7 @@ function MonthDivMonth({
       }}
       onClick={() => {
         if (state === "previous" || state === "following") {
-          navigate(`/${year}/${data.index}/${mode}`);
+          navigate(`/month/${year}/${data.index}/${mode}`);
         }
       }}
     >
