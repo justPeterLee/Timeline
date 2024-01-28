@@ -7,6 +7,7 @@ import {
 } from "../timeline_components/TimelineComponents";
 import { useEffect, useState } from "react";
 export default function TimelineYearPage() {
+  const { mode } = useParams();
   const [monthSelected, setMonthSelected] = useState<number>(-1);
 
   const setSelectedMonth = (index: number) => {
@@ -19,11 +20,14 @@ export default function TimelineYearPage() {
   return (
     <>
       <TodayTrackerYear accurate={false} />
-      {/* <MonthDivYearContainer
-        selectMonth={setSelectedMonth}
-        selectedMonth={monthSelected}
-      /> */}
-      <CreateTimeline />
+      {mode === "view" || !mode ? (
+        <MonthDivYearContainer
+          selectMonth={setSelectedMonth}
+          selectedMonth={monthSelected}
+        />
+      ) : (
+        <CreateTimeline />
+      )}{" "}
       <MonthMarkersYearContainer
         selectMonth={setSelectedMonth}
         selectedMonth={monthSelected}
@@ -83,37 +87,28 @@ export function MonthMarkerYear({
         top: index % 2 <= 0 ? "0%" : "-15px",
         left: `${monthData.startDay * 0.27397260274}%`,
       }}
-      onMouseOver={() => {
-        selectMonth(index);
-      }}
-      onMouseOut={() => {
-        selectMonth(-1);
-      }}
-      onClick={() => {
-        navigate(monthRoute);
-      }}
     >
-      <div className={styles.monthLine}></div>
+      {/* <div className={styles.monthLine}></div> */}
 
       <div
         className={styles.monthAbrContainer}
         style={{
           alignItems: `${index % 2 === 0 ? "flex-end" : "flex-start"}`,
           bottom: `${index % 2 === 0 ? "" : "0"}`,
+          userSelect: "none",
         }}
         onMouseOver={() => {
           selectMonth(index);
+          // console.log("over");
         }}
         onMouseOut={() => {
           selectMonth(-1);
         }}
+        onClick={() => {
+          navigate(monthRoute);
+        }}
       >
-        <p
-          style={{ opacity: selectedMonth === index ? "80%" : "30%" }}
-          onClick={() => {
-            navigate(monthRoute);
-          }}
-        >
+        <p style={{ opacity: selectedMonth === index ? "80%" : "30%" }}>
           {monthData.month}
         </p>
       </div>
@@ -179,7 +174,7 @@ function MonthDivYear({
     <div
       className={styles.extentionContainer}
       style={{
-        width: `${monthData.day * 0.274}%`,
+        width: `${monthData.day * 0.27397260274}%`,
       }}
       onClick={() => {
         navigate(monthRoute);
@@ -198,13 +193,6 @@ function MonthDivYear({
             selectedMonth === index ? "rgb(242,242,242)" : "initial",
         }}
       >
-        <div
-          className={styles.month}
-          style={{
-            justifyContent: index % 2 <= 0 ? "flex-end" : "flex-start",
-          }}
-        ></div>
-
         <div className={styles.weekLineContainer}>
           {Array.from({ length: monthData.weeks }, (_, index) => {
             return (

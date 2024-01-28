@@ -39,18 +39,13 @@
   flex-direction: column;
   align-items: center;
   position: absolute;
+  width: 2px;
+  background-color: rgb(150, 150, 150);
+  transform: translateX(-50%);
 }
 
 .month:hover {
   cursor: pointer;
-}
-
-.monthLine {
-  height: 100%;
-  width: 2px;
-  background-color: rgb(150, 150, 150);
-
-  z-index: 100;
 }
 
 .monthAbrContainer {
@@ -58,9 +53,7 @@
   height: 40px;
   display: flex;
 }
-.monthAbrContainer:hover {
-  cursor: pointer;
-}
+
 .monthAbrContainer p {
   margin: 0;
   font-size: 12px;
@@ -78,6 +71,7 @@
   height: 100%;
 
   position: absolute;
+  margin-left: 2px;
 }
 
 .weekLine {

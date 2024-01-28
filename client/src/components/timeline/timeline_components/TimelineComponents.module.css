@@ -76,11 +76,11 @@
   width: 100%;
   /* background-color: rgb(245, 245, 245); */
   transition: background-color 0.3s;
-  /* z-index: 900; */
+  z-index: 1000;
 }
 
 .createTimeline:hover {
-  background-color: rgb(245, 245, 245);
+  /* background-color: rgb(245, 245, 245); */
   cursor: pointer;
 }
 
@@ -99,5 +99,5 @@
 
   opacity: 0%;
 
-  transition: opacity 0.2s;
+  transition: opacity 0.3s, transform 0.03s;
 }
