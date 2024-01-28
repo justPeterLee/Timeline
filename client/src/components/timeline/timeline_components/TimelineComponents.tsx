@@ -1,5 +1,5 @@
 import styles from "./TimelineComponents.module.css";
-import { current, month_data } from "../../../tools/data";
+import { current, month_data, getDateFromDayOfYear } from "../../../tools/data";
 import { useRef, useState } from "react";
 // identifies todays date (on YEAR timeline)
 export function TodayTrackerYear({ accurate }: { accurate: boolean }) {
@@ -39,6 +39,9 @@ export function CreateTimeline() {
   const childRef = useRef<HTMLDivElement>(null);
 
   const [xPercent, setXPercent] = useState<number>(0);
+  const [dayOfYear, setDayOfYear] = useState<Date | null>(null);
+  const [selectedDOY, setSelectedDOY] = useState<Date | null>(null);
+  const [toggle, setToggle] = useState<boolean>(false);
 
   const handleMouseMove = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
@@ -52,10 +55,19 @@ export function CreateTimeline() {
     const limitPercent = (parentWidth / childWidth) * 100 + -50;
     if (percent <= limitPercent && percent >= -50) {
       setXPercent(() => percent);
+
+      const day = Math.floor((x * 100) / 0.27397260274 + 1);
+      if (day >= 1 && day <= 365) {
+        setDayOfYear(getDateFromDayOfYear(day, 2024));
+      }
     }
   };
 
-  const [toggle, setToggle] = useState<boolean>(false);
+  const handleClickMouse = () => {
+    setSelectedDOY(() => {
+      return dayOfYear;
+    });
+  };
 
   return (
     <div
@@ -68,6 +80,10 @@ export function CreateTimeline() {
       onMouseLeave={() => {
         setToggle(() => false);
       }}
+      onClick={() => {
+        handleClickMouse();
+        // setToggle(() => false);
+      }}
     >
       <div
         ref={childRef}
@@ -77,6 +93,10 @@ export function CreateTimeline() {
           opacity: toggle ? "100%" : "0%",
         }}
       ></div>
+      {JSON.stringify(dayOfYear)}
+      {JSON.stringify(selectedDOY)}
     </div>
   );
 }
+
+// function

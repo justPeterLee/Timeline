@@ -98,10 +98,16 @@ export const month_data: MonthDate = {
 };
 
 function getDayOfYear(date: Date): number {
+  // gets start of date
   const start = new Date(date.getFullYear(), 0, 0);
+
+  // gets the difference from the start of the year and current date
   const diff = date.getTime() - start.getTime();
+
+  // miliseconds in a day
   const oneDay = 24 * 60 * 60 * 1000;
 
+  // mili x diff
   return Math.floor(diff / oneDay);
 }
 
@@ -139,3 +145,9 @@ export const current: Current = {
     month: current_date.getMonth(),
   },
 };
+
+export function getDateFromDayOfYear(dayOfYear: number, year: number) {
+  let date = new Date(year, 0);
+  date.setDate(dayOfYear);
+  return date;
+}
