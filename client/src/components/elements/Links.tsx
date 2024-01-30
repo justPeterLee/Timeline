@@ -42,18 +42,30 @@ export function GlobalLinks({ page }: { page: string }) {
 }
 
 export function ValidInput(props: {
-  inputStyle: { width?: number; height?: number };
+  inputStyle?: { width?: number; height?: number };
+  placeholder?: string;
   label: string;
-  errorLabel: string;
+  errorLabel?: string;
 
   // labelStyle: string;
 }) {
   return (
     <div className="valid-input-container">
-      <input className="valid-input" id={`${props.label}`} />
+      <input
+        className="valid-input"
+        id={`${props.label}`}
+        placeholder={props.placeholder}
+      />
       <label className="valid-label" htmlFor={`${props.label}`}>
         {props.label}
       </label>
     </div>
   );
+}
+
+export function Backdrop({ onClose }: { onClose: () => void }) {
+  // const closeBackdrop = () => {
+  //   onClose
+  // };
+  return <div className={"backdrop"} onClick={onClose} />;
 }

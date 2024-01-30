@@ -9,6 +9,11 @@ export function TimepoleMarker() {
   );
 }
 
-export function Timepole() {
-  return <div className={styles.timepole}></div>;
+export function Timepole({ height }: { height?: string }) {
+  return (
+    <div
+      className={styles.timepole}
+      style={{ height: height ? height : "" }}
+    ></div>
+  );
 }

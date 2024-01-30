@@ -52,6 +52,8 @@ button:hover {
 
   transition: color 0.2s;
   user-select: none;
+
+  /* z-index: 1; */
 }
 
 .Link:hover {
@@ -71,6 +73,7 @@ button:hover {
 
 .valid-input-container {
   position: relative;
+  margin-bottom: 1rem;
 }
 
 .valid-input {
@@ -95,4 +98,12 @@ button:hover {
   font-size: 12px;
   /* font-weight: 500; */
   transition: color 0.2s, transform 0.2s;
+}
+
+.backdrop {
+  position: absolute;
+  height: 100vh;
+  width: 100vw;
+  z-index: 2000;
+  /* background-color: #242424; */
 }

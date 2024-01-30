@@ -70,7 +70,9 @@ export function CreateTimeline() {
     <>
       <div
         className={styles.createTimeline}
-        onMouseMove={handleMouseMove}
+        onMouseMove={(e) => {
+          if (!selectedDOY) handleMouseMove(e);
+        }}
         onMouseEnter={() => {
           setToggle(() => true);
         }}
@@ -86,35 +88,60 @@ export function CreateTimeline() {
           className={styles.createMarker}
           style={{
             transform: `translate(${xPercent}%, -50%)`,
-            opacity: toggle ? "100%" : "0%",
+            opacity: toggle || selectedDOY ? "100%" : "0%",
           }}
         ></div>
-        {JSON.stringify(dayOfYear)}
-        {JSON.stringify(selectedDOY)}
       </div>
-      <CreatePoleModal xPercent={xPercent} />
+      {
+        <CreatePoleModal
+          xPercent={xPercent}
+          date={selectedDOY}
+          onClose={() => {
+            setSelectedDOY(null);
+          }}
+        />
+      }
     </>
   );
 }
 
 import { Timepole } from "../../timepole/Timepole";
 import { ValidInput } from "../../elements/Links";
-function CreatePoleModal({ xPercent }: { xPercent: number }) {
+import { Backdrop } from "../../elements/Links";
+function CreatePoleModal({
+  xPercent,
+  date,
+  onClose,
+}: {
+  xPercent: number;
+  date: Date | null;
+  onClose: () => void;
+}) {
   return (
-    <div
-      className={styles.createTimeline}
-      style={{ position: "absolute", zIndex: "-1" }}
-    >
+    <>
+      {date && <Backdrop onClose={onClose} />}
       <div
         className={styles.poleModalContainer}
-        style={{ transform: `translate(${xPercent}%, -50%)` }}
+        style={{
+          transform: `translate(${xPercent}%, -50%)`,
+          opacity: date ? "100%" : "0%",
+        }}
       >
         {/* <div className={styles.createMarker}></div> */}
         <div className={styles.inputContainer}>
-          <ValidInput label="title" />
+          <ValidInput label="title" errorLabel="invalid title" />
+          <ValidInput label="description" />
+          <div className={styles.buttonContainer}>
+            {/* <button className={styles.button} id={styles.cancelButton}>
+              cancel
+            </button> */}
+            <button className={styles.button} id={styles.createButton}>
+              create
+            </button>
+          </div>
         </div>
-        <Timepole />
+        <Timepole height={"100px"} />
       </div>
-    </div>
+    </>
   );
 }
