@@ -40,3 +40,20 @@ export function GlobalLinks({ page }: { page: string }) {
     </div>
   );
 }
+
+export function ValidInput(props: {
+  inputStyle: { width?: number; height?: number };
+  label: string;
+  errorLabel: string;
+
+  // labelStyle: string;
+}) {
+  return (
+    <div className="valid-input-container">
+      <input className="valid-input" id={`${props.label}`} />
+      <label className="valid-label" htmlFor={`${props.label}`}>
+        {props.label}
+      </label>
+    </div>
+  );
+}

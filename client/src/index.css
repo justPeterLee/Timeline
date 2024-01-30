@@ -68,3 +68,31 @@ button:hover {
     color: #747bff;
   }
 }
+
+.valid-input-container {
+  position: relative;
+}
+
+.valid-input {
+  background-color: transparent;
+  border: none;
+  border-bottom: solid 1px rgb(200, 200, 200);
+}
+
+.valid-input:focus {
+  outline: none;
+}
+
+.valid-input:focus ~ .valid-label {
+  color: blue;
+  /* bottom: -16px; */
+  transform: translateY(16px);
+}
+.valid-label {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  font-size: 12px;
+  /* font-weight: 500; */
+  transition: color 0.2s, transform 0.2s;
+}

@@ -1,6 +1,6 @@
 import styles from "./TimelineComponents.module.css";
 import { current, month_data, getDateFromDayOfYear } from "../../../tools/data";
-import { useRef, useState } from "react";
+import { useState } from "react";
 // identifies todays date (on YEAR timeline)
 export function TodayTrackerYear({ accurate }: { accurate: boolean }) {
   const days = month_data[current.today.month];
@@ -35,9 +35,6 @@ export function TimelineSVG() {
 }
 
 export function CreateTimeline() {
-  const parentRef = useRef<HTMLDivElement>(null);
-  const childRef = useRef<HTMLDivElement>(null);
-
   const [xPercent, setXPercent] = useState<number>(0);
   const [dayOfYear, setDayOfYear] = useState<Date | null>(null);
   const [selectedDOY, setSelectedDOY] = useState<Date | null>(null);
@@ -70,33 +67,54 @@ export function CreateTimeline() {
   };
 
   return (
-    <div
-      ref={parentRef}
-      className={styles.createTimeline}
-      onMouseMove={handleMouseMove}
-      onMouseEnter={() => {
-        setToggle(() => true);
-      }}
-      onMouseLeave={() => {
-        setToggle(() => false);
-      }}
-      onClick={() => {
-        handleClickMouse();
-        // setToggle(() => false);
-      }}
-    >
+    <>
       <div
-        ref={childRef}
-        className={styles.createMarker}
-        style={{
-          transform: `translate(${xPercent}%, -50%)`,
-          opacity: toggle ? "100%" : "0%",
+        className={styles.createTimeline}
+        onMouseMove={handleMouseMove}
+        onMouseEnter={() => {
+          setToggle(() => true);
         }}
-      ></div>
-      {JSON.stringify(dayOfYear)}
-      {JSON.stringify(selectedDOY)}
-    </div>
+        onMouseLeave={() => {
+          setToggle(() => false);
+        }}
+        onClick={() => {
+          handleClickMouse();
+          // setToggle(() => false);
+        }}
+      >
+        <div
+          className={styles.createMarker}
+          style={{
+            transform: `translate(${xPercent}%, -50%)`,
+            opacity: toggle ? "100%" : "0%",
+          }}
+        ></div>
+        {JSON.stringify(dayOfYear)}
+        {JSON.stringify(selectedDOY)}
+      </div>
+      <CreatePoleModal xPercent={xPercent} />
+    </>
   );
 }
 
-// function
+import { Timepole } from "../../timepole/Timepole";
+import { ValidInput } from "../../elements/Links";
+function CreatePoleModal({ xPercent }: { xPercent: number }) {
+  return (
+    <div
+      className={styles.createTimeline}
+      style={{ position: "absolute", zIndex: "-1" }}
+    >
+      <div
+        className={styles.poleModalContainer}
+        style={{ transform: `translate(${xPercent}%, -50%)` }}
+      >
+        {/* <div className={styles.createMarker}></div> */}
+        <div className={styles.inputContainer}>
+          <ValidInput label="title" />
+        </div>
+        <Timepole />
+      </div>
+    </div>
+  );
+}
