@@ -1,6 +1,6 @@
 import styles from "./TimelineComponents.module.css";
 import { current, month_data, getDateFromDayOfYear } from "../../../tools/data";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 // identifies todays date (on YEAR timeline)
 export function TodayTrackerYear({ accurate }: { accurate: boolean }) {
   const days = month_data[current.today.month];
@@ -105,6 +105,11 @@ export function CreateTimeline() {
   );
 }
 
+interface TimepoleType {
+  title: string;
+  description: string;
+  date: Date | null;
+}
 import { Timepole } from "../../timepole/Timepole";
 import { ValidInput } from "../../elements/Links";
 import { Backdrop } from "../../elements/Links";
@@ -117,25 +122,75 @@ function CreatePoleModal({
   date: Date | null;
   onClose: () => void;
 }) {
+  const [value, setValue] = useState<TimepoleType>({
+    title: "",
+    description: "",
+    date: date,
+  });
+
+  const [error, setError] = useState<any>({ custom: false });
+
+  const postTimepole = () => {
+    if (value.title.replace(/\s+/g, "")) {
+      setError({ custom: false });
+    } else {
+      // reject("");
+      setError({ custom: true });
+    }
+  };
+
+  const onClear = () => {
+    setError({ custom: false });
+    setValue({
+      title: "",
+      description: "",
+      date: date,
+    });
+    onClose();
+  };
+  useEffect(() => {
+    setValue({ ...value, date: date });
+  }, [date]);
   return (
     <>
-      {date && <Backdrop onClose={onClose} />}
+      {date && <Backdrop onClose={onClear} />}
       <div
         className={styles.poleModalContainer}
         style={{
           transform: `translate(${xPercent}%, -50%)`,
-          opacity: date ? "100%" : "0%",
+          display: date ? "flex" : "none",
+          // opacity: date ? "100%" : "0%",
         }}
       >
-        {/* <div className={styles.createMarker}></div> */}
         <div className={styles.inputContainer}>
-          <ValidInput label="title" errorLabel="invalid title" />
-          <ValidInput label="description" />
+          <ValidInput
+            label="title"
+            errorLabel="invalid title"
+            error={{ custom: error.custom }}
+            setValue={(newValue) => {
+              if (error.custom) {
+                setError({ ...error, custom: false });
+              }
+              setValue({ ...value, title: newValue });
+            }}
+            value={value.title}
+          />
+          <ValidInput
+            label="description"
+            placeholder="(optional)"
+            setValue={(newValue) => {
+              setValue({ ...value, description: newValue });
+            }}
+            value={value.description}
+          />
           <div className={styles.buttonContainer}>
-            {/* <button className={styles.button} id={styles.cancelButton}>
-              cancel
-            </button> */}
-            <button className={styles.button} id={styles.createButton}>
+            <button
+              className={styles.button}
+              id={styles.createButton}
+              onClick={() => {
+                postTimepole();
+              }}
+            >
               create
             </button>
           </div>

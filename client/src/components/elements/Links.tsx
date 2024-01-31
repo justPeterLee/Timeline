@@ -40,25 +40,44 @@ export function GlobalLinks({ page }: { page: string }) {
     </div>
   );
 }
-
 export function ValidInput(props: {
+  value: string;
+  setValue: (value: string) => void;
   inputStyle?: { width?: number; height?: number };
   placeholder?: string;
   label: string;
   errorLabel?: string;
 
-  // labelStyle: string;
+  error?: { custom: boolean };
 }) {
   return (
     <div className="valid-input-container">
       <input
+        value={props.value}
+        onChange={(e) => {
+          props.setValue(e.target.value);
+        }}
         className="valid-input"
         id={`${props.label}`}
         placeholder={props.placeholder}
       />
-      <label className="valid-label" htmlFor={`${props.label}`}>
+      <label
+        className="valid-label"
+        htmlFor={`${props.label}`}
+        style={{
+          transform: props.value.replace(/\s+/g, "") ? "translateY(16px)" : "",
+        }}
+      >
         {props.label}
       </label>
+
+      {props.errorLabel && props.error?.custom ? (
+        <label className="error-label" htmlFor={`${props.label}`}>
+          {`* ${props.errorLabel}`}
+        </label>
+      ) : (
+        <></>
+      )}
     </div>
   );
 }
