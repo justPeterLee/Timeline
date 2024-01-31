@@ -43,7 +43,7 @@ export function GlobalLinks({ page }: { page: string }) {
 export function ValidInput(props: {
   value: string;
   setValue: (value: string) => void;
-  inputStyle?: { width?: number; height?: number };
+  inputStyle?: { width?: string; height?: string };
   placeholder?: string;
   label: string;
   errorLabel?: string;
@@ -57,6 +57,7 @@ export function ValidInput(props: {
         onChange={(e) => {
           props.setValue(e.target.value);
         }}
+        style={props.inputStyle}
         className="valid-input"
         id={`${props.label}`}
         placeholder={props.placeholder}
