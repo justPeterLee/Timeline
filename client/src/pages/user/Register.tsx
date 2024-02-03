@@ -4,20 +4,28 @@ import { useState } from "react";
 
 import { Link } from "react-router-dom";
 import { ValidInput } from "../../components/elements/Links";
-
-export default function LoginPage() {
-  // console.log(current);
-  const [user, setUser] = useState<{ user: string; pass: string }>({
+export default function Registar() {
+  const [user, setUser] = useState<{
+    user: string;
+    pass: string;
+    email: string;
+  }>({
     user: "",
     pass: "",
+    email: "",
   });
 
-  const [error, setError] = useState<{ user: boolean; pass: boolean }>({
+  const [error, setError] = useState<{
+    user: boolean;
+    pass: boolean;
+    email: boolean;
+  }>({
     user: false,
     pass: false,
+    email: false,
   });
 
-  const loginReq = () => {
+  const registerReq = () => {
     console.log(user);
   };
 
@@ -30,11 +38,10 @@ export default function LoginPage() {
             setValue={(par) => {
               setUser({ ...user, user: par });
             }}
-            label="username / email"
+            label="username"
             inputStyle={{ width: "250px" }}
             errorLabel="invalid user"
             error={{ custom: error.user }}
-            // placeholder="email or"
           />
 
           <ValidInput
@@ -44,6 +51,19 @@ export default function LoginPage() {
             }}
             label="password"
             inputStyle={{ width: "250px" }}
+            error={{ custom: error.pass }}
+            errorLabel="invaild password"
+          />
+
+          <ValidInput
+            value={user.email}
+            setValue={(par) => {
+              setUser({ ...user, pass: par });
+            }}
+            label="email"
+            inputStyle={{ width: "250px" }}
+            error={{ custom: error.email }}
+            errorLabel="invalid email"
           />
         </div>
         <div className={styles.loginButton}>
@@ -52,14 +72,14 @@ export default function LoginPage() {
             type="submit"
             onClick={(e) => {
               e.preventDefault();
-              loginReq();
+              registerReq();
             }}
           >
-            login
+            create
           </button>
 
           <div className={styles.loginLink}>
-            <Link to={"/register"} className="Link">
+            <Link to={"/login"} className="Link">
               create account
             </Link>
             <Link to={"/sign-up"} className="Link">
@@ -68,11 +88,7 @@ export default function LoginPage() {
           </div>
         </div>
       </form>
-      <UserDateLine />
+      {/* <UserDateLine /> */}
     </div>
   );
-}
-
-function UserDateLine() {
-  return <div className={styles.userDateLine}></div>;
 }

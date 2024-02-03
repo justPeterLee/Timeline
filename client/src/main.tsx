@@ -6,7 +6,7 @@ import MonthPage from "./pages/month/MonthPage.tsx";
 import "./index.css";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import SignUpPage from "./pages/user/SignUpPage.tsx";
+import RegistarPage from "./pages/user/Register.tsx";
 import LoginPage from "./pages/user/LoginPage.tsx";
 import UserPage from "./pages/user/UserPage.tsx";
 
@@ -28,8 +28,8 @@ const router = createBrowserRouter([
     element: <UserPage />,
   },
   {
-    path: "/sign-up",
-    element: <SignUpPage />,
+    path: "/register",
+    element: <RegistarPage />,
   },
   {
     path: "/login",
