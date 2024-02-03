@@ -22,7 +22,7 @@ export default function LoginPage() {
 
   return (
     <div className={styles.loginContainer}>
-      <div className={styles.loginInputContainer}>
+      <form className={styles.loginInputContainer}>
         <div className={styles.loginInput}>
           <ValidInput
             value={user.user}
@@ -47,7 +47,9 @@ export default function LoginPage() {
         <div className={styles.loginButton}>
           <button
             className={styles.actionButton}
-            onClick={() => {
+            type="submit"
+            onClick={(e) => {
+              e.preventDefault();
               loginReq();
             }}
           >
@@ -63,7 +65,7 @@ export default function LoginPage() {
             </Link>
           </div>
         </div>
-      </div>
+      </form>
       <UserDateLine />
     </div>
   );
