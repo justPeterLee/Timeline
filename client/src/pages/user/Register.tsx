@@ -1,10 +1,14 @@
 import styles from "./User.module.css";
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+// import use
 // import { current } from "../../tools/data";
 
 import { Link } from "react-router-dom";
 import { ValidInput } from "../../components/elements/Links";
 export default function Registar() {
+  const dispatch = useDispatch();
+
   const [user, setUser] = useState<{
     user: string;
     pass: string;
@@ -25,13 +29,18 @@ export default function Registar() {
     email: false,
   });
 
-  const registerReq = () => {
-    console.log(user);
+  const registerReq = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    dispatch({ type: "REGISTER", payload: user });
+    // console.log(user);
   };
 
   return (
     <div className={styles.loginContainer}>
-      <form className={styles.loginInputContainer}>
+      <form
+        className={styles.loginInputContainer}
+        onSubmit={(e) => registerReq(e)}
+      >
         <div className={styles.loginInput}>
           <ValidInput
             value={user.user}
@@ -67,14 +76,7 @@ export default function Registar() {
           />
         </div>
         <div className={styles.loginButton}>
-          <button
-            className={styles.actionButton}
-            type="submit"
-            onClick={(e) => {
-              e.preventDefault();
-              registerReq();
-            }}
-          >
+          <button className={styles.actionButton} type="submit">
             create
           </button>
 
