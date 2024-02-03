@@ -67,7 +67,7 @@ export default function Registar() {
           <ValidInput
             value={user.email}
             setValue={(par) => {
-              setUser({ ...user, pass: par });
+              setUser({ ...user, email: par });
             }}
             label="email"
             inputStyle={{ width: "250px" }}
@@ -82,7 +82,7 @@ export default function Registar() {
 
           <div className={styles.loginLink}>
             <Link to={"/login"} className="Link">
-              create account
+              login
             </Link>
             <Link to={"/sign-up"} className="Link">
               forgot password
