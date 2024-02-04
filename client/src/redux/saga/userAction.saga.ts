@@ -4,6 +4,7 @@ import axios from "axios";
 function* userActionSaga() {
   yield takeLatest("REGISTER", registerUser);
   yield takeLatest("LOGIN", loginUser);
+  yield takeLatest("FETCH_USER", fetchUser);
 }
 
 type RegisterParams = {
@@ -34,6 +35,17 @@ function* loginUser({ payload }: LoginParams): Generator {
   try {
     console.log("saga", payload);
     yield axios.post("/api/v1/userAction/login", payload, config);
+    yield put({ type: "FETCH_USER" });
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+function* fetchUser(): Generator {
+  try {
+    const response: any = yield axios.get("/api/v1/userAction", config);
+
+    yield put({ type: "SET_USER", payload: response.data });
   } catch (err) {
     console.log(err);
   }

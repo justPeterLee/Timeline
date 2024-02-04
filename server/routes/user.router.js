@@ -3,11 +3,15 @@ const router = express.Router();
 const pool = require("../modules/pool");
 const passport = require("../modules/passport-config");
 const { encryptPassword } = require("../modules/encryption");
+const { rejectUnauthenticated } = require("../modules/authenication");
+
 // register
 // router.get("/register", (req,res)=>{
 
 // })
-
+router.get("/", rejectUnauthenticated, (req, res) => {
+  res.send(req.user);
+});
 router.post("/register", (req, res) => {
   const { user, email, pass } = req.body;
   const password = encryptPassword(pass);
