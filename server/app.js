@@ -1,7 +1,14 @@
 const express = require("express");
+const bodyParser = require("body-parser");
 const app = express();
 
-const bodyParser = require("body-parser");
+const sessionMiddleware = require("./modules/session");
+const passport = require("./modules/passport-config");
+
+app.use(sessionMiddleware);
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -11,6 +18,7 @@ app.use("/api/v1", poleRouter);
 
 const userActionRouter = require("./routes/user.router");
 app.use("/api/v1/userAction", userActionRouter);
+
 const PORT = process.env.PORT || 5001;
 
 app.listen(PORT, () => {
