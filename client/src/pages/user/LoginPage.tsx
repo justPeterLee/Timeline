@@ -4,12 +4,13 @@ import { useState } from "react";
 
 import { Link } from "react-router-dom";
 import { ValidInput } from "../../components/elements/Links";
-
+import { useDispatch, useSelector } from "react-redux";
 export default function LoginPage() {
+  const dispatch = useDispatch();
   // console.log(current);
-  const [user, setUser] = useState<{ user: string; pass: string }>({
-    user: "",
-    pass: "",
+  const [user, setUser] = useState<{ username: string; password: string }>({
+    username: "",
+    password: "",
   });
 
   const [error, setError] = useState<{ user: boolean; pass: boolean }>({
@@ -17,18 +18,28 @@ export default function LoginPage() {
     pass: false,
   });
 
-  const loginReq = () => {
-    console.log(user);
+  const loginReq = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    dispatch({
+      type: "LOGIN",
+      payload: user,
+    });
   };
 
   return (
     <div className={styles.loginContainer}>
-      <form className={styles.loginInputContainer}>
+      <form
+        className={styles.loginInputContainer}
+        onSubmit={(e) => {
+          loginReq(e);
+        }}
+      >
         <div className={styles.loginInput}>
           <ValidInput
-            value={user.user}
+            value={user.username}
             setValue={(par) => {
-              setUser({ ...user, user: par });
+              setUser({ ...user, username: par });
             }}
             label="username / email"
             inputStyle={{ width: "250px" }}
@@ -38,23 +49,16 @@ export default function LoginPage() {
           />
 
           <ValidInput
-            value={user.pass}
+            value={user.password}
             setValue={(par) => {
-              setUser({ ...user, pass: par });
+              setUser({ ...user, password: par });
             }}
             label="password"
             inputStyle={{ width: "250px" }}
           />
         </div>
         <div className={styles.loginButton}>
-          <button
-            className={styles.actionButton}
-            type="submit"
-            onClick={(e) => {
-              e.preventDefault();
-              loginReq();
-            }}
-          >
+          <button className={styles.actionButton} type="submit">
             login
           </button>
 
