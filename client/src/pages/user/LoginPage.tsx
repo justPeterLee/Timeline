@@ -5,6 +5,8 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { ValidInput } from "../../components/elements/Links";
 import { useDispatch, useSelector } from "react-redux";
+
+import { useEffect } from "react";
 export default function LoginPage() {
   const dispatch = useDispatch();
   // console.log(current);
@@ -27,6 +29,9 @@ export default function LoginPage() {
     });
   };
 
+  useEffect(() => {
+    dispatch({ type: "FETCH_USER" });
+  }, [dispatch]);
   return (
     <div className={styles.loginContainer}>
       <form
@@ -71,6 +76,15 @@ export default function LoginPage() {
             </Link>
           </div>
         </div>
+      </form>
+
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          dispatch({ type: "LOGOUT" });
+        }}
+      >
+        <button type="submit">logout</button>
       </form>
       <UserDateLine />
     </div>
