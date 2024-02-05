@@ -1,3 +1,14 @@
+import { UseDispatch, useDispatch } from "react-redux";
 export default function UserPage() {
-  return <div>User Page</div>;
+  const dispatch = useDispatch();
+  return (
+    <form
+      onSubmit={(e) => {
+        // e.preventDefault();
+        dispatch({ type: "LOGOUT" });
+      }}
+    >
+      <button type="submit">logout</button>
+    </form>
+  );
 }

@@ -21,7 +21,7 @@ export default function LoginPage() {
   });
 
   const loginReq = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+    // e.preventDefault();
 
     dispatch({
       type: "LOGIN",
@@ -76,15 +76,6 @@ export default function LoginPage() {
             </Link>
           </div>
         </div>
-      </form>
-
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          dispatch({ type: "LOGOUT" });
-        }}
-      >
-        <button type="submit">logout</button>
       </form>
       <UserDateLine />
     </div>

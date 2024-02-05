@@ -30,7 +30,7 @@ export default function Registar() {
   });
 
   const registerReq = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+    // e.preventDefault();
     dispatch({ type: "REGISTER", payload: user });
     // console.log(user);
   };

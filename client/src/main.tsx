@@ -1,16 +1,42 @@
-import React from "react";
+import React, { useEffect } from "react";
 import ReactDOM from "react-dom/client";
 import YearPage from "./pages/year/YearPage.tsx";
 import MonthPage from "./pages/month/MonthPage.tsx";
 import "./index.css";
 
-import { Provider } from "react-redux";
+import { Provider, useDispatch } from "react-redux";
 import { store } from "./redux/store.ts";
 
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  redirect,
+  RouterProvider,
+} from "react-router-dom";
 import RegistarPage from "./pages/user/Register.tsx";
 import LoginPage from "./pages/user/LoginPage.tsx";
 import UserPage from "./pages/user/UserPage.tsx";
+
+import axios from "axios";
+
+async function rescricted(url: string) {
+  try {
+    await axios.get("/api/v1/userAction");
+    return null;
+  } catch (err) {
+    return redirect(url);
+  }
+}
+
+async function redirectURL(url: string) {
+  try {
+    await axios.get("/api/v1/userAction");
+    return redirect(url);
+  } catch (err) {
+    return null;
+  }
+}
+// user();
+// getUser();
 
 const router = createBrowserRouter([
   {
@@ -28,14 +54,24 @@ const router = createBrowserRouter([
   {
     path: "/user",
     element: <UserPage />,
+    loader: () => {
+      return rescricted("/login");
+    },
   },
   {
     path: "/register",
     element: <RegistarPage />,
+    loader: () => {
+      return redirectURL("/user");
+    },
+    // loader:
   },
   {
     path: "/login",
     element: <LoginPage />,
+    loader: () => {
+      return redirectURL("/user");
+    },
   },
 ]);
 
