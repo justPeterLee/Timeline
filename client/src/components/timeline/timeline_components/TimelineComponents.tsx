@@ -1,6 +1,6 @@
 import styles from "./TimelineComponents.module.css";
 import { current, month_data, getDateFromDayOfYear } from "../../../tools/data";
-import { ChangeEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 // identifies todays date (on YEAR timeline)
 export function TodayTrackerYear({ accurate }: { accurate: boolean }) {
   const days = month_data[current.today.month];
@@ -127,11 +127,7 @@ function CreatePoleModal({
   date: Date | null;
   onClose: () => void;
 }) {
-  const [selectedDate, setSelectedDate] = useState(date);
-
-  const dateSelector = (e: Date) => {
-    setSelectedDate(e);
-  };
+  // ------- time pole values -------
   const [value, setValue] = useState<TimepoleType>({
     title: "",
     description: "",
@@ -148,15 +144,13 @@ function CreatePoleModal({
     }
   };
 
-  const onClear = () => {
-    setError({ custom: false });
-    setValue({
-      title: "",
-      description: "",
-      date: date,
-    });
-    onClose();
+  // ------- date picker --------
+  const [selectedDate, setSelectedDate] = useState(date);
+
+  const dateSelector = (e: Date) => {
+    setSelectedDate(e);
   };
+
   const CustomInput = React.forwardRef<
     HTMLInputElement,
     { value: any; onClick: any }
@@ -166,8 +160,17 @@ function CreatePoleModal({
     </button>
   ));
 
-  const minDate = new Date("2024-01-01");
-  const maxDate = new Date("2024-12-31");
+  // ------- inital setup --------
+  const onClear = () => {
+    setError({ custom: false });
+    setValue({
+      title: "",
+      description: "",
+      date: date,
+    });
+    onClose();
+  };
+
   useEffect(() => {
     setValue({ ...value, date: date });
     if (date) setSelectedDate(date);
@@ -217,8 +220,8 @@ function CreatePoleModal({
             }}
             customInput={<CustomInput value={undefined} onClick={undefined} />}
             dateFormat="EEEE, LLLL d"
-            minDate={minDate}
-            maxDate={maxDate}
+            minDate={new Date("2024-01-01")}
+            maxDate={new Date("2024-12-31")}
           />
 
           <div className={styles.buttonContainer}>
