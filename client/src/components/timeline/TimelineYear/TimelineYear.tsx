@@ -195,22 +195,7 @@ function MonthDivYear({
           backgroundColor:
             selectedMonth === index ? "rgb(242,242,242)" : "initial",
         }}
-      >
-        <div className={styles.weekLineContainer}>
-          {Array.from({ length: monthData.weeks }, (_, index) => {
-            return (
-              <div
-                className={styles.weekLine}
-                key={index}
-                style={{
-                  backgroundColor:
-                    index === 0 ? "transparent" : "rgb(200, 200, 200)",
-                }}
-              ></div>
-            );
-          })}
-        </div>
-      </div>
+      ></div>
     </div>
   );
 }
