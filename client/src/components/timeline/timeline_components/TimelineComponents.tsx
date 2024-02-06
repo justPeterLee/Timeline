@@ -48,7 +48,6 @@ export function CreateTimeline({
 }: {
   monthData?: MonthDataSection;
 }) {
-  console.log(monthData);
   const [xPercent, setXPercent] = useState<number>(0);
   const [dayOfYear, setDayOfYear] = useState<Date | null>(null);
   const [selectedDOY, setSelectedDOY] = useState<Date | null>(null);
@@ -68,9 +67,8 @@ export function CreateTimeline({
     if (percent <= limitPercent && percent >= -50) {
       setXPercent(() => percent);
 
-      const mo = monthData ? 100 / monthData.day : 0.27397260274;
-      const day = Math.floor((x * 100) / mo + 1);
-      // console.log(day);
+      const dayConstant = monthData ? 100 / monthData.day : 0.27397260274;
+      const day = Math.floor((x * 100) / dayConstant + 1);
 
       const limit = monthData ? monthData.day : 365;
 
@@ -80,19 +78,6 @@ export function CreateTimeline({
           : setDayOfYear(getDateFromDayOfYear(day, 2024));
       }
     }
-  };
-
-  const year = (x: number) => {
-    const day = Math.floor((x * 100) / 0.27397260274 + 1);
-    console.log(day);
-    if (day >= 1 && day <= 365) {
-      setDayOfYear(getDateFromDayOfYear(day, 2024));
-    }
-  };
-
-  const month = (x: number) => {
-    const day = Math.floor((x * 100) / monthData!.day + 1);
-    console.log(day);
   };
 
   const handleClickMouse = () => {
@@ -130,11 +115,7 @@ export function CreateTimeline({
         <div>{dayOfYear && format(dayOfYear, "LLLL d")}</div>
 
         {selectedDOY && (
-          <CreatePoleModal
-            xPercent={xPercent}
-            date={selectedDOY}
-            onClose={clear}
-          />
+          <CreatePoleModal xPercent={xPercent} date={selectedDOY} />
         )}
       </div>
     </>
@@ -149,18 +130,15 @@ interface TimepoleType {
 import { Timepole } from "../../timepole/Timepole";
 import { ValidInput } from "../../elements/Links";
 import DatePicker from "react-datepicker";
-
 import "react-datepicker/dist/react-datepicker.css";
 import React from "react";
 
 function CreatePoleModal({
   xPercent,
   date,
-  onClose,
 }: {
   xPercent: number;
   date: Date | null;
-  onClose: () => void;
 }) {
   // ------- time pole values -------
   const [value, setValue] = useState<TimepoleType>({
@@ -171,7 +149,8 @@ function CreatePoleModal({
 
   const [error, setError] = useState<any>({ custom: false });
 
-  const postTimepole = () => {
+  const postTimepole = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     if (value.title.replace(/\s+/g, "")) {
       setError({ custom: false });
     } else {
@@ -196,15 +175,6 @@ function CreatePoleModal({
   ));
 
   // ------- inital setup --------
-  const onClear = () => {
-    setError({ custom: false });
-    setValue({
-      title: "",
-      description: "",
-      date: date,
-    });
-    onClose();
-  };
 
   useEffect(() => {
     setValue({ ...value, date: date });
@@ -218,7 +188,6 @@ function CreatePoleModal({
 
   return (
     <>
-      {/* {date && <Backdrop onClose={onClear} />} */}
       <div
         className={styles.poleModalContainer}
         style={{
@@ -227,7 +196,10 @@ function CreatePoleModal({
           // opacity: date ? "100%" : "0%",
         }}
       >
-        <div className={styles.inputContainer}>
+        <form
+          className={styles.inputContainer}
+          onSubmit={(e) => postTimepole(e)}
+        >
           <ValidInput
             label="title"
             errorLabel="invalid title"
@@ -264,15 +236,12 @@ function CreatePoleModal({
             <button
               className={styles.button}
               id={styles.createButton}
-              onClick={() => {
-                postTimepole();
-                // onClose();
-              }}
+              type="submit"
             >
               create
             </button>
           </div>
-        </div>
+        </form>
         <Timepole height={"100px"} />
       </div>
     </>
