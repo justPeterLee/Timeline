@@ -1,5 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { current } from "../../tools/data";
+import ReactDOM from "react-dom";
 export function GlobalLinks({ page }: { page: string }) {
   const navigate = useNavigate();
   const { year, month, mode } = useParams();
@@ -87,5 +88,17 @@ export function Backdrop({ onClose }: { onClose: () => void }) {
   // const closeBackdrop = () => {
   //   onClose
   // };
-  return <div className={"backdrop"} onClick={onClose} />;
+  const portalRoot = document.getElementById("portal-modal");
+  if (!portalRoot) {
+    return <div>Portal root not found!</div>;
+  }
+  return (
+    <div
+      className={"backdrop"}
+      onClick={() => {
+        onClose();
+        console.log("click");
+      }}
+    />
+  );
 }

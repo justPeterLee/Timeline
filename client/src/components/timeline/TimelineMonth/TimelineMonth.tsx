@@ -1,8 +1,11 @@
 import styles from "./TimelineMonth.module.css";
 import { month_data, current } from "../../../tools/data";
 import { useParams, useNavigate } from "react-router-dom";
-import { TodayTrackerYear } from "../timeline_components/TimelineComponents";
-
+import {
+  TodayTrackerYear,
+  CreateTimeline,
+} from "../timeline_components/TimelineComponents";
+// import {}
 interface MonthsData {
   current: MonthDataSection;
   previous: MonthDataSection;
@@ -18,7 +21,7 @@ type MonthDataSection = {
 };
 
 export default function TimelineMonthPage() {
-  const { month } = useParams();
+  const { month, mode } = useParams();
 
   const selectedMonthData = () => {
     const monthInt = month ? parseInt(month) : -1;
@@ -36,8 +39,10 @@ export default function TimelineMonthPage() {
 
   return (
     <>
+      {mode === "create" && (
+        <CreateTimeline monthData={month_data[parseInt(month!) - 1]} />
+      )}
       <MonthDivMonthContainer monthsData={data} />
-      <MonthMarkersMonthContainer monthsData={data} />
     </>
   );
 }
@@ -96,7 +101,7 @@ function MonthDivMonth({
     <div
       className={styles.monthViewDiv}
       style={{
-        width: state === "current" ? "83.0136986301%" : "8.49315068493%",
+        width: state === "current" ? "90%" : "5%",
       }}
       onClick={() => {
         if (state === "previous" || state === "following") {
@@ -104,7 +109,7 @@ function MonthDivMonth({
         }
       }}
     >
-      {/* {state} {JSON.stringify(data)} */}
+      <MonthMarker state={state} data={data} />
       {state === "current" && <AccurateWeekMarkersContainer data={data} />}
       {state === "current" ? (
         data.index - 1 === current.today.month ? (
@@ -167,12 +172,12 @@ function MonthMarker({
       className={styles.month}
       style={{
         top: (data.index - 1) % 2 <= 0 ? "0%" : "-15px",
-        left:
-          state === "previous"
-            ? "0%"
-            : state === "following"
-            ? "91.5068493151%"
-            : "8.49315068493%",
+        // left:
+        //   state === "previous"
+        //     ? "0%"
+        //     : state === "following"
+        //     ? "91.5068493151%"
+        //     : "10%",
       }}
     >
       <div className={styles.monthLine}></div>

@@ -1,6 +1,7 @@
 import styles from "./TimelineComponents.module.css";
 import { current, month_data, getDateFromDayOfYear } from "../../../tools/data";
 import { useEffect, useState } from "react";
+import { Backdrop } from "../../elements/Links";
 // identifies todays date (on YEAR timeline)
 export function TodayTrackerYear({ accurate }: { accurate: boolean }) {
   const days = month_data[current.today.month];
@@ -34,10 +35,24 @@ export function TimelineSVG() {
   );
 }
 
-export function CreateTimeline() {
+import { format } from "date-fns";
+type MonthDataSection = {
+  month: string;
+  day: number;
+  weeks: number;
+  startDay: number;
+  index: number;
+};
+export function CreateTimeline({
+  monthData,
+}: {
+  monthData?: MonthDataSection;
+}) {
+  console.log(monthData);
   const [xPercent, setXPercent] = useState<number>(0);
   const [dayOfYear, setDayOfYear] = useState<Date | null>(null);
   const [selectedDOY, setSelectedDOY] = useState<Date | null>(null);
+
   const [toggle, setToggle] = useState<boolean>(false);
 
   const handleMouseMove = (
@@ -53,21 +68,44 @@ export function CreateTimeline() {
     if (percent <= limitPercent && percent >= -50) {
       setXPercent(() => percent);
 
-      const day = Math.floor((x * 100) / 0.27397260274 + 1);
-      if (day >= 1 && day <= 365) {
-        setDayOfYear(getDateFromDayOfYear(day, 2024));
+      const mo = monthData ? 100 / monthData.day : 0.27397260274;
+      const day = Math.floor((x * 100) / mo + 1);
+      // console.log(day);
+
+      const limit = monthData ? monthData.day : 365;
+
+      if (day >= 1 && day <= limit) {
+        monthData
+          ? setDayOfYear(new Date(`2024-${monthData.index}-${day}`))
+          : setDayOfYear(getDateFromDayOfYear(day, 2024));
       }
     }
   };
 
+  const year = (x: number) => {
+    const day = Math.floor((x * 100) / 0.27397260274 + 1);
+    console.log(day);
+    if (day >= 1 && day <= 365) {
+      setDayOfYear(getDateFromDayOfYear(day, 2024));
+    }
+  };
+
+  const month = (x: number) => {
+    const day = Math.floor((x * 100) / monthData!.day + 1);
+    console.log(day);
+  };
+
   const handleClickMouse = () => {
-    setSelectedDOY(() => {
-      return dayOfYear;
-    });
+    setSelectedDOY(dayOfYear);
+  };
+
+  const clear = () => {
+    setSelectedDOY(null);
   };
 
   return (
     <>
+      {selectedDOY && <Backdrop onClose={clear} />}
       <div
         className={styles.createTimeline}
         onMouseMove={(e) => {
@@ -79,10 +117,8 @@ export function CreateTimeline() {
         onMouseLeave={() => {
           setToggle(() => false);
         }}
-        onClick={() => {
-          handleClickMouse();
-          // setToggle(() => false);
-        }}
+        onClick={handleClickMouse}
+        style={{ width: monthData ? "90%" : "" }}
       >
         <div
           className={styles.createMarker}
@@ -91,16 +127,16 @@ export function CreateTimeline() {
             opacity: toggle || selectedDOY ? "100%" : "0%",
           }}
         ></div>
+        <div>{dayOfYear && format(dayOfYear, "LLLL d")}</div>
+
+        {selectedDOY && (
+          <CreatePoleModal
+            xPercent={xPercent}
+            date={selectedDOY}
+            onClose={clear}
+          />
+        )}
       </div>
-      {
-        <CreatePoleModal
-          xPercent={xPercent}
-          date={selectedDOY}
-          onClose={() => {
-            setSelectedDOY(null);
-          }}
-        />
-      }
     </>
   );
 }
@@ -112,7 +148,6 @@ interface TimepoleType {
 }
 import { Timepole } from "../../timepole/Timepole";
 import { ValidInput } from "../../elements/Links";
-import { Backdrop } from "../../elements/Links";
 import DatePicker from "react-datepicker";
 
 import "react-datepicker/dist/react-datepicker.css";
@@ -176,17 +211,18 @@ function CreatePoleModal({
     if (date) setSelectedDate(date);
   }, [date]);
 
+  useEffect(() => {}, []);
   if (!date) {
     return <></>;
   }
 
   return (
     <>
-      {date && <Backdrop onClose={onClear} />}
+      {/* {date && <Backdrop onClose={onClear} />} */}
       <div
         className={styles.poleModalContainer}
         style={{
-          transform: `translate(${xPercent}%, -50%)`,
+          transform: `translateX(${xPercent}%)`,
           display: date ? "flex" : "none",
           // opacity: date ? "100%" : "0%",
         }}
@@ -230,6 +266,7 @@ function CreatePoleModal({
               id={styles.createButton}
               onClick={() => {
                 postTimepole();
+                // onClose();
               }}
             >
               create

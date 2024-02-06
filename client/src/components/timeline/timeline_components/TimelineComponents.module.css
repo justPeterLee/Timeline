@@ -75,12 +75,11 @@
   height: 50px;
   width: 100%;
   transition: background-color 0.3s;
-  z-index: 1000;
+  z-index: 2001;
   position: relative;
 }
 
 .createTimeline:hover {
-  /* background-color: rgb(245, 245, 245); */
   cursor: pointer;
 }
 
@@ -104,9 +103,6 @@
 
 .poleModalContainer {
   width: 8px;
-  left: 0;
-  /* bottom: -0px; */
-  /* transform: translateY(-10000%); */
   position: absolute;
 
   display: flex;
@@ -114,9 +110,9 @@
   justify-content: flex-end;
   align-items: center;
   padding-bottom: 10px;
-  /* padding-right: 10px; */
   transition: opacity 0.1s;
-  z-index: 2001;
+  z-index: 3000;
+  bottom: 30px;
 }
 
 .inputContainer {

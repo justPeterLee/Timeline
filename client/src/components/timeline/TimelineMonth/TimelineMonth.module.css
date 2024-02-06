@@ -4,6 +4,8 @@
   flex-direction: column;
   align-items: center;
   position: absolute;
+
+  transform: translateY(15px);
 }
 
 .month:hover {
@@ -74,7 +76,8 @@
   height: 100%;
 
   display: flex;
-  gap: 2px;
+  position: absolute;
+  /* gap: 2px; */
 }
 
 /* week marker */
@@ -96,4 +99,9 @@
 
   /* background-color: red; */
   position: relative;
+}
+
+.createTimelineCard {
+  position: absolute;
+  width: 100%;
 }
