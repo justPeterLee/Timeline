@@ -158,7 +158,6 @@ export function MonthMarkersMonthContainer({
 
 // Month Marker (month)
 function MonthMarker({
-  state,
   data,
 }: // index,
 {

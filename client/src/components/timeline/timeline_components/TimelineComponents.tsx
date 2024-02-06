@@ -133,6 +133,8 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import React from "react";
 
+import { useDispatch } from "react-redux";
+
 function CreatePoleModal({
   xPercent,
   date,
@@ -140,6 +142,9 @@ function CreatePoleModal({
   xPercent: number;
   date: Date | null;
 }) {
+  // dependencies
+  const dispatch = useDispatch();
+
   // ------- time pole values -------
   const [value, setValue] = useState<TimepoleType>({
     title: "",
@@ -166,6 +171,23 @@ function CreatePoleModal({
 
     if (!timepoleValidator()) return;
     console.log(value);
+
+    const date_data = {
+      date: date!.getDate(),
+      month: date!.getMonth(),
+      year: date!.getFullYear(),
+      day: date!.getDay(),
+      full_date: date!.toISOString(),
+    };
+
+    dispatch({
+      type: "CREATE_TIMEPOLE",
+      payload: {
+        title: value.title,
+        description: value.description,
+        date_data,
+      },
+    });
   };
   // ------- date picker --------
   const [selectedDate, setSelectedDate] = useState(date);
