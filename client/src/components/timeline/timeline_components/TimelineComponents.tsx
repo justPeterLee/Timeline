@@ -149,19 +149,29 @@ function CreatePoleModal({
 
   const [error, setError] = useState<any>({ custom: false });
 
-  const postTimepole = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (value.title.replace(/\s+/g, "")) {
+  const timepoleValidator = () => {
+    if (value.title.replace(/\s+/g, "") && value.date) {
+      // NO ERROR
       setError({ custom: false });
-    } else {
-      setError({ custom: true });
+      return true;
     }
+
+    // ERROR
+    setError({ custom: true });
+    return false;
   };
 
+  const postTimepole = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (!timepoleValidator()) return;
+    console.log(value);
+  };
   // ------- date picker --------
   const [selectedDate, setSelectedDate] = useState(date);
 
   const dateSelector = (e: Date) => {
+    setValue({ ...value, date: e });
     setSelectedDate(e);
   };
 
