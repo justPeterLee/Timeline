@@ -2,7 +2,7 @@ import { put, takeLatest } from "redux-saga/effects";
 import axios from "axios";
 
 function* timePoleSaga() {
-  yield takeLatest("CREATE_TIMEPOLE", createTimePole);
+  yield takeLatest("CREATE_TIMEPOLE_SERVER", createTimePoleSERVER);
 }
 
 type PostTimePole = {
@@ -20,11 +20,13 @@ type PostTimePole = {
   type: string;
 };
 
-function* createTimePole({ payload }: PostTimePole) {
+function* createTimePoleSERVER({ payload }: PostTimePole) {
   try {
     console.log(payload);
+    axios.post("/api/v1/timepole/create", payload);
   } catch (err) {
     console.log(err);
   }
 }
+
 export default timePoleSaga;

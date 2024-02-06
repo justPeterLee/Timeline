@@ -133,7 +133,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import React from "react";
 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 function CreatePoleModal({
   xPercent,
@@ -144,7 +144,7 @@ function CreatePoleModal({
 }) {
   // dependencies
   const dispatch = useDispatch();
-
+  const user = useSelector((store: any) => store.userAccount);
   // ------- time pole values -------
   const [value, setValue] = useState<TimepoleType>({
     title: "",
@@ -170,7 +170,6 @@ function CreatePoleModal({
     e.preventDefault();
 
     if (!timepoleValidator()) return;
-    console.log(value);
 
     const date_data = {
       date: date!.getDate(),
@@ -180,14 +179,18 @@ function CreatePoleModal({
       full_date: date!.toISOString(),
     };
 
-    dispatch({
-      type: "CREATE_TIMEPOLE",
-      payload: {
-        title: value.title,
-        description: value.description,
-        date_data,
-      },
-    });
+    if (user) {
+      dispatch({
+        type: "CREATE_TIMEPOLE_SERVER",
+        payload: {
+          title: value.title,
+          description: value.description,
+          date_data,
+        },
+      });
+    } else {
+      console.log("create on local storage");
+    }
   };
   // ------- date picker --------
   const [selectedDate, setSelectedDate] = useState(date);
@@ -213,7 +216,10 @@ function CreatePoleModal({
     if (date) setSelectedDate(date);
   }, [date]);
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    // console.log("updated user");
+    dispatch({ type: "FETCH_USER" });
+  }, []);
   if (!date) {
     return <></>;
   }
