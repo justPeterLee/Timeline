@@ -157,3 +157,20 @@
 #cancelButton:hover {
   background-color: rgb(245, 245, 245);
 }
+
+/* Markers */
+.weekMarkersContainer {
+  width: 100%;
+  display: flex;
+  position: absolute;
+}
+
+.weekLine {
+  position: absolute;
+  height: 10px;
+  width: 1px;
+  background-color: rgb(200, 200, 200);
+  transform: translateY(-5px);
+  /* top: -500%; */
+  /* transform: translateY(100%); */
+}

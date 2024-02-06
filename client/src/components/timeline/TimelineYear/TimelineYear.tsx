@@ -4,7 +4,9 @@ import { month_data, current } from "../../../tools/data";
 import {
   TodayTrackerYear,
   CreateTimeline,
+  WeekMarkers,
 } from "../timeline_components/TimelineComponents";
+
 import { useEffect, useState } from "react";
 export default function TimelineYearPage() {
   const { mode } = useParams();
@@ -19,6 +21,7 @@ export default function TimelineYearPage() {
   }, [location.pathname]);
   return (
     <>
+      <WeekMarkers />
       <TodayTrackerYear accurate={false} />
       {mode === "view" || !mode ? (
         <MonthDivYearContainer
@@ -27,7 +30,7 @@ export default function TimelineYearPage() {
         />
       ) : (
         <CreateTimeline />
-      )}{" "}
+      )}
       <MonthMarkersYearContainer
         selectMonth={setSelectedMonth}
         selectedMonth={monthSelected}

@@ -154,7 +154,7 @@ function CreatePoleModal({
   const CustomInput = React.forwardRef<
     HTMLInputElement,
     { value: any; onClick: any }
-  >(({ value, onClick }) => (
+  >(({ value, onClick }, ref) => (
     <button onClick={onClick} value={value}>
       {value}
     </button>
@@ -239,5 +239,29 @@ function CreatePoleModal({
         <Timepole height={"100px"} />
       </div>
     </>
+  );
+}
+
+export function WeekMarkers() {
+  return (
+    <div className={styles.weekMarkersContainer}>
+      {Array.from({ length: 52 }, (_, index) => {
+        return <MiniMarkers key={index} index={index} />;
+      })}
+    </div>
+  );
+}
+
+function MiniMarkers({ index }: { index: number }) {
+  return (
+    <div
+      className={styles.weekLine}
+      // key={index}
+      id={`${index}`}
+      style={{
+        display: index === 0 ? "none" : "initial",
+        left: `${index * 1.92307692308}%`,
+      }}
+    ></div>
   );
 }
