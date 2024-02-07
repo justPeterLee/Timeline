@@ -8,7 +8,9 @@ import {
 } from "../timeline_components/TimelineComponents";
 
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 export default function TimelineYearPage() {
+  const dispatch = useDispatch();
   const { mode } = useParams();
   const [monthSelected, setMonthSelected] = useState<number>(-1);
 
@@ -17,6 +19,7 @@ export default function TimelineYearPage() {
   };
 
   useEffect(() => {
+    dispatch({ type: "GET_TIMEPOLE_SERVER" });
     setSelectedMonth(-1);
   }, [location.pathname]);
   return (

@@ -97,6 +97,8 @@ export const month_data: MonthDate = {
   },
 };
 
+// turns DATE to Number (2024-12-31 => 365)
+
 function getDayOfYear(date: Date): number {
   // gets start of date
   const start = new Date(date.getFullYear(), 0, 0);
@@ -146,6 +148,7 @@ export const current: Current = {
   },
 };
 
+// NUMBER to DATE (365 -> 2024-12-31)
 export function getDateFromDayOfYear(dayOfYear: number, year: number) {
   let date = new Date(year, 0);
   date.setDate(dayOfYear);
