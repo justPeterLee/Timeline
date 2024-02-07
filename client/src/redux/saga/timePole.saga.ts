@@ -3,6 +3,8 @@ import axios from "axios";
 
 function* timePoleSaga() {
   yield takeLatest("CREATE_TIMEPOLE_SERVER", createTimePoleSERVER);
+
+  yield takeLatest("GET_TIMEPOLE_SERVER", getTimePoleSERVER);
 }
 
 type PostTimePole = {
@@ -20,10 +22,20 @@ type PostTimePole = {
   type: string;
 };
 
-function* createTimePoleSERVER({ payload }: PostTimePole) {
+function* getTimePoleSERVER(): Generator {
+  try {
+    const data: any = yield axios.get("/api/v1/timepole");
+    yield put({ type: "SET_TIME_POLE", payload: data.data });
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+function* createTimePoleSERVER({ payload }: PostTimePole): Generator {
   try {
     console.log(payload);
-    axios.post("/api/v1/timepole/create", payload);
+    yield axios.post("/api/v1/timepole/create", payload);
+    yield put({ type: "GET_TIMEPOLE_SERVER" });
   } catch (err) {
     console.log(err);
   }
