@@ -14,7 +14,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 const poleRouter = require("./routes/pole.router");
-app.use("/api/v1", poleRouter);
+app.use("/api/v1/timepole", poleRouter);
 
 const userActionRouter = require("./routes/user.router");
 app.use("/api/v1/userAction", userActionRouter);
