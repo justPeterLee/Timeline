@@ -204,7 +204,7 @@ function CreatePoleModal({
     HTMLInputElement,
     { value: any; onClick: any }
   >(({ value, onClick }, ref) => (
-    <button onClick={onClick} value={value}>
+    <button onClick={onClick} value={value} type="button">
       {value}
     </button>
   ));
