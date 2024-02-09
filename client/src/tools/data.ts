@@ -162,3 +162,17 @@ export function inputDateFormat(date: Date) {
   const day = String(currentDate.getDate()).padStart(2, "0");
   return `${year}-${month}-${day}`;
 }
+
+export function getWeek(date: Date) {
+  const year = date.getFullYear();
+  const firstDayOfYear = new Date(year, 0, 1);
+  const daysOffset =
+    (date.getTime() - firstDayOfYear.getTime()) / (1000 * 60 * 60 * 24);
+
+  const firstDayDay = firstDayOfYear.getDay();
+  const sub = firstDayDay === 0 ? 1 : firstDayDay === 1 ? 0 : 8 - firstDayDay;
+
+  const weekNumber = Math.floor((daysOffset - sub) / 7);
+
+  return weekNumber + 1;
+}

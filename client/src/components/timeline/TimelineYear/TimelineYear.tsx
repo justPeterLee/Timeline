@@ -7,10 +7,10 @@ import {
   WeekMarkers,
 } from "../timeline_components/TimelineComponents";
 
+import { TimePoleDisplay } from "../../timepole/Timepole";
+
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
 export default function TimelineYearPage() {
-  const dispatch = useDispatch();
   const { mode } = useParams();
   const [monthSelected, setMonthSelected] = useState<number>(-1);
 
@@ -19,7 +19,6 @@ export default function TimelineYearPage() {
   };
 
   useEffect(() => {
-    dispatch({ type: "GET_TIMEPOLE_SERVER" });
     setSelectedMonth(-1);
   }, [location.pathname]);
   return (
@@ -38,6 +37,7 @@ export default function TimelineYearPage() {
         selectMonth={setSelectedMonth}
         selectedMonth={monthSelected}
       />
+      <TimePoleDisplay />
     </>
   );
 }
