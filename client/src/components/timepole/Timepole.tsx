@@ -1,12 +1,12 @@
 import styles from "./Timepole.module.css";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { getDayOfYear } from "date-fns";
 import {
   useAppDispatch,
   useAppSelector,
 } from "../../redux/redux-hooks/redux.hook";
 
-import { getWeek } from "../../tools/data";
+import { getWeek, getPoleData, getPoleDataList } from "../../tools/data";
 interface Pole {
   id: string;
   title: string;
@@ -20,23 +20,40 @@ interface Pole {
   full_date: string;
 }
 
+// import {}
 export function TimePoleDisplay() {
   const dispatch = useAppDispatch();
 
   const poles = useAppSelector((store) => store.timepole.getTimePole);
 
+  const [poleData, setPoleData] = useState(getPoleDataList(poles, "year"));
+
   // console.log(poles);
   useEffect(() => {
     dispatch({ type: "GET_TIMEPOLE_SERVER" });
+    // dispatch({ type: "SET_POLES_DATA", payload: "year" });
+    console.log(getPoleDataList(poles, "year"));
+    setPoleData(getPoleDataList(poles, "year"));
+    // console.log(poleData);
   }, [dispatch]);
   return (
     <div className={styles.timePoleDisplayContainer}>
+      {JSON.stringify(poleData)}
+      {Object.keys(poleData).map((_, index) => {
+        console.log(index);
+        return <></>;
+      })}
+
       {poles.map((pole: Pole) => {
-        const date = new Date(pole.full_date); // full date
-        // console.log();
-        // getWeek(new Date("2025-1-3"));
-        console.log(getWeek(new Date("2024-12-30")));
-        const dayOfYear = getDayOfYear(date); // NUMBER (0/365)
+        const xPercent = getPoleData(pole, "year");
+        // console.log(xPercent);
+        return (
+          <TimepoleMarker
+            key={pole.id}
+            xPercent={xPercent.xPercent}
+            timePoleData={{ title: xPercent.weekNumber }}
+          />
+        );
       })}
       <Timepole />
     </div>
@@ -46,11 +63,12 @@ export function TimePoleDisplay() {
 export function TimepoleMarker({
   xPercent,
   timepoleConfig,
-  timepoleData,
-}: {
+  timePoleData,
+}: // timepoleData,
+{
   xPercent: number;
   timepoleConfig?: { height?: string };
-  timepoleData: { title: string };
+  timePoleData: { title: number };
 }) {
   return (
     <div
@@ -58,7 +76,7 @@ export function TimepoleMarker({
       style={{ left: `${xPercent}%` }}
     >
       <Timepole height={timepoleConfig?.height} />
-      <div className={styles.textContainer}>{timepoleData.title}</div>
+      <div className={styles.textContainer}>{timePoleData.title}</div>
     </div>
   );
 }

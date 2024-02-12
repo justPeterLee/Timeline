@@ -176,3 +176,52 @@ export function getWeek(date: Date) {
 
   return weekNumber + 1;
 }
+
+interface Pole {
+  xPercent?: number;
+  id: string;
+  title: string;
+  description: string;
+  completed: boolean;
+  user_id: number;
+  date: number;
+  month: number;
+  year: number;
+  day: number;
+  full_date: string;
+}
+
+export function getPoleData(pole: Pole, state: string) {
+  // x-percent
+  const date = new Date(pole.full_date);
+  const dateNumber = getDayOfYear(date);
+  const limit =
+    state && state === "month" ? 100 / month_data[pole.month].day : 100 / 365;
+
+  // weekNumber
+  const xPercent = limit * dateNumber;
+
+  const weekNumber = getWeek(date);
+  return { xPercent, weekNumber };
+}
+
+export function getPoleDataList(poles: Pole[], state: string) {
+  const poleWeekList: any = {};
+
+  for (let i = 0; i < poles.length; i++) {
+    const poleData = getPoleData(poles[i], state);
+
+    const poleWithX = { pole: poles[i], xPercent: poleData.xPercent };
+    const z = poleWeekList[poleData.weekNumber];
+    if (z) {
+      poleWeekList[poleData.weekNumber] = [
+        ...poleWeekList[poleData.weekNumber],
+        poleWithX,
+      ];
+    } else {
+      poleWeekList[poleData.weekNumber] = [poleWithX];
+    }
+  }
+
+  return poleWeekList;
+}

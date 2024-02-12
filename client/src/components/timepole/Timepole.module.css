@@ -10,3 +10,8 @@
   width: 1px;
   background-color: rgb(200, 200, 200);
 }
+
+.timePoleMarkerContainer {
+  position: absolute;
+  /* transform: //translateX(-50%); */
+}

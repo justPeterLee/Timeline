@@ -7,9 +7,18 @@ interface action {
 function getTimePole(state = [], action: action) {
   switch (action.type) {
     case "SET_TIME_POLE":
-      return action.payload;
+      return [...action.payload];
     default:
       return state;
   }
 }
-export default combineReducers({ getTimePole });
+
+function setTimePoleData(state = {}, action: action) {
+  switch (action.type) {
+    case "SET_POLES_DATA":
+      return (state = { ...state, value: action.payload });
+    default:
+      return state;
+  }
+}
+export default combineReducers({ getTimePole, setTimePoleData });
