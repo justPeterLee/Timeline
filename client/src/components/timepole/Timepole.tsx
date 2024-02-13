@@ -55,19 +55,6 @@ export function TimePoleDisplay() {
           </Fragment>
         );
       })}
-
-      {/* {poles.map((pole: Pole) => {
-        const xPercent = getPoleData(pole, "year");
-        // console.log(xPercent);
-        return (
-          <TimepoleMarker
-            key={pole.id}
-            xPercent={xPercent.xPercent}
-            timePoleData={{ title: xPercent.weekNumber }}
-          />
-        );
-      })} */}
-      {/* <Timepole /> */}
     </div>
   );
 }
