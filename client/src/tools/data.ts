@@ -173,8 +173,9 @@ export function getWeek(date: Date) {
   const sub = firstDayDay === 0 ? 1 : firstDayDay === 1 ? 0 : 8 - firstDayDay;
 
   const weekNumber = Math.floor((daysOffset - sub) / 7);
-
-  return weekNumber + 1;
+  const midPoint = weekNumber * 7 + 3.5 + sub;
+  // console.log(midPoint);
+  return { weekNumber: weekNumber + 1, midPoint };
 }
 
 interface Pole {
@@ -202,7 +203,7 @@ export function getPoleData(pole: Pole, state: string) {
   const xPercent = limit * dateNumber;
 
   const weekNumber = getWeek(date);
-  return { xPercent, weekNumber };
+  return { xPercent, weekInfo: weekNumber };
 }
 
 export function getPoleDataList(poles: Pole[], state: string) {
@@ -212,14 +213,17 @@ export function getPoleDataList(poles: Pole[], state: string) {
     const poleData = getPoleData(poles[i], state);
 
     const poleWithX = { pole: poles[i], xPercent: poleData.xPercent };
-    const z = poleWeekList[poleData.weekNumber];
+    const z = poleWeekList[poleData.weekInfo.weekNumber];
     if (z) {
-      poleWeekList[poleData.weekNumber] = [
-        ...poleWeekList[poleData.weekNumber],
+      poleWeekList[poleData.weekInfo.weekNumber].polesList = [
+        ...poleWeekList[poleData.weekInfo.weekNumber].polesList,
         poleWithX,
       ];
     } else {
-      poleWeekList[poleData.weekNumber] = [poleWithX];
+      poleWeekList[poleData.weekInfo.weekNumber] = {
+        polesList: [poleWithX],
+        midPoint: poleData.weekInfo.midPoint * (100 / 365),
+      };
     }
   }
 

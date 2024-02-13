@@ -24,9 +24,9 @@ type PostTimePole = {
 
 function* getTimePoleSERVER(): Generator {
   try {
+    // console.log(window.location);
     const data: any = yield axios.get("/api/v1/timepole");
     yield put({ type: "SET_TIME_POLE", payload: data.data });
-    yield put({ type: "SET_POLES_DATA", payload: data.data });
   } catch (err) {
     console.log(err);
   }

@@ -1,12 +1,11 @@
 import styles from "./Timepole.module.css";
-import { useEffect, useState } from "react";
-import { getDayOfYear } from "date-fns";
+import { useEffect, Fragment } from "react";
 import {
   useAppDispatch,
   useAppSelector,
 } from "../../redux/redux-hooks/redux.hook";
 
-import { getWeek, getPoleData, getPoleDataList } from "../../tools/data";
+import { getPoleDataList } from "../../tools/data";
 interface Pole {
   id: string;
   title: string;
@@ -20,31 +19,44 @@ interface Pole {
   full_date: string;
 }
 
-// import {}
 export function TimePoleDisplay() {
   const dispatch = useAppDispatch();
 
   const poles = useAppSelector((store) => store.timepole.getTimePole);
 
-  const [poleData, setPoleData] = useState(getPoleDataList(poles, "year"));
+  const poleDatas = getPoleDataList(poles, "year");
 
-  // console.log(poles);
   useEffect(() => {
     dispatch({ type: "GET_TIMEPOLE_SERVER" });
-    // dispatch({ type: "SET_POLES_DATA", payload: "year" });
-    console.log(getPoleDataList(poles, "year"));
-    setPoleData(getPoleDataList(poles, "year"));
-    // console.log(poleData);
   }, [dispatch]);
   return (
     <div className={styles.timePoleDisplayContainer}>
-      {JSON.stringify(poleData)}
-      {Object.keys(poleData).map((_, index) => {
-        console.log(index);
-        return <></>;
+      {Object.keys(poleDatas).map((_key, index) => {
+        return (
+          <Fragment key={index}>
+            {poleDatas[_key].polesList.map(
+              (_pole: { pole: Pole; xPercent: number }) => {
+                const isGroup =
+                  poleDatas[_key].polesList.length >= 3 ? true : false;
+
+                if (isGroup) console.log(_pole);
+
+                return (
+                  <TimepoleMarker
+                    key={_pole.pole.id}
+                    xPercent={
+                      isGroup ? poleDatas[_key].midPoint : _pole.xPercent
+                    }
+                    timePoleData={_pole.pole}
+                  />
+                );
+              }
+            )}
+          </Fragment>
+        );
       })}
 
-      {poles.map((pole: Pole) => {
+      {/* {poles.map((pole: Pole) => {
         const xPercent = getPoleData(pole, "year");
         // console.log(xPercent);
         return (
@@ -54,8 +66,8 @@ export function TimePoleDisplay() {
             timePoleData={{ title: xPercent.weekNumber }}
           />
         );
-      })}
-      <Timepole />
+      })} */}
+      {/* <Timepole /> */}
     </div>
   );
 }
@@ -68,7 +80,7 @@ export function TimepoleMarker({
 {
   xPercent: number;
   timepoleConfig?: { height?: string };
-  timePoleData: { title: number };
+  timePoleData: Pole;
 }) {
   return (
     <div
@@ -76,7 +88,7 @@ export function TimepoleMarker({
       style={{ left: `${xPercent}%` }}
     >
       <Timepole height={timepoleConfig?.height} />
-      <div className={styles.textContainer}>{timePoleData.title}</div>
+      <div className={styles.textContainer}>{timePoleData.id}</div>
     </div>
   );
 }

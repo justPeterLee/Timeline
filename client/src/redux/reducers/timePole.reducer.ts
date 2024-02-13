@@ -13,12 +13,4 @@ function getTimePole(state = [], action: action) {
   }
 }
 
-function setTimePoleData(state = {}, action: action) {
-  switch (action.type) {
-    case "SET_POLES_DATA":
-      return (state = { ...state, value: action.payload });
-    default:
-      return state;
-  }
-}
-export default combineReducers({ getTimePole, setTimePoleData });
+export default combineReducers({ getTimePole });
