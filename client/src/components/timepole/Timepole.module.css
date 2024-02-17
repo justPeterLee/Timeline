@@ -5,13 +5,60 @@
   position: absolute;
 }
 
-.timepole {
+.timepole,
+.animatedTimePole {
   height: 100px;
   width: 1px;
-  background-color: rgb(200, 200, 200);
+  border-left: 1px solid rgb(200, 200, 200);
+  /* position: absolute; */
+  /* background-color: rgb(200, 200, 200); */
+  /* margin: 2px; */
 }
-
+.animatedTimePole {
+  height: 0px;
+  position: absolute;
+}
+.timepoleLine {
+  transition: y2 0.5s ease;
+}
 .timePoleMarkerContainer {
   position: absolute;
+
+  display: flex;
+  flex-direction: column;
+  /* justify-content: center; */
+  align-items: center;
+
+  /* background-color: aqua; */
+
+  width: 1px;
   /* transform: //translateX(-50%); */
+}
+
+.textContainer {
+  /* background-color: aqua; */
+  font-size: 14px;
+  color: rgb(125, 125, 125);
+  margin: 5px;
+  padding: 5px;
+  border-radius: 2px;
+
+  text-align: center;
+  user-select: none;
+
+  transition: background-color 0.1s linear;
+}
+
+.textContainer:hover,
+.timepole:hover + .textContainer {
+  background-color: rgb(235, 235, 235);
+  cursor: pointer;
+  color: black;
+}
+
+.timepole:hover {
+  cursor: pointer;
+}
+.textContainer:hover + .timepole {
+  background-color: red;
 }
