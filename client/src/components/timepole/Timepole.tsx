@@ -19,16 +19,17 @@ interface Pole {
   full_date: string;
 }
 
-export function TimePoleDisplay() {
+export function TimePoleDisplay({ url }: { url: string | undefined }) {
   const dispatch = useAppDispatch();
-
   const poles = useAppSelector((store) => store.timepole.getTimePole);
 
-  const poleDatas = getPoleDataList(poles, "year");
+  const urlView = url ? url : "year";
+  const poleDatas = getPoleDataList(poles, urlView);
 
   useEffect(() => {
     dispatch({ type: "GET_TIMEPOLE_SERVER" });
   }, [dispatch]);
+
   return (
     <div className={styles.timePoleDisplayContainer}>
       {Object.keys(poleDatas).map((_key, index) => {
@@ -64,42 +65,27 @@ import { useDrag } from "@use-gesture/react";
 import { useRef } from "react";
 export function TimepoleMarker({
   xPercent,
-  timepoleConfig,
+  // timepoleConfig,
   timePoleData,
-}: // timepoleData,
-{
+}: {
   xPercent: number;
-  timepoleConfig?: { height?: string };
+  // timepoleConfig?: { height?: string };
   timePoleData: Pole;
 }) {
   const yPos = useRef(0);
-  // const poleH
-  const [isMoving, setIsMoving] = useState(false);
-  const [poleHeight, setPoleHeight] = useState(0);
   const [{ y, height }, api] = useSpring(() => ({
     y: 10,
     height: 0,
   }));
-  const bind = useDrag(({ down, movement, movement: [, my], delta }) => {
+
+  const bind = useDrag(({ down, movement: [, my] }) => {
     if (!down) {
-      setIsMoving(false);
-      if (yPos.current === 0) {
-        // console.log("run");
-        yPos.current = my;
-        // setPoleHeight(my)
-      } else {
-        yPos.current = my + yPos.current;
-        // setPoleHeight(poleHeight + my)
-      }
+      yPos.current = my + yPos.current;
     }
 
     if (down) {
-      setPoleHeight(my);
-      setIsMoving(true);
-      // console.log(delta, movement);
       api.start({ y: my + yPos.current, height: my + yPos.current });
     }
-    console.log(height);
   });
 
   return (
@@ -127,29 +113,14 @@ export function TimepoleMarker({
       >
         {timePoleData.id}
       </animated.div>
-
-      {/* {poleHeight < 0 && (
-        <animated.div
-          className={styles.animatedTimePole}
-          style={{ height }}
-        ></animated.div>
-      )} */}
     </div>
   );
 }
 
-import { useState } from "react";
 export function Timepole() {
   return <div className={styles.timepole}></div>;
 }
 
-export function AnimatedTimePole({
-  isMoving,
-  points,
-}: {
-  isMoving: boolean;
-  points: { point1: any; point2: any };
-}) {
-  console.log(points.point1);
+export function AnimatedTimePole() {
   return <animated.div className={styles.animatedTimePole}></animated.div>;
 }

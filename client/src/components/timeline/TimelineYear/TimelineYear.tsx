@@ -37,7 +37,7 @@ export default function TimelineYearPage() {
         selectMonth={setSelectedMonth}
         selectedMonth={monthSelected}
       />
-      <TimePoleDisplay />
+      <TimePoleDisplay url={"year"} />
     </>
   );
 }
