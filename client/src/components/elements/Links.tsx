@@ -104,13 +104,33 @@ export function Backdrop({ onClose }: { onClose: () => void }) {
   );
 }
 
-export function Modal(props: { children: ReactNode }) {
+import { useRef } from "react";
+export function Modal(props: { children: ReactNode; onClose: () => void }) {
+  const backdropClick = useRef(true);
+
   const portalRoot = document.getElementById("portal-modal");
   if (!portalRoot) return <>Portal Root Not Found!</>;
 
   return ReactDOM.createPortal(
-    <div className="modal-background">
-      <div className="modal">{props.children}</div>
+    <div
+      className="modal-background"
+      onClick={() => {
+        if (backdropClick.current) {
+          props.onClose();
+        }
+      }}
+    >
+      <div
+        className="modal"
+        onMouseEnter={() => {
+          backdropClick.current = false;
+        }}
+        onMouseLeave={() => {
+          backdropClick.current = true;
+        }}
+      >
+        {props.children}
+      </div>
     </div>,
     portalRoot
   );

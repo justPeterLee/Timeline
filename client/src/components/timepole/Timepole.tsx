@@ -30,6 +30,10 @@ export function TimePoleDisplay({ url }: { url: string | undefined }) {
 
   const [selectedPole, setSelectedPole] = useState<null | number>(null);
 
+  const onClose = () => {
+    setSelectedPole(null);
+  };
+
   useEffect(() => {
     dispatch({ type: "GET_TIMEPOLE_SERVER" });
     yPosRef.current = 200;
@@ -68,8 +72,10 @@ export function TimePoleDisplay({ url }: { url: string | undefined }) {
         })}
       </div>
       {selectedPole && (
-        <Modal>
-          <div>modal dialog</div>
+        <Modal onClose={onClose}>
+          <div>
+            modal dialog <button onClick={onClose}>close</button>
+          </div>
         </Modal>
       )}
     </>
