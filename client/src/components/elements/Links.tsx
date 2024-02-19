@@ -104,13 +104,13 @@ export function Backdrop({ onClose }: { onClose: () => void }) {
   );
 }
 
-export function Modal(children: ReactNode) {
+export function Modal(props: { children: ReactNode }) {
   const portalRoot = document.getElementById("portal-modal");
   if (!portalRoot) return <>Portal Root Not Found!</>;
 
   return ReactDOM.createPortal(
     <div className="modal-background">
-      <div>{children}</div>
+      <div className="modal">{props.children}</div>
     </div>,
     portalRoot
   );

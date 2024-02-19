@@ -35,38 +35,44 @@ export function TimePoleDisplay({ url }: { url: string | undefined }) {
   // useEffect(()=>{},[])
 
   return (
-    <div className={styles.timePoleDisplayContainer}>
-      {Object.keys(poleDatas).map((_key, index) => {
-        return (
-          <Fragment key={index}>
-            {poleDatas[_key].polesList.map(
-              (_pole: { pole: Pole; xPercent: number }) => {
-                const isGroup =
-                  poleDatas[_key].polesList.length >= 3 ? true : false;
+    <>
+      <div className={styles.timePoleDisplayContainer}>
+        {Object.keys(poleDatas).map((_key, index) => {
+          return (
+            <Fragment key={index}>
+              {poleDatas[_key].polesList.map(
+                (_pole: { pole: Pole; xPercent: number }) => {
+                  const isGroup =
+                    poleDatas[_key].polesList.length >= 3 ? true : false;
 
-                // if (isGroup) console.log(_pole);
+                  // if (isGroup) console.log(_pole);
 
-                return (
-                  <TimepoleMarker
-                    key={_pole.pole.id}
-                    xPercent={
-                      isGroup ? poleDatas[_key].midPoint : _pole.xPercent
-                    }
-                    timePoleData={_pole.pole}
-                    yPosRef={yPosRef.current}
-                  />
-                );
-              }
-            )}
-          </Fragment>
-        );
-      })}
-    </div>
+                  return (
+                    <TimepoleMarker
+                      key={_pole.pole.id}
+                      xPercent={
+                        isGroup ? poleDatas[_key].midPoint : _pole.xPercent
+                      }
+                      timePoleData={_pole.pole}
+                      yPosRef={yPosRef.current}
+                    />
+                  );
+                }
+              )}
+            </Fragment>
+          );
+        })}
+      </div>
+      <Modal>
+        <div>modal dialog</div>
+      </Modal>
+    </>
   );
 }
 
 import { useSpring, animated } from "react-spring";
 import { useDrag } from "@use-gesture/react";
+import { Modal } from "../elements/Links";
 export function TimepoleMarker({
   xPercent,
   // timepoleConfig,
