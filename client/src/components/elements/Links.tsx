@@ -104,15 +104,28 @@ export function Backdrop({ onClose }: { onClose: () => void }) {
   );
 }
 
+import { animated, useSpring } from "react-spring";
 import { useRef } from "react";
 export function Modal(props: { children: ReactNode; onClose: () => void }) {
   const backdropClick = useRef(true);
+  const backgroundSpring = useSpring({
+    from: { backgroundColor: "rgba(0,0,0,0)" },
+    to: { backgroundColor: "rgba(0,0,0,.4)" },
+    config: { duration: 200 },
+  });
+
+  const modalSpring = useSpring({
+    from: { y: "-40%", x: "-50%", opacity: 0 },
+    to: { y: "-50%", x: "-50%", opacity: 1 },
+    config: { duration: 200 },
+  });
 
   const portalRoot = document.getElementById("portal-modal");
   if (!portalRoot) return <>Portal Root Not Found!</>;
 
   return ReactDOM.createPortal(
-    <div
+    <animated.div
+      style={{ ...backgroundSpring }}
       className="modal-background"
       onClick={() => {
         if (backdropClick.current) {
@@ -120,7 +133,8 @@ export function Modal(props: { children: ReactNode; onClose: () => void }) {
         }
       }}
     >
-      <div
+      <animated.div
+        style={{ ...modalSpring }}
         className="modal"
         onMouseEnter={() => {
           backdropClick.current = false;
@@ -130,8 +144,8 @@ export function Modal(props: { children: ReactNode; onClose: () => void }) {
         }}
       >
         {props.children}
-      </div>
-    </div>,
+      </animated.div>
+    </animated.div>,
     portalRoot
   );
 }
