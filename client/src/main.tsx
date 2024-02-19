@@ -1,10 +1,10 @@
-import React, { useEffect } from "react";
+import React from "react";
 import ReactDOM from "react-dom/client";
 import YearPage from "./pages/year/YearPage.tsx";
 import MonthPage from "./pages/month/MonthPage.tsx";
 import "./index.css";
 
-import { Provider, useDispatch } from "react-redux";
+import { Provider } from "react-redux";
 import { store } from "./redux/store.ts";
 
 import {

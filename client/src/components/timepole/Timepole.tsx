@@ -1,5 +1,5 @@
 import styles from "./Timepole.module.css";
-import { useEffect, Fragment } from "react";
+import { useEffect, Fragment, useRef } from "react";
 import {
   useAppDispatch,
   useAppSelector,
@@ -26,9 +26,13 @@ export function TimePoleDisplay({ url }: { url: string | undefined }) {
   const urlView = url ? url : "year";
   const poleDatas = getPoleDataList(poles, urlView);
 
+  const yPosRef = useRef(0);
   useEffect(() => {
     dispatch({ type: "GET_TIMEPOLE_SERVER" });
+    yPosRef.current = 200;
   }, [dispatch]);
+
+  // useEffect(()=>{},[])
 
   return (
     <div className={styles.timePoleDisplayContainer}>
@@ -49,6 +53,7 @@ export function TimePoleDisplay({ url }: { url: string | undefined }) {
                       isGroup ? poleDatas[_key].midPoint : _pole.xPercent
                     }
                     timePoleData={_pole.pole}
+                    yPosRef={yPosRef.current}
                   />
                 );
               }
@@ -62,19 +67,20 @@ export function TimePoleDisplay({ url }: { url: string | undefined }) {
 
 import { useSpring, animated } from "react-spring";
 import { useDrag } from "@use-gesture/react";
-import { useRef } from "react";
 export function TimepoleMarker({
   xPercent,
   // timepoleConfig,
   timePoleData,
+  yPosRef,
 }: {
   xPercent: number;
   // timepoleConfig?: { height?: string };
   timePoleData: Pole;
+  yPosRef: number;
 }) {
-  const yPos = useRef(0);
+  const yPos = useRef(yPosRef);
   const [{ y, height }, api] = useSpring(() => ({
-    y: 10,
+    y: yPosRef,
     height: 0,
   }));
 

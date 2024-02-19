@@ -1,6 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { current } from "../../tools/data";
 import ReactDOM from "react-dom";
+import { ReactNode } from "react";
 export function GlobalLinks({ page }: { page: string }) {
   const navigate = useNavigate();
   const { year, month, mode } = useParams();
@@ -100,5 +101,17 @@ export function Backdrop({ onClose }: { onClose: () => void }) {
         console.log("click");
       }}
     />
+  );
+}
+
+export function Modal(children: ReactNode) {
+  const portalRoot = document.getElementById("portal-modal");
+  if (!portalRoot) return <>Portal Root Not Found!</>;
+
+  return ReactDOM.createPortal(
+    <div className="modal-background">
+      <div>{children}</div>
+    </div>,
+    portalRoot
   );
 }
