@@ -1,5 +1,5 @@
 import styles from "./Timepole.module.css";
-import { useEffect, Fragment, useRef } from "react";
+import { useEffect, Fragment, useRef, useState } from "react";
 import {
   useAppDispatch,
   useAppSelector,
@@ -27,12 +27,13 @@ export function TimePoleDisplay({ url }: { url: string | undefined }) {
   const poleDatas = getPoleDataList(poles, urlView);
 
   const yPosRef = useRef(0);
+
+  const [selectedPole, setSelectedPole] = useState<null | number>(null);
+
   useEffect(() => {
     dispatch({ type: "GET_TIMEPOLE_SERVER" });
     yPosRef.current = 200;
   }, [dispatch]);
-
-  // useEffect(()=>{},[])
 
   return (
     <>
@@ -55,6 +56,9 @@ export function TimePoleDisplay({ url }: { url: string | undefined }) {
                       }
                       timePoleData={_pole.pole}
                       yPosRef={yPosRef.current}
+                      setSelectedPole={(id) => {
+                        setSelectedPole(id);
+                      }}
                     />
                   );
                 }
@@ -63,9 +67,11 @@ export function TimePoleDisplay({ url }: { url: string | undefined }) {
           );
         })}
       </div>
-      <Modal>
-        <div>modal dialog</div>
-      </Modal>
+      {selectedPole && (
+        <Modal>
+          <div>modal dialog</div>
+        </Modal>
+      )}
     </>
   );
 }
@@ -75,15 +81,18 @@ import { useDrag } from "@use-gesture/react";
 import { Modal } from "../elements/Links";
 export function TimepoleMarker({
   xPercent,
-  // timepoleConfig,
   timePoleData,
   yPosRef,
+
+  setSelectedPole,
 }: {
   xPercent: number;
-  // timepoleConfig?: { height?: string };
   timePoleData: Pole;
   yPosRef: number;
+  setSelectedPole: (id: number) => void;
 }) {
+  const wasDragging = useRef(false);
+
   const yPos = useRef(yPosRef);
   const [{ y, height }, api] = useSpring(() => ({
     y: yPosRef,
@@ -96,14 +105,26 @@ export function TimepoleMarker({
     }
 
     if (down) {
+      if (!wasDragging.current && (my > 5 || my < -5)) {
+        wasDragging.current = true;
+        console.log("changed", wasDragging.current);
+      }
       api.start({ y: my + yPos.current, height: my + yPos.current });
     }
+
+    // console.log(my);
   });
 
   return (
     <div
       className={styles.timePoleMarkerContainer}
       style={{ left: `${xPercent}%` }}
+      onClick={() => {
+        if (!wasDragging.current) {
+          setSelectedPole(parseInt(timePoleData.id));
+        }
+        wasDragging.current = false;
+      }}
     >
       {/* {<AnimatedTimePole isMoving={isMoving} points={{ point1, point2 }} />} */}
 

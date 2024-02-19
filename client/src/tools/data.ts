@@ -227,7 +227,7 @@ export function getPoleDataList(poles: Pole[], state: string) {
     }
   }
 
-  console.log(poleWeekList);
+  // console.log(poleWeekList);
 
   return poleWeekList;
 }
