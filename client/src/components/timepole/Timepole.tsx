@@ -250,7 +250,7 @@ function TimePoleModal({
             />
           </div>
 
-          <div>
+          <div className={styles.saveButtonContainer}>
             <button onClick={onClose} type="button">
               save
             </button>
