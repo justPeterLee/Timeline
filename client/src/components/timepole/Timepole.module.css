@@ -66,3 +66,93 @@
 .textContainer:hover + .timepole {
   background-color: red;
 }
+
+/* -------------   modal styling   --------------- */
+
+.modalContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.modalContainer p {
+  margin: 0;
+}
+
+/* title */
+.modalTitle p {
+  font-size: 26px;
+  color: rgb(100, 100, 100);
+}
+
+/* date */
+.modalDate {
+  width: 100%;
+  border-radius: 5px;
+  border: solid 1px rgb(240, 240, 240);
+  /* padding: 10px; */
+  background-color: rgb(240, 240, 240);
+}
+.modalDate p {
+  margin: 10px;
+  font-size: 14px;
+  /* font-weight: 400; */
+}
+.modalDateYear {
+  font-size: 10px;
+}
+
+/* description */
+.modalDescriptionContainer,
+.modalDateContainer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  /* justify-content: center; */
+}
+
+/* modal buttons */
+.modalButtonContainer {
+  /* border-top: solid 1px rgb(100, 100, 100); */
+  display: flex;
+  justify-content: space-between;
+  padding-top: 15px;
+}
+
+.modalButtonContainer button {
+  /* padding: 0; */
+}
+
+.modalActionButton {
+  display: flex;
+  gap: 10px;
+}
+
+.completeModal {
+  transition: background-color ease 0.2s;
+
+  border-radius: 5px;
+  padding: 10px;
+}
+.completeModal:hover {
+  background-color: rgb(220, 220, 220);
+  /* color: white; */
+}
+
+.deleteModalIcon {
+  transition: color ease 0.1s;
+  height: 100%;
+  width: 100%;
+}
+.deleteModalIcon:hover {
+  color: red;
+}
+
+#modalClose,
+#modalEdit {
+  border-radius: 5px;
+  transition: background-color ease 0.1s;
+}
+#modalClose:hover,
+#modalEdit:hover {
+  background-color: rgb(240, 240, 240);
+}

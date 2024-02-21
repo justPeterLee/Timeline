@@ -132,12 +132,13 @@ button:hover {
 }
 
 .modal {
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   background-color: white;
   border-radius: 5px;
-  padding: 10px;
+  padding: 30px;
 
   min-width: 20rem;
-  min-height: 20rem;
+  /* min-height: 20rem; */
 
   position: absolute;
   top: 50%;

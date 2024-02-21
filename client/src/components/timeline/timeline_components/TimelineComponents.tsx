@@ -280,7 +280,7 @@ function CreatePoleModal({
             </button>
           </div>
         </form>
-        <Timepole height={"100px"} />
+        <Timepole />
       </div>
     </>
   );
