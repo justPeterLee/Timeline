@@ -45,7 +45,12 @@ export function GlobalLinks({ page }: { page: string }) {
 export function ValidInput(props: {
   value: string;
   setValue: (value: string) => void;
-  inputStyle?: { width?: string; height?: string };
+  inputStyle?: {
+    width?: string;
+    height?: string;
+    fontSize?: string;
+    color?: string;
+  };
   placeholder?: string;
   label: string;
   errorLabel?: string;

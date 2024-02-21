@@ -86,7 +86,7 @@
 
 /* date */
 .modalDate {
-  width: 100%;
+  flex: 1;
   border-radius: 5px;
   border: solid 1px rgb(240, 240, 240);
   /* padding: 10px; */
@@ -101,25 +101,12 @@
   font-size: 10px;
 }
 
-/* description */
-.modalDescriptionContainer,
-.modalDateContainer {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  /* justify-content: center; */
-}
-
 /* modal buttons */
 .modalButtonContainer {
   /* border-top: solid 1px rgb(100, 100, 100); */
   display: flex;
   justify-content: space-between;
   padding-top: 15px;
-}
-
-.modalButtonContainer button {
-  /* padding: 0; */
 }
 
 .modalActionButton {
@@ -155,4 +142,47 @@
 #modalClose:hover,
 #modalEdit:hover {
   background-color: rgb(240, 240, 240);
+}
+
+.modalDescription p {
+  padding: 5px;
+}
+/* ---------- modal edit mode ------------ */
+.modalDateButton {
+  background-color: rgb(235, 235, 235);
+  padding: 10px;
+  border-radius: 5px;
+  position: relative;
+}
+
+.modalTextarea {
+  resize: none;
+  border: none;
+  background-color: rgb(235, 235, 235);
+  border-radius: 5px;
+  height: 50px;
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+
+  padding: 10px;
+  outline: none;
+
+  transition: background-color ease 0.1s;
+
+  width: 100%;
+}
+
+.modalTextarea:hover {
+  background-color: rgb(210, 210, 210);
+}
+
+.modalEditDate,
+.modalEditDescription,
+.modalDescriptionContainer,
+.modalDateContainer {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+.modalIcon {
+  transform: translateY(10px);
 }

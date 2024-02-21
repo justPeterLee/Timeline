@@ -165,6 +165,8 @@ import { ValidInput } from "../elements/Links";
 import format from "date-fns/format";
 // import { CiTextAlignCenter } from "react-icons/ci";
 import { BsTextCenter, BsCalendar3, BsTrash3 } from "react-icons/bs";
+import DatePicker from "react-datepicker";
+import React from "react";
 
 function TimePoleModal({
   timePoleData,
@@ -182,13 +184,33 @@ function TimePoleModal({
 
   const [editMode, setEditMode] = useState(false);
 
+  const dateSelector = (newDate: Date) => {
+    setNewTimePoleData({ ...newTimePoleData, date: newDate.toISOString() });
+  };
+
+  const CustomInput = React.forwardRef<
+    HTMLInputElement,
+    { value: any; onClick: any }
+  >(({ value, onClick }, ref) => (
+    <button
+      onClick={onClick}
+      value={value}
+      type="button"
+      className={styles.modalDateButton}
+    >
+      {value}
+    </button>
+  ));
   const onSubmitForm = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
   };
   return (
     <>
       {editMode ? (
-        <form onSubmit={(e) => onSubmitForm(e)}>
+        <form
+          onSubmit={(e) => onSubmitForm(e)}
+          className={styles.modalContainer}
+        >
           <ValidInput
             value={newTimePoleData.title}
             setValue={(newTitle) => {
@@ -196,11 +218,43 @@ function TimePoleModal({
             }}
             label="title"
             error={{ custom: true }}
-            inputStyle={{ width: "100%" }}
+            inputStyle={{
+              width: "100%",
+              fontSize: "26px",
+              color: "rgb(100,100,100)",
+            }}
+            placeholder="add title"
           />
-          <button onClick={onClose} type="button">
-            save
-          </button>
+          <div className={styles.modalEditDate}>
+            <BsCalendar3 className={styles.modalIcon} />
+            <DatePicker
+              selected={new Date(newTimePoleData.date)}
+              onChange={(e: Date) => {
+                dateSelector(e);
+              }}
+              customInput={
+                <CustomInput value={undefined} onClick={undefined} />
+              }
+              dateFormat="EEEE, LLLL d"
+              minDate={new Date("2024-01-01")}
+              maxDate={new Date("2024-12-31")}
+            />
+          </div>
+
+          <div className={styles.modalEditDescription}>
+            <BsTextCenter className={styles.modalIcon} />
+
+            <textarea
+              className={styles.modalTextarea}
+              placeholder="add description"
+            />
+          </div>
+
+          <div>
+            <button onClick={onClose} type="button">
+              save
+            </button>
+          </div>
         </form>
       ) : (
         <div className={styles.modalContainer}>
@@ -211,7 +265,7 @@ function TimePoleModal({
             {/* <p className={styles.modalTitleView}>title</p> */}
           </div>
           <div className={styles.modalDateContainer}>
-            <BsCalendar3 />
+            <BsCalendar3 className={styles.modalIcon} />
             <div className={styles.modalDate}>
               <p style={{ marginBottom: "0px" }}>
                 {format(new Date(timePoleData.full_date), "EEEE, LLLL d")}
@@ -232,7 +286,7 @@ function TimePoleModal({
           </div>
           {timePoleData.description && (
             <div className={styles.modalDescriptionContainer}>
-              <BsTextCenter />
+              <BsTextCenter className={styles.modalIcon} />
               <div className={styles.modalDescription}>
                 <p>{timePoleData.description}</p>
               </div>
