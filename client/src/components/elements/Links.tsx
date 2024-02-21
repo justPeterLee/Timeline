@@ -113,6 +113,8 @@ import { animated, useSpring } from "react-spring";
 import { useRef } from "react";
 export function Modal(props: { children: ReactNode; onClose: () => void }) {
   const backdropClick = useRef(true);
+  const heldInModal = useRef(false);
+  const wasClickedInModal = useRef(false);
   const backgroundSpring = useSpring({
     from: { backgroundColor: "rgba(0,0,0,0)" },
     to: { backgroundColor: "rgba(0,0,0,.4)" },
@@ -133,9 +135,10 @@ export function Modal(props: { children: ReactNode; onClose: () => void }) {
       style={{ ...backgroundSpring }}
       className="modal-background"
       onClick={() => {
-        if (backdropClick.current) {
+        if (backdropClick.current && !wasClickedInModal.current) {
           props.onClose();
         }
+        wasClickedInModal.current = false;
       }}
     >
       <animated.div
@@ -146,6 +149,19 @@ export function Modal(props: { children: ReactNode; onClose: () => void }) {
         }}
         onMouseLeave={() => {
           backdropClick.current = true;
+
+          if (heldInModal.current) {
+            wasClickedInModal.current = true;
+          } else {
+            wasClickedInModal.current = false;
+          }
+          heldInModal.current = false;
+        }}
+        onMouseDown={() => {
+          heldInModal.current = true;
+        }}
+        onMouseUp={() => {
+          heldInModal.current = false;
         }}
       >
         {props.children}
