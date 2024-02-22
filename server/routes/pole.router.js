@@ -7,7 +7,7 @@ const { rejectUnauthenticated } = require("../modules/authenication");
 
 router.get("/", rejectUnauthenticated, (req, res) => {
   const query = `
-    SELECT p.*, pd.*
+    SELECT pd.full_date, pd.time_pole_id, pd.id AS "date_id", p.*
     FROM time_pole p
     JOIN time_pole_date pd ON pd.time_pole_id = p.id
     JOIN "user" u ON p.user_id = u.id
@@ -60,4 +60,46 @@ router.post("/create", rejectUnauthenticated, async (req, res) => {
   }
 });
 
+router.put("/update", rejectUnauthenticated, async (req, res) => {
+  const { id, title, description, date_data } = req.body;
+  const { date, month, year, day, full_date } = date_data;
+  const timePoleQuery = `
+  UPDATE time_pole
+  SET title = $1,
+      description = $2
+  WHERE id = $3;
+  `;
+  const timePoleDateQuery = `
+  UPDATE time_pole_date
+  SET date = $1,
+      month = $2,
+      year = $3,
+      day = $4,
+      full_date = $5
+  WHERE time_pole_id = $6;
+  `;
+  const client = await pool.connect();
+
+  try {
+    await client.query("BEGIN");
+    await client.query(timePoleQuery, [title, description, id]);
+    await client.query(timePoleDateQuery, [
+      date,
+      month,
+      year,
+      day,
+      full_date,
+      id,
+    ]);
+    await client.query("COMMIT");
+    res.sendStatus(200);
+  } catch (err) {
+    await client.query("ROLLBACK");
+    console.error("Error updating time pole: ", err);
+    res.status(500).send("Error updating time pole");
+  } finally {
+    client.release();
+  }
+  // res.sendStatus(200);
+});
 module.exports = router;
