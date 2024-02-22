@@ -176,6 +176,7 @@ function TimePoleModal({
   onClose: () => void;
 }) {
   const dispatch = useAppDispatch();
+  const user = useAppSelector((store) => store.userAccount);
 
   const [newTimePoleData, setNewTimePoleData] = useState({
     title: timePoleData.title,
@@ -236,12 +237,19 @@ function TimePoleModal({
     };
 
     const newTimePole = {
+      id: timePoleData.id,
       title: newTimePoleData.title,
       description: newTimePoleData.description,
       date_data,
     };
 
-    dispatch({ type: "UPDATE_TIME_POLE", payload: newTimePole });
+    console.log(timePoleData);
+
+    if (user) {
+      dispatch({ type: "UPDATE_TIME_POLE_SERVER", payload: newTimePole });
+    } else {
+      console.log("not logged in");
+    }
     // console.log(newTimePole);
     // if (user) {
     //   dispatch({
@@ -257,6 +265,7 @@ function TimePoleModal({
     // }
     onClose();
   };
+
   return (
     <>
       {editMode ? (
