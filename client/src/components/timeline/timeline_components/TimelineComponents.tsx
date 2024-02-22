@@ -152,34 +152,38 @@ function CreatePoleModal({
     date: date,
   });
 
-  const [error, setError] = useState<any>({ custom: false });
+  const [isError, setIsError] = useState(false);
 
-  const timepoleValidator = () => {
-    if (value.title.replace(/\s+/g, "") && value.date) {
-      // NO ERROR
-      setError({ custom: false });
+  const validateTimePole = () => {
+    if (!value.title.replace(/\s/g, "")) {
+      setIsError(true);
       return true;
+    } else {
+      setIsError(false);
     }
-
-    // ERROR
-    setError({ custom: true });
     return false;
   };
-
   const postTimepole = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!timepoleValidator()) return;
+    if (validateTimePole()) {
+      throw `error`;
+    }
+
+    if (!date) {
+      throw "invalid date";
+    }
 
     const date_data = {
-      date: date!.getDate(),
-      month: date!.getMonth(),
-      year: date!.getFullYear(),
-      day: date!.getDay(),
-      full_date: date!.toISOString(),
+      date: date.getDate(),
+      month: date.getMonth(),
+      year: date.getFullYear(),
+      day: date.getDay(),
+      full_date: date.toISOString(),
     };
 
     if (user) {
+      console.log("user is found");
       dispatch({
         type: "CREATE_TIMEPOLE_SERVER",
         payload: {
@@ -240,12 +244,12 @@ function CreatePoleModal({
         >
           <ValidInput
             label="title"
-            errorLabel="invalid title"
-            error={{ custom: error.custom }}
+            // errorLabel="invalid title"
+            error={{
+              label: "invalid title",
+              state: isError,
+            }}
             setValue={(newValue) => {
-              if (error.custom) {
-                setError({ ...error, custom: false });
-              }
               setValue({ ...value, title: newValue });
             }}
             value={value.title}

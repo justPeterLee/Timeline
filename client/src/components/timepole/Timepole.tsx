@@ -175,6 +175,8 @@ function TimePoleModal({
   timePoleData: Pole;
   onClose: () => void;
 }) {
+  const dispatch = useAppDispatch();
+
   const [newTimePoleData, setNewTimePoleData] = useState({
     title: timePoleData.title,
     description: timePoleData.description,
@@ -201,8 +203,59 @@ function TimePoleModal({
       {value}
     </button>
   ));
+  const [isError, setIsError] = useState(false);
+
+  const validateNewTimePole = () => {
+    if (!newTimePoleData.title.replace(/\s/g, "")) {
+      setIsError(true);
+      return true;
+    } else {
+      setIsError(false);
+    }
+    return false;
+  };
+
   const onSubmitForm = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    // dispatch({ type: "FETCH_USER" });
+
+    if (validateNewTimePole()) throw "error with input values";
+
+    if (!newTimePoleData.date) {
+      throw "invalid date";
+    }
+
+    const newDate = new Date(newTimePoleData.date);
+
+    const date_data = {
+      date: newDate.getDate(),
+      month: newDate.getMonth(),
+      year: newDate.getFullYear(),
+      day: newDate.getDay(),
+      full_date: newDate.toISOString(),
+    };
+
+    const newTimePole = {
+      title: newTimePoleData.title,
+      description: newTimePoleData.description,
+      date_data,
+    };
+
+    dispatch({ type: "UPDATE_TIME_POLE", payload: newTimePole });
+    // console.log(newTimePole);
+    // if (user) {
+    //   dispatch({
+    //     type: "CREATE_TIMEPOLE_SERVER",
+    //     payload: {
+    //       title: value.title,
+    //       description: value.description,
+    //       date_data,
+    //     },
+    //   });
+    // } else {
+    //   console.log("create on local storage");
+    // }
+    onClose();
   };
   return (
     <>
@@ -217,7 +270,10 @@ function TimePoleModal({
               setNewTimePoleData({ ...newTimePoleData, title: newTitle });
             }}
             label="title"
-            error={{ custom: true }}
+            error={{
+              label: "title cannot be empty",
+              state: isError,
+            }}
             inputStyle={{
               width: "100%",
               fontSize: "26px",
@@ -251,9 +307,7 @@ function TimePoleModal({
           </div>
 
           <div className={styles.saveButtonContainer}>
-            <button onClick={onClose} type="button">
-              save
-            </button>
+            <button>save</button>
           </div>
         </form>
       ) : (

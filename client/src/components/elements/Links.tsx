@@ -53,9 +53,11 @@ export function ValidInput(props: {
   };
   placeholder?: string;
   label: string;
-  errorLabel?: string;
 
-  error?: { custom: boolean };
+  error?: {
+    label: string;
+    state: boolean;
+  };
 }) {
   return (
     <div className="valid-input-container">
@@ -79,9 +81,9 @@ export function ValidInput(props: {
         {props.label}
       </label>
 
-      {props.errorLabel && props.error?.custom ? (
+      {props.error && props.error.state ? (
         <label className="error-label" htmlFor={`${props.label}`}>
-          {`* ${props.errorLabel}`}
+          {`* ${props.error.label}`}
         </label>
       ) : (
         <></>
@@ -111,6 +113,7 @@ export function Backdrop({ onClose }: { onClose: () => void }) {
 
 import { animated, useSpring } from "react-spring";
 import { useRef } from "react";
+import { error } from "console";
 export function Modal(props: { children: ReactNode; onClose: () => void }) {
   const backdropClick = useRef(true);
   const heldInModal = useRef(false);

@@ -21,7 +21,7 @@ export default function LoginPage() {
   });
 
   const loginReq = (e: React.FormEvent<HTMLFormElement>) => {
-    // e.preventDefault();
+    e.preventDefault();
 
     dispatch({
       type: "LOGIN",

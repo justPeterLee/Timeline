@@ -54,7 +54,7 @@ function* logoutUser(): Generator {
 function* fetchUser(): Generator {
   try {
     const response: any = yield axios.get("/api/v1/userAction", config);
-
+    console.log(response.data);
     yield put({ type: "SET_USER", payload: response.data });
   } catch (err) {
     console.log(err);
