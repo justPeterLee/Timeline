@@ -7,6 +7,11 @@ function* timePoleSaga() {
   yield takeLatest("GET_TIMEPOLE_SERVER", getTimePoleSERVER);
 
   yield takeLatest("UPDATE_TIME_POLE_SERVER", updateTimePoleSERVER);
+
+  yield takeLatest(
+    "UPDATE_COMPLETED_TIME_POLE_SERVER",
+    updateCompletedTimePoleServer
+  );
 }
 
 type PostTimePole = {
@@ -48,6 +53,22 @@ function* updateTimePoleSERVER({ payload }: PostTimePole): Generator {
   try {
     console.log("in saga", payload);
     yield axios.put("/api/v1/timepole/update", payload);
+    yield put({ type: "GET_TIMEPOLE_SERVER" });
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+function* updateCompletedTimePoleServer({
+  payload,
+}: {
+  payload: { id: string; state: boolean };
+  type: string;
+}) {
+  try {
+    yield axios.put(`/api/v1/timepole/update/completed/${payload.id}`, {
+      state: payload.state,
+    });
     yield put({ type: "GET_TIMEPOLE_SERVER" });
   } catch (err) {
     console.log(err);

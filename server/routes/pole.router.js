@@ -61,13 +61,14 @@ router.post("/create", rejectUnauthenticated, async (req, res) => {
 });
 
 router.put("/update", rejectUnauthenticated, async (req, res) => {
+  const user = req.user.id;
   const { id, title, description, date_data } = req.body;
   const { date, month, year, day, full_date } = date_data;
   const timePoleQuery = `
   UPDATE time_pole
   SET title = $1,
       description = $2
-  WHERE id = $3;
+  WHERE id = $3 AND user_id = $4;
   `;
   const timePoleDateQuery = `
   UPDATE time_pole_date
@@ -82,7 +83,7 @@ router.put("/update", rejectUnauthenticated, async (req, res) => {
 
   try {
     await client.query("BEGIN");
-    await client.query(timePoleQuery, [title, description, id]);
+    await client.query(timePoleQuery, [title, description, id, user]);
     await client.query(timePoleDateQuery, [
       date,
       month,
@@ -101,5 +102,25 @@ router.put("/update", rejectUnauthenticated, async (req, res) => {
     client.release();
   }
   // res.sendStatus(200);
+});
+
+router.put("/update/completed/:id", rejectUnauthenticated, async (req, res) => {
+  const state = req.body.state;
+  const timePoleId = req.params.id;
+  const userId = req.user.id;
+  const query = `
+  UPDATE time_pole 
+  SET completed = $1
+  WHERE id = $2 AND user_id = $3;
+  `;
+  pool
+    .query(query, [state, timePoleId, userId])
+    .then(() => {
+      res.sendStatus(200);
+    })
+    .catch((err) => {
+      console.log("Error marking time pole completion: ", err);
+      res.sendStatus(500).send("Error marking time pole completion");
+    });
 });
 module.exports = router;

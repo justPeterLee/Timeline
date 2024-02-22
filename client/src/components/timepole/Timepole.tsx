@@ -250,19 +250,19 @@ function TimePoleModal({
     } else {
       console.log("not logged in");
     }
-    // console.log(newTimePole);
-    // if (user) {
-    //   dispatch({
-    //     type: "CREATE_TIMEPOLE_SERVER",
-    //     payload: {
-    //       title: value.title,
-    //       description: value.description,
-    //       date_data,
-    //     },
-    //   });
-    // } else {
-    //   console.log("create on local storage");
-    // }
+    onClose();
+  };
+
+  const onMarkComplete = () => {
+    console.log(timePoleData.completed);
+    if (user) {
+      dispatch({
+        type: "UPDATE_COMPLETED_TIME_POLE_SERVER",
+        payload: { id: timePoleData.id, state: !timePoleData.completed },
+      });
+    } else {
+      console.log("not logged in");
+    }
     onClose();
   };
 
@@ -359,7 +359,9 @@ function TimePoleModal({
 
           <div className={styles.modalButtonContainer}>
             <div>
-              <button className={styles.completeModal}>mark complete</button>
+              <button className={styles.completeModal} onClick={onMarkComplete}>
+                {timePoleData.completed ? "mark uncompleted" : "mark completed"}
+              </button>
             </div>
             <div className={styles.modalActionButton}>
               <button className={styles.modalButton} id={styles.deleteModal}>
