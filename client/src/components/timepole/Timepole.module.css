@@ -202,3 +202,34 @@
 .saveButtonContainer button:hover {
   background-color: rgb(210, 210, 210);
 }
+
+/* confirmation styling */
+
+.confirmationContainer,
+.confirmationButtonContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+}
+
+.confirmationButtonContainer {
+  margin-top: 10px;
+  flex-direction: row;
+  justify-content: flex-end;
+  /* align-items: flex-end; */
+  gap: 10px;
+}
+
+.confirmationCancel,
+.confirmationAction {
+  /* background-color: antiquewhite; */
+  border-radius: 5px;
+  padding: 10px;
+  transition: background-color ease 0.15s;
+}
+
+.confirmationCancel:hover,
+.confirmationAction:hover {
+  background-color: rgb(235, 235, 235);
+}

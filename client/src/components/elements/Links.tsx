@@ -113,15 +113,18 @@ export function Backdrop({ onClose }: { onClose: () => void }) {
 
 import { animated, useSpring } from "react-spring";
 import { useRef } from "react";
-import { error } from "console";
-export function Modal(props: { children: ReactNode; onClose: () => void }) {
+export function Modal(props: {
+  children: ReactNode;
+  onClose: () => void;
+  styles?: { minWidth: string };
+}) {
   const backdropClick = useRef(true);
   const heldInModal = useRef(false);
   const wasClickedInModal = useRef(false);
   const backgroundSpring = useSpring({
     from: { backgroundColor: "rgba(0,0,0,0)" },
     to: { backgroundColor: "rgba(0,0,0,.4)" },
-    config: { duration: 200 },
+    config: { duration: 150 },
   });
 
   const modalSpring = useSpring({
@@ -145,12 +148,13 @@ export function Modal(props: { children: ReactNode; onClose: () => void }) {
       }}
     >
       <animated.div
-        style={{ ...modalSpring }}
+        style={{ ...modalSpring, ...props.styles }}
         className="modal"
         onMouseEnter={() => {
           backdropClick.current = false;
         }}
         onMouseLeave={() => {
+          console.log("leave");
           backdropClick.current = true;
 
           if (heldInModal.current) {
