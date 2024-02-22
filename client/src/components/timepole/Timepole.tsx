@@ -266,6 +266,18 @@ function TimePoleModal({
     onClose();
   };
 
+  const onDelete = () => {
+    if (user) {
+      dispatch({
+        type: "DELETE_TIME_POLE_SERVER",
+        payload: timePoleData.id,
+      });
+    } else {
+      console.log("not logged in");
+    }
+    onClose();
+  };
+
   return (
     <>
       {editMode ? (
@@ -364,7 +376,11 @@ function TimePoleModal({
               </button>
             </div>
             <div className={styles.modalActionButton}>
-              <button className={styles.modalButton} id={styles.deleteModal}>
+              <button
+                className={styles.modalButton}
+                id={styles.deleteModal}
+                onClick={onDelete}
+              >
                 <BsTrash3 size={15} className={styles.deleteModalIcon} />
               </button>
 

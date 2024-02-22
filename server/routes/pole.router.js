@@ -123,4 +123,22 @@ router.put("/update/completed/:id", rejectUnauthenticated, async (req, res) => {
       res.sendStatus(500).send("Error marking time pole completion");
     });
 });
+
+router.delete("/delete/:id", rejectUnauthenticated, async (req, res) => {
+  const timePoleId = req.params.id;
+  const userId = req.user.id;
+  const query = `
+  DELETE FROM time_pole
+  WHERE id = $1 AND user_id = $2;
+  `;
+  pool
+    .query(query, [timePoleId, userId])
+    .then(() => {
+      res.sendStatus(200);
+    })
+    .catch((err) => {
+      console.error("Error deleting time pole: ", err);
+      res.sendStatus(500).send("Error deleting time pole");
+    });
+});
 module.exports = router;

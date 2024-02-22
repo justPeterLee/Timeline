@@ -12,6 +12,8 @@ function* timePoleSaga() {
     "UPDATE_COMPLETED_TIME_POLE_SERVER",
     updateCompletedTimePoleServer
   );
+
+  yield takeLatest("DELETE_TIME_POLE_SERVER", deleteTimePoleSERVER);
 }
 
 type PostTimePole = {
@@ -69,6 +71,15 @@ function* updateCompletedTimePoleServer({
     yield axios.put(`/api/v1/timepole/update/completed/${payload.id}`, {
       state: payload.state,
     });
+    yield put({ type: "GET_TIMEPOLE_SERVER" });
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+function* deleteTimePoleSERVER({ payload }: { payload: string; type: string }) {
+  try {
+    yield axios.delete(`/api/v1/timepole/delete/${payload}`);
     yield put({ type: "GET_TIMEPOLE_SERVER" });
   } catch (err) {
     console.log(err);
