@@ -15,8 +15,9 @@
   /* margin: 2px; */
 }
 .animatedTimePole {
-  height: 0px;
+  height: 1px;
   position: absolute;
+  /* transform: scale(px); */
 }
 .timepoleLine {
   transition: y2 0.5s ease;
@@ -33,10 +34,11 @@
 
   width: 1px;
   /* transform: //translateX(-50%); */
+  /* max-width: 100px; */
 }
 
 .textContainer {
-  /* background-color: aqua; */
+  background-color: rgb(245, 245, 245);
   font-size: 14px;
   color: rgb(125, 125, 125);
   margin: 5px;
@@ -50,6 +52,8 @@
 
   position: absolute;
   top: -50%;
+
+  max-width: 1000px;
   /* transform: translateY(-100px); */
 }
 

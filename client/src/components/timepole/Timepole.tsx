@@ -6,6 +6,7 @@ import {
 } from "../../redux/redux-hooks/redux.hook";
 
 import { getPoleDataList } from "../../tools/data";
+import { sortPoleData, sort } from "../../tools/utilities/timepole";
 interface Pole {
   id: string;
   title: string;
@@ -36,12 +37,17 @@ export function TimePoleDisplay({ url }: { url: string | undefined }) {
 
   useEffect(() => {
     dispatch({ type: "GET_TIMEPOLE_SERVER" });
-    yPosRef.current = 200;
+    // yPosRef.current = 200;
+    // console.log(document.querySelector("#asdf"));
   }, [dispatch]);
 
+  useEffect(() => {
+    // console.log(sortPoleData(poleDatas));
+    sort(poleDatas);
+  }, [poleDatas]);
   return (
     <>
-      <div className={styles.timePoleDisplayContainer}>
+      <div className={styles.timePoleDisplayContainer} id={"asdf"}>
         {Object.keys(poleDatas).map((_key, index) => {
           return (
             <Fragment key={index}>
@@ -55,6 +61,7 @@ export function TimePoleDisplay({ url }: { url: string | undefined }) {
                   return (
                     <TimepoleMarker
                       key={_pole.pole.id}
+                      id={_pole.pole.id}
                       xPercent={
                         isGroup ? poleDatas[_key].midPoint : _pole.xPercent
                       }
@@ -80,16 +87,19 @@ export function TimePoleDisplay({ url }: { url: string | undefined }) {
   );
 }
 
-import { useSpring, animated } from "react-spring";
+import { useSpring, animated, to as interpolate } from "react-spring";
+// import{to} from ''
 import { useDrag } from "@use-gesture/react";
 import { Modal } from "../elements/Links";
 export function TimepoleMarker({
+  id,
   xPercent,
   timePoleData,
   yPosRef,
 
   setSelectedPole,
 }: {
+  id: string | number;
   xPercent: number;
   timePoleData: Pole;
   yPosRef: number;
@@ -98,12 +108,15 @@ export function TimepoleMarker({
   const wasDragging = useRef(false);
 
   const yPos = useRef(yPosRef);
-  const [{ y, height }, api] = useSpring(() => ({
+
+  const targetElement = useRef<HTMLDivElement>(null);
+  const [{ x, y, scale }, api] = useSpring(() => ({
+    x: 0,
     y: yPosRef,
-    height: 0,
+    scale: 0,
   }));
 
-  const bind = useDrag(({ down, movement: [, my] }) => {
+  const bind = useDrag(({ down, movement: [mx, my] }) => {
     if (!down) {
       yPos.current = my + yPos.current;
     }
@@ -112,8 +125,14 @@ export function TimepoleMarker({
       if (!wasDragging.current && (my > 5 || my < -5)) {
         wasDragging.current = true;
       }
-      api.start({ y: my + yPos.current, height: my + yPos.current });
+      api.start({
+        y: my + yPos.current,
+        scale:
+          my + yPos.current > 0 ? my + yPos.current : my + yPos.current + 40,
+      });
     }
+
+    api.start({ x: down ? mx : 0 });
 
     // console.log(my);
   });
@@ -124,7 +143,7 @@ export function TimepoleMarker({
       style={{ left: `${xPercent}%` }}
       onClick={() => {
         if (!wasDragging.current) {
-          setSelectedPole(timePoleData);
+          // setSelectedPole(timePoleData);
         }
         wasDragging.current = false;
       }}
@@ -135,8 +154,10 @@ export function TimepoleMarker({
         className={styles.animatedTimePole}
         style={{
           // thrans,
-          height,
-          transform: "rotate(180deg)",
+          transform: interpolate([scale], (s: number) => {
+            return `scaleY(${s})`;
+          }),
+          // transform: "rotate(180deg)",
           // transform:
           transformOrigin: "top",
         }}
@@ -144,10 +165,16 @@ export function TimepoleMarker({
 
       <animated.div
         {...bind()}
-        style={{ y, touchAction: "pan-y" }}
+        style={{ x, y, touchAction: "pan-y" }}
         className={styles.textContainer}
+        id={`pole-${id}`}
+        ref={targetElement}
+        onClick={(e) => {
+          console.log(e.currentTarget.getBoundingClientRect());
+          console.log(window.innerHeight);
+        }}
       >
-        {timePoleData.id}
+        <p style={{ margin: 0, whiteSpace: "nowrap" }}>{timePoleData.title}</p>
       </animated.div>
     </div>
   );
