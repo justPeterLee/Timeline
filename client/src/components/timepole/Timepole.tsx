@@ -6,9 +6,10 @@ import {
 } from "../../redux/redux-hooks/redux.hook";
 
 import { getPoleDataList } from "../../tools/data";
-import { sort } from "../../tools/utilities/timepole";
+import { sort } from "../../tools/utilities/timepoleUtils/timepole";
 
-import { PoleCordsData } from "../../tools/utilities/timepole";
+import { PoleCordsData } from "../../tools/utilities/timepoleUtils/timepoleUtils";
+
 interface Pole {
   id: string;
   title: string;
