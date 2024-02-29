@@ -33,6 +33,17 @@ type SortedPoleData = {
   [key: string]: StandardPoleData[];
 };
 
+type OverLappingData = {
+  boundingClient: DOMRect;
+  pole: StandardPoleData;
+  y_pos: number;
+};
+
+type OverLappingDataObj = { [key: string]: OverLappingData };
+
+export type PoleCordsData = {
+  [key: string]: { yPos: number };
+};
 export function sortPoleData(poleData: UnSortedPoleData) {
   if (!poleData) return;
   const unsortedPoleDataKeys: string[] = Object.keys(poleData);
@@ -70,6 +81,7 @@ function orientationlimits(length: number) {
 }
 
 export function sort(poleData: UnSortedPoleData) {
+  // console.log(window.in)
   const sortedData = sortPoleData(poleData);
 
   if (!sortedData) return;
@@ -77,8 +89,11 @@ export function sort(poleData: UnSortedPoleData) {
 
   const sortedDataKeys = Object.keys(sortedData);
 
-  const poleCordsData = {};
-  const overlappingData: { heaven: any; hell: any } = { heaven: {}, hell: {} };
+  const poleCordsData: PoleCordsData = {};
+  const overlappingData: {
+    heaven: OverLappingDataObj;
+    hell: OverLappingDataObj;
+  } = { heaven: {}, hell: {} };
   const lastPoleData: { [key: string]: string } = {};
 
   for (let i = 0; i < sortedDataKeys.length; i++) {
@@ -94,7 +109,14 @@ export function sort(poleData: UnSortedPoleData) {
       const week = sortedDataKeys[i - 1];
       const lastPoleOrientation = lastPoleData[week];
 
-      let selectedOrientation: "heaven" | "hell" | "" = "";
+      const currentTarget = document.querySelector(`#pole-${_poles.id}`);
+      const boundingClient = currentTarget
+        ? currentTarget.getBoundingClientRect()
+        : undefined;
+      if (!boundingClient) return;
+
+      let selectedOrientation: "heaven" | "hell" = "heaven";
+
       let generatedYPos = randomNumberInRange(90, 200);
 
       // check if first pole of week
@@ -117,16 +139,96 @@ export function sort(poleData: UnSortedPoleData) {
       if (index === weekObj.length - 1)
         lastPoleData[weekId] = selectedOrientation;
 
-      if (selectedOrientation)
-        overlappingData[selectedOrientation] = {
-          ...overlappingData[selectedOrientation],
-          [_poles.id]: _poles,
+      // if (selectedOrientation)
+      //   overlappingData[selectedOrientation] = {
+      //     ...overlappingData[selectedOrientation],
+      //     [_poles.id]: _poles,
+      //   };
+
+      // console.log(currentTarget);
+
+      if (selectedOrientation === "heaven") {
+        generatedYPos = -1 * (generatedYPos + 5 + boundingClient.height);
+      }
+
+      const sameOrientationKeys = Object.keys(
+        overlappingData[selectedOrientation]
+      );
+
+      if (!sameOrientationKeys.length) {
+        overlappingData[selectedOrientation][boundingClient.right] = {
+          boundingClient: boundingClient,
+          y_pos: generatedYPos,
+          pole: _poles,
         };
+      }
+
+      const potentialOverlapKeys = sameOrientationKeys.filter((rightCord) => {
+        return parseFloat(rightCord) > boundingClient.left;
+      });
+
+      // console.log(potentialOverlapKeys);
+      if (!potentialOverlapKeys.length) {
+        overlappingData[selectedOrientation][boundingClient.right] = {
+          boundingClient: boundingClient,
+          y_pos: generatedYPos,
+          pole: _poles,
+        };
+      } else {
+        let isOverlapping = false;
+        const currentCalcCords = calcNewCords(
+          generatedYPos,
+          boundingClient.height
+        );
+
+        for (let i = 0; i < potentialOverlapKeys.length; i++) {
+          const currentPotential =
+            overlappingData[selectedOrientation][potentialOverlapKeys[i]];
+          const potentialCalcCords = calcNewCords(
+            currentPotential.y_pos,
+            currentPotential.boundingClient.height
+          );
+          // console.log(
+          //   currentPotential.pole.title + `: ${potentialCalcCords.top}`,
+          //   _poles.title + `: ${currentCalcCords.top}`
+          // );
+
+          if (
+            currentCalcCords.bottom >= potentialCalcCords.top &&
+            currentCalcCords.top <= potentialCalcCords.bottom
+          ) {
+            isOverlapping = true;
+
+            break;
+          }
+        }
+        // console.log(isOverlapping, _poles.title);
+        if (isOverlapping) {
+          const potentailPolesArr = potentialOverlapKeys.map((_) => {
+            return overlappingData[selectedOrientation][_];
+          });
+
+          generatedYPos = generateAccurateCords(
+            potentailPolesArr,
+            boundingClient.height
+          );
+        }
+
+        overlappingData[selectedOrientation][boundingClient.right] = {
+          boundingClient: boundingClient,
+          y_pos: generatedYPos,
+          pole: _poles,
+        };
+      }
+
+      // console.log(sameOrientationKeys,selectedOrientation);
+      poleCordsData[_poles.id] = { yPos: generatedYPos };
+      // poleCordsData[weekId][_poles.id] = { yPos: generatedYPos };
     });
   }
 
-  console.log(overlappingData);
-  console.log(lastPoleData);
+  // console.log(poleCordsData);
+  return poleCordsData;
 }
 
 class Orientation {
@@ -199,5 +301,49 @@ class Orientation {
     } else {
       throw `error: invalid amounts of poles in week ${this._week}`;
     }
+  }
+}
+
+function calcNewCords(Ypos: number, height: number, margin = 5) {
+  const top = Ypos + window.innerHeight / 2 + margin;
+  const bottom = Ypos + (window.innerHeight / 2 + margin + height);
+
+  return { top, bottom };
+}
+
+function generateAccurateCords(
+  potentialPoles: OverLappingData[],
+  height: number
+) {
+  const bounds = [];
+
+  for (let i = 0; i < potentialPoles.length; i++) {
+    const newCalc = calcNewCords(
+      potentialPoles[i].y_pos,
+      potentialPoles[i].boundingClient.height
+    );
+    bounds.push(newCalc.top);
+    bounds.push(newCalc.bottom);
+  }
+
+  // const topBounds = potentialPoles.map((_pole) => {
+  //   const newCalc = calcNewCords(_pole.y_pos, _pole.boundingClient.height);
+
+  //   return newCalc.top;
+  // });
+
+  // const bottomBounds = potentialPoles.map((_pole) => {
+  //   const newCalc = calcNewCords(_pole.y_pos, _pole.boundingClient.height);
+  //   return newCalc.bottom;
+  // });
+
+  const topBound = Math.min(...bounds);
+  const bottomBound = Math.max(...bounds);
+
+  // console.log(windowHalf);
+  if (random()) {
+    return topBound - (window.innerHeight / 2 + 5) - (20 + height);
+  } else {
+    return bottomBound - (window.innerHeight / 2 + height + 5) + (20 + height);
   }
 }

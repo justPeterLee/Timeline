@@ -1,12 +1,14 @@
 import styles from "./Timepole.module.css";
-import { useEffect, Fragment, useRef, useState } from "react";
+import { useEffect, Fragment, useRef, useState, useMemo } from "react";
 import {
   useAppDispatch,
   useAppSelector,
 } from "../../redux/redux-hooks/redux.hook";
 
 import { getPoleDataList } from "../../tools/data";
-import { sortPoleData, sort } from "../../tools/utilities/timepole";
+import { sort } from "../../tools/utilities/timepole";
+
+import { PoleCordsData } from "../../tools/utilities/timepole";
 interface Pole {
   id: string;
   title: string;
@@ -23,12 +25,13 @@ interface Pole {
 export function TimePoleDisplay({ url }: { url: string | undefined }) {
   const dispatch = useAppDispatch();
   const poles = useAppSelector((store) => store.timepole.getTimePole);
-
   const urlView = url ? url : "year";
-  const poleDatas = getPoleDataList(poles, urlView);
 
-  const yPosRef = useRef(0);
+  const poleDatas = useMemo(() => {
+    return getPoleDataList(poles, urlView);
+  }, [poles, urlView]);
 
+  const [sortData, setSortDataEffect] = useState<PoleCordsData>({});
   const [selectedPole, setSelectedPole] = useState<null | Pole>(null);
 
   const onClose = () => {
@@ -37,36 +40,70 @@ export function TimePoleDisplay({ url }: { url: string | undefined }) {
 
   useEffect(() => {
     dispatch({ type: "GET_TIMEPOLE_SERVER" });
-    // yPosRef.current = 200;
-    // console.log(document.querySelector("#asdf"));
   }, [dispatch]);
 
   useEffect(() => {
-    // console.log(sortPoleData(poleDatas));
-    sort(poleDatas);
-  }, [poleDatas]);
+    //check if sort data already exist
+    if (window.localStorage.getItem("sortDataEffect")) {
+      const jsonSortData = JSON.parse(
+        window.localStorage.getItem("sortDataEffect")!
+      );
+      setSortDataEffect(jsonSortData);
+    } else {
+      // create sort data
+
+      // check if data is generated
+      if (!Object.keys(poleDatas).length) {
+        console.log("invalid poles data: ", poles);
+        return;
+      }
+
+      // if data is done generated
+      const newSortData = sort(poleDatas);
+
+      // if newSortData is valid
+      if (newSortData) {
+        window.localStorage.setItem(
+          "sortDataEffect",
+          JSON.stringify(newSortData)
+        );
+      }
+
+      // if window.localStorage is valid
+      if (window.localStorage.getItem("sortDataEffect")) {
+        const jsonSortData = JSON.parse(
+          window.localStorage.getItem("sortDataEffect")!
+        );
+        setSortDataEffect(jsonSortData);
+      }
+    }
+  }, [poleDatas, window.localStorage.getItem("sortDataEffect")]);
+
   return (
     <>
       <div className={styles.timePoleDisplayContainer} id={"asdf"}>
-        {Object.keys(poleDatas).map((_key, index) => {
+        {Object.keys(poleDatas).map((_week, index) => {
           return (
             <Fragment key={index}>
-              {poleDatas[_key].polesList.map(
+              {poleDatas[_week].polesList.map(
                 (_pole: { pole: Pole; xPercent: number }) => {
                   const isGroup =
-                    poleDatas[_key].polesList.length >= 3 ? true : false;
+                    poleDatas[_week].polesList.length >= 3 ? true : false;
 
                   // if (isGroup) console.log(_pole);
+                  let sortYPos = sortData[_pole.pole.id]
+                    ? sortData[_pole.pole.id].yPos
+                    : 100;
 
                   return (
                     <TimepoleMarker
                       key={_pole.pole.id}
                       id={_pole.pole.id}
                       xPercent={
-                        isGroup ? poleDatas[_key].midPoint : _pole.xPercent
+                        isGroup ? poleDatas[_week].midPoint : _pole.xPercent
                       }
                       timePoleData={_pole.pole}
-                      yPosRef={yPosRef.current}
+                      yPos={sortYPos}
                       setSelectedPole={(id) => {
                         setSelectedPole(id);
                       }}
@@ -95,30 +132,39 @@ export function TimepoleMarker({
   id,
   xPercent,
   timePoleData,
-  yPosRef,
+  yPos,
 
   setSelectedPole,
 }: {
   id: string | number;
   xPercent: number;
   timePoleData: Pole;
-  yPosRef: number;
+  yPos: number;
   setSelectedPole: (id: Pole) => void;
 }) {
   const wasDragging = useRef(false);
 
-  const yPos = useRef(yPosRef);
+  const yPosRef = useRef(yPos);
 
   const targetElement = useRef<HTMLDivElement>(null);
+
   const [{ x, y, scale }, api] = useSpring(() => ({
+    y: yPos,
     x: 0,
-    y: yPosRef,
-    scale: 0,
+    scale: yPos > 0 ? yPos : yPos + 40,
   }));
+
+  api.set({ y: yPos, scale: yPos > 0 ? yPos : yPos + 40 });
 
   const bind = useDrag(({ down, movement: [mx, my] }) => {
     if (!down) {
-      yPos.current = my + yPos.current;
+      yPosRef.current = my + yPosRef.current;
+      if (
+        (yPosRef.current <= 25 && yPosRef.current >= 0) ||
+        (yPosRef.current >= -60 && yPosRef.current <= 0)
+      ) {
+        console.log("dropped near center");
+      }
     }
 
     if (down) {
@@ -126,15 +172,15 @@ export function TimepoleMarker({
         wasDragging.current = true;
       }
       api.start({
-        y: my + yPos.current,
+        y: my + yPosRef.current,
         scale:
-          my + yPos.current > 0 ? my + yPos.current : my + yPos.current + 40,
+          my + yPosRef.current > 0
+            ? my + yPosRef.current
+            : my + yPosRef.current + 40,
       });
     }
 
     api.start({ x: down ? mx : 0 });
-
-    // console.log(my);
   });
 
   return (
@@ -143,7 +189,7 @@ export function TimepoleMarker({
       style={{ left: `${xPercent}%` }}
       onClick={() => {
         if (!wasDragging.current) {
-          // setSelectedPole(timePoleData);
+          setSelectedPole(timePoleData);
         }
         wasDragging.current = false;
       }}
@@ -171,7 +217,7 @@ export function TimepoleMarker({
         ref={targetElement}
         onClick={(e) => {
           console.log(e.currentTarget.getBoundingClientRect());
-          console.log(window.innerHeight);
+          // console.log(window.innerHeight);
         }}
       >
         <p style={{ margin: 0, whiteSpace: "nowrap" }}>{timePoleData.title}</p>
@@ -226,14 +272,13 @@ function TimePoleModal({
     HTMLInputElement,
     { value: any; onClick: any }
   >(({ value, onClick }, ref) => (
-    <button
+    <input
       onClick={onClick}
       value={value}
       type="button"
       className={styles.modalDateButton}
-    >
-      {value}
-    </button>
+      ref={ref}
+    ></input>
   ));
 
   // -------------- submit --------------------

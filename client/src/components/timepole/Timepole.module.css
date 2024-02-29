@@ -54,6 +54,7 @@
   top: -50%;
 
   max-width: 1000px;
+  z-index: 100;
   /* transform: translateY(-100px); */
 }
 
@@ -186,6 +187,11 @@
   display: flex;
   align-items: flex-start;
   gap: 10px;
+}
+
+.modalDateButton {
+  outline: none;
+  border: none;
 }
 .modalIcon {
   transform: translateY(10px);
