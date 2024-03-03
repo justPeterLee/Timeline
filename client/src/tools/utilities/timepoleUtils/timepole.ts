@@ -5,11 +5,47 @@ import {
   OverLappingDataObj,
   PoleCordsData,
   SortedPoleData,
+  StandardPoleData,
   UnSortedPoleData,
   calcNewCords,
   generateAccurateCords,
   orientationlimits,
 } from "./timepoleUtils";
+
+export function compareSortPoles(
+  poles: StandardPoleData[],
+  localData: PoleCordsData
+): string[] {
+  const poleData = poles.map((_pole) => {
+    return _pole.id;
+  });
+  const localDataKeys = Object.keys(localData);
+
+  const addArray = [];
+  const poleMap = new Map();
+
+  for (let i = 0; i < poleData.length; i++) {
+    poleMap.set(
+      poleData[i],
+      !poleMap.get(poleData[i]) ? 1 : poleMap.get(poleData[i]) + 1
+    );
+  }
+
+  for (let i = 0; i < localDataKeys.length; i++) {
+    poleMap.set(
+      localDataKeys[i],
+      !poleMap.get(localDataKeys[i]) ? -1 : poleMap.get(localDataKeys[i]) - 1
+    );
+  }
+
+  for (const [key, value] of poleMap.entries()) {
+    if (value > 0) {
+      addArray.push(key);
+    }
+  }
+
+  return addArray;
+}
 
 export function sortPoleData(poleData: UnSortedPoleData) {
   if (!poleData) return;
@@ -64,6 +100,7 @@ export function sort(poleData: UnSortedPoleData) {
       const lastPoleOrientation = lastPoleData[sortedDataKeys[i - 1]];
 
       const currentTarget = document.querySelector(`#pole-${_poles.id}`);
+      // console.log(currentTarget);
 
       const boundingClient = currentTarget
         ? currentTarget.getBoundingClientRect()
@@ -179,4 +216,10 @@ export function sort(poleData: UnSortedPoleData) {
   }
 
   return poleCordsData;
+}
+
+export function insertSorData(poles: string[]) {
+  for (let i = 0; i < poles.length; i++) {
+    // console.log(document.querySelector(`#pole-${poles[i]}`));
+  }
 }

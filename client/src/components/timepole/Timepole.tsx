@@ -6,53 +6,69 @@ import {
 } from "../../redux/redux-hooks/redux.hook";
 
 import { getPoleDataList } from "../../tools/data";
-import { sort } from "../../tools/utilities/timepoleUtils/timepole";
+import {
+  sort,
+  insertSorData,
+  compareSortPoles,
+} from "../../tools/utilities/timepoleUtils/timepole";
 
-import { PoleCordsData } from "../../tools/utilities/timepoleUtils/timepoleUtils";
+import {
+  PoleCordsData,
+  PoleDatas,
+  StandardPoleData,
+} from "../../tools/utilities/timepoleUtils/timepoleUtils";
 
-interface Pole {
-  id: string;
-  title: string;
-  description: string;
-  completed: boolean;
-  user_id: number;
-  date: number;
-  month: number;
-  year: number;
-  day: number;
-  full_date: string;
-}
-
-export function TimePoleDisplay({ url }: { url: string | undefined }) {
-  const dispatch = useAppDispatch();
-  const poles = useAppSelector((store) => store.timepole.getTimePole);
+export function TimePoleDisplay({
+  url,
+  poles,
+}: {
+  url: string | undefined;
+  poles: any[];
+}) {
   const urlView = url ? url : "year";
 
-  const poleDatas = useMemo(() => {
+  const poleDatas: PoleDatas = useMemo(() => {
     return getPoleDataList(poles, urlView);
   }, [poles, urlView]);
 
-  const [sortData, setSortDataEffect] = useState<PoleCordsData>({});
-  const [selectedPole, setSelectedPole] = useState<null | Pole>(null);
+  const [sortData, setSortData] = useState<any>({});
+  const [pageRender, setPageRender] = useState(false);
+
+  const [selectedPole, setSelectedPole] = useState<null | StandardPoleData>(
+    null
+  );
 
   const onClose = () => {
     setSelectedPole(null);
   };
 
-  useEffect(() => {
-    dispatch({ type: "GET_TIMEPOLE_SERVER" });
-  }, [dispatch]);
+  const updateWindowSort = (data: string) => {
+    window.localStorage.setItem("sortDataEffect", data);
+  };
+
+  const updateSortData = (_pole: { id: string; yPos: number }) => {
+    const proxyLocalData = sortData;
+    proxyLocalData[_pole.id] = { yPos: _pole.yPos };
+
+    const jsonSortData = JSON.stringify(proxyLocalData);
+    updateWindowSort(jsonSortData);
+  };
 
   useEffect(() => {
     //check if sort data already exist
-    if (window.localStorage.getItem("sortDataEffect")) {
-      const jsonSortData = JSON.parse(
-        window.localStorage.getItem("sortDataEffect")!
-      );
-      setSortDataEffect(jsonSortData);
+    const localStorageData = window.localStorage.getItem("sortDataEffect");
+    if (localStorageData && localStorageData !== undefined) {
+      const jsonLocalStorageData: PoleCordsData = JSON.parse(localStorageData);
+      const addPoles = compareSortPoles(poles, jsonLocalStorageData);
+
+      if (addPoles.length) {
+        console.log(addPoles);
+        insertSorData(addPoles);
+      }
+
+      setSortData(jsonLocalStorageData);
     } else {
       // create sort data
-
       // check if data is generated
       if (!Object.keys(poleDatas).length) {
         console.log("invalid poles data: ", poles);
@@ -61,24 +77,15 @@ export function TimePoleDisplay({ url }: { url: string | undefined }) {
 
       // if data is done generated
       const newSortData = sort(poleDatas);
-
-      // if newSortData is valid
-      if (newSortData) {
-        window.localStorage.setItem(
-          "sortDataEffect",
-          JSON.stringify(newSortData)
-        );
-      }
-
-      // if window.localStorage is valid
-      if (window.localStorage.getItem("sortDataEffect")) {
-        const jsonSortData = JSON.parse(
-          window.localStorage.getItem("sortDataEffect")!
-        );
-        setSortDataEffect(jsonSortData);
-      }
+      const jsonSortData = JSON.stringify(newSortData);
+      updateWindowSort(jsonSortData);
+      setSortData(JSON.parse(window.localStorage.getItem("sortDataEffect")!));
     }
-  }, [poleDatas, window.localStorage.getItem("sortDataEffect")]);
+  }, [poles, poleDatas, window.localStorage.getItem("sortDataEffect")]);
+
+  useEffect(() => {
+    setPageRender(true);
+  }, [poleDatas]);
 
   return (
     <>
@@ -86,32 +93,30 @@ export function TimePoleDisplay({ url }: { url: string | undefined }) {
         {Object.keys(poleDatas).map((_week, index) => {
           return (
             <Fragment key={index}>
-              {poleDatas[_week].polesList.map(
-                (_pole: { pole: Pole; xPercent: number }) => {
-                  const isGroup =
-                    poleDatas[_week].polesList.length >= 3 ? true : false;
+              {poleDatas[_week].polesList.map((_pole) => {
+                const isGroup =
+                  poleDatas[_week].polesList.length >= 3 ? true : false;
 
-                  // if (isGroup) console.log(_pole);
-                  let sortYPos = sortData[_pole.pole.id]
-                    ? sortData[_pole.pole.id].yPos
-                    : 100;
+                // if (isGroup) console.log(_pole);
 
-                  return (
-                    <TimepoleMarker
-                      key={_pole.pole.id}
-                      id={_pole.pole.id}
-                      xPercent={
-                        isGroup ? poleDatas[_week].midPoint : _pole.xPercent
-                      }
-                      timePoleData={_pole.pole}
-                      yPos={sortYPos}
-                      setSelectedPole={(id) => {
-                        setSelectedPole(id);
-                      }}
-                    />
-                  );
-                }
-              )}
+                return (
+                  <TimepoleMarker
+                    key={_pole.pole.id}
+                    xPercent={
+                      isGroup ? poleDatas[_week].midPoint : _pole.xPercent
+                    }
+                    timePoleData={_pole.pole}
+                    yPos={sortData[_pole.pole.id]}
+                    setSelectedPole={(id) => {
+                      setSelectedPole(id);
+                    }}
+                    updateSortData={(_pole: { id: string; yPos: number }) => {
+                      updateSortData(_pole);
+                    }}
+                    pageRender={pageRender}
+                  />
+                );
+              })}
             </Fragment>
           );
         })}
@@ -126,63 +131,104 @@ export function TimePoleDisplay({ url }: { url: string | undefined }) {
 }
 
 import { useSpring, animated, to as interpolate } from "react-spring";
-// import{to} from ''
 import { useDrag } from "@use-gesture/react";
 import { Modal } from "../elements/Links";
 export function TimepoleMarker({
-  id,
   xPercent,
   timePoleData,
   yPos,
+  pageRender,
 
   setSelectedPole,
+  updateSortData,
 }: {
-  id: string | number;
   xPercent: number;
-  timePoleData: Pole;
-  yPos: number;
-  setSelectedPole: (id: Pole) => void;
+  timePoleData: StandardPoleData;
+  yPos: { yPos: number };
+  pageRender: boolean;
+
+  setSelectedPole: (id: StandardPoleData) => void;
+  updateSortData: (_pole: { id: string; yPos: number }) => void;
 }) {
   const wasDragging = useRef(false);
-
-  const yPosRef = useRef(yPos);
-
+  const yPosRef = useRef(yPos ? yPos.yPos : 100);
   const targetElement = useRef<HTMLDivElement>(null);
 
-  const [{ x, y, scale }, api] = useSpring(() => ({
-    y: yPos,
-    x: 0,
-    scale: yPos > 0 ? yPos : yPos + 40,
-  }));
+  const yPosMemo = useMemo(() => {
+    yPosRef.current = yPos ? yPos.yPos : -100;
+    return yPos ? yPos.yPos : -100;
+  }, [yPos]);
 
-  api.set({ y: yPos, scale: yPos > 0 ? yPos : yPos + 40 });
+  const [{ x, y, scale }, api] = useSpring(() => ({
+    y: 0,
+    x: 0,
+    scale: 0,
+  }));
 
   const bind = useDrag(({ down, movement: [mx, my] }) => {
     if (!down) {
+      // updator
       yPosRef.current = my + yPosRef.current;
-      if (
-        (yPosRef.current <= 25 && yPosRef.current >= 0) ||
-        (yPosRef.current >= -60 && yPosRef.current <= 0)
-      ) {
-        console.log("dropped near center");
+
+      if (targetElement.current) {
+        //middle point
+        const boundClient = targetElement.current.getBoundingClientRect();
+        const middlePoint = boundClient.height / 2;
+        const targetPos = boundClient.top + middlePoint;
+
+        // bounds
+        const windowHalf = window.innerHeight / 2;
+        const heavenWindow = windowHalf - 50;
+        const hellWindow = windowHalf + 50;
+
+        //condition
+        if (targetPos > heavenWindow && targetPos < hellWindow) {
+          if (targetPos > heavenWindow && targetPos < windowHalf) {
+            yPosRef.current = -80;
+            api.start({ y: yPosRef.current, scale: yPosRef.current + 40 });
+          } else {
+            yPosRef.current = 40;
+            api.start({ y: yPosRef.current, scale: yPosRef.current });
+          }
+        }
+      } else {
+        const middleOffset = 15.5 + 5;
+        const targetPos = yPosRef.current + middleOffset + my;
+        console.log(targetPos);
+        if (targetPos > -40 && targetPos < 40) {
+          if (targetPos > -40 && targetPos < 0) {
+            yPosRef.current = -80;
+            api.start({ y: yPosRef.current, scale: yPosRef.current + 40 });
+          } else {
+            yPosRef.current = 40;
+            api.start({ y: yPosRef.current, scale: yPosRef.current });
+          }
+        }
       }
+
+      updateSortData({ id: timePoleData.id, yPos: yPosRef.current });
     }
 
     if (down) {
       if (!wasDragging.current && (my > 5 || my < -5)) {
         wasDragging.current = true;
       }
+      const offsetYPos = my + yPosRef.current;
       api.start({
-        y: my + yPosRef.current,
-        scale:
-          my + yPosRef.current > 0
-            ? my + yPosRef.current
-            : my + yPosRef.current + 40,
+        y: offsetYPos,
+        scale: offsetYPos > 0 ? offsetYPos : offsetYPos + 40,
       });
     }
 
     api.start({ x: down ? mx : 0 });
   });
+
+  useEffect(() => {
+    api.start({
+      from: { y: yPosMemo > 0 ? 25 : -25, scale: yPosMemo > 0 ? 25 : -25 },
+      to: { y: yPosMemo, scale: yPosMemo > 0 ? yPosMemo : yPosMemo + 40 },
+    });
+  }, [pageRender]);
 
   return (
     <div
@@ -195,17 +241,12 @@ export function TimepoleMarker({
         wasDragging.current = false;
       }}
     >
-      {/* {<AnimatedTimePole isMoving={isMoving} points={{ point1, point2 }} />} */}
-
       <animated.div
         className={styles.animatedTimePole}
         style={{
-          // thrans,
           transform: interpolate([scale], (s: number) => {
             return `scaleY(${s})`;
           }),
-          // transform: "rotate(180deg)",
-          // transform:
           transformOrigin: "top",
         }}
       ></animated.div>
@@ -214,10 +255,10 @@ export function TimepoleMarker({
         {...bind()}
         style={{ x, y, touchAction: "pan-y" }}
         className={styles.textContainer}
-        id={`pole-${id}`}
+        id={`pole-${timePoleData.id}`}
         ref={targetElement}
         onClick={(e) => {
-          console.log(e.currentTarget.getBoundingClientRect());
+          // console.log(e.currentTarget.getBoundingClientRect());
           // console.log(window.innerHeight);
         }}
       >
@@ -237,7 +278,6 @@ export function AnimatedTimePole() {
 
 import { ValidInput } from "../elements/Links";
 import format from "date-fns/format";
-// import { CiTextAlignCenter } from "react-icons/ci";
 import { BsTextCenter, BsCalendar3, BsTrash3 } from "react-icons/bs";
 import DatePicker from "react-datepicker";
 import React from "react";
@@ -246,7 +286,7 @@ function TimePoleModal({
   timePoleData,
   onClose,
 }: {
-  timePoleData: Pole;
+  timePoleData: StandardPoleData;
   onClose: () => void;
 }) {
   // ------------ redux -----------------------

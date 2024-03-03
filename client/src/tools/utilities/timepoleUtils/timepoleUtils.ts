@@ -13,6 +13,14 @@ export interface StandardPoleData {
   full_date: string;
 }
 
+export type PoleDatas = Record<
+  string,
+  {
+    midPoint: number;
+    polesList: { pole: StandardPoleData; xPercent: number }[];
+  }
+>;
+
 export interface UnSortedPoleData {
   [key: string]: {
     polesList: { pole: StandardPoleData; xPercent: number }[];

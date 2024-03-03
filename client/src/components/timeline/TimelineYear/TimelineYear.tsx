@@ -10,8 +10,13 @@ import {
 import { TimePoleDisplay } from "../../timepole/Timepole";
 
 import { useEffect, useState } from "react";
-import { useAppDispatch } from "../../../redux/redux-hooks/redux.hook";
+import {
+  useAppDispatch,
+  useAppSelector,
+} from "../../../redux/redux-hooks/redux.hook";
 export default function TimelineYearPage() {
+  const poles = useAppSelector((store) => store.timepole.getTimePole);
+
   const dispatch = useAppDispatch();
   const { mode } = useParams();
   const [monthSelected, setMonthSelected] = useState<number>(-1);
@@ -26,7 +31,11 @@ export default function TimelineYearPage() {
 
   useEffect(() => {
     dispatch({ type: "FETCH_USER" });
+    dispatch({ type: "GET_TIMEPOLE_SERVER" });
   }, []);
+
+  // useEffect(() => {
+  // }, [dispatch]);
   return (
     <>
       <WeekMarkers />
@@ -43,7 +52,7 @@ export default function TimelineYearPage() {
         selectMonth={setSelectedMonth}
         selectedMonth={monthSelected}
       />
-      <TimePoleDisplay url={"year"} />
+      <TimePoleDisplay url={"year"} poles={poles} />
     </>
   );
 }
@@ -91,6 +100,7 @@ export function MonthMarkerYear({
   const monthRoute = `/month/${year || current.year}/${index + 1}/${
     mode || "view"
   }`;
+
   return (
     <div
       id={`${index}`}
