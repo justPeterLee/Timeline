@@ -234,8 +234,17 @@ export function TimepoleMarker({
       from: { y: yPosMemo > 0 ? 25 : -25, scale: yPosMemo > 0 ? 25 : -25 },
       to: { y: yPosMemo, scale: yPosMemo > 0 ? yPosMemo : yPosMemo + 40 },
     });
-  }, [pageRender, yPosMemo]);
+  }, [pageRender]);
 
+  // useEffect(() => {
+  //   console.log(pageRender);
+  //   if (pageRender) {
+  //     api.start({
+  //       from: { y: yPosMemo > 0 ? 25 : -25, scale: yPosMemo > 0 ? 25 : -25 },
+  //       to: { y: yPosMemo, scale: yPosMemo > 0 ? yPosMemo : yPosMemo + 40 },
+  //     });
+  //   }
+  // }, [yPosMemo, pageRender]);
   // if (!yPos) return <></>;
 
   return (
