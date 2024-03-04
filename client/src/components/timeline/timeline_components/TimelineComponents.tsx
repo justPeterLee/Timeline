@@ -84,13 +84,13 @@ export function CreateTimeline({
     setSelectedDOY(dayOfYear);
   };
 
-  const clear = () => {
+  const onClose = () => {
     setSelectedDOY(null);
   };
 
   return (
     <>
-      {selectedDOY && <Backdrop onClose={clear} />}
+      {selectedDOY && <Backdrop onClose={onClose} />}
       <div
         className={styles.createTimeline}
         onMouseMove={(e) => {
@@ -115,7 +115,11 @@ export function CreateTimeline({
         <div>{dayOfYear && format(dayOfYear, "LLLL d")}</div>
 
         {selectedDOY && (
-          <CreatePoleModal xPercent={xPercent} date={selectedDOY} />
+          <CreatePoleModal
+            xPercent={xPercent}
+            date={selectedDOY}
+            onClose={onClose}
+          />
         )}
       </div>
     </>
@@ -134,15 +138,21 @@ import "react-datepicker/dist/react-datepicker.css";
 import React from "react";
 
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
 
 function CreatePoleModal({
   xPercent,
   date,
+  onClose,
 }: {
   xPercent: number;
   date: Date | null;
+  onClose: () => void;
 }) {
   // dependencies
+  const { year, month } = useParams();
+  const navigate = useNavigate();
+
   const dispatch = useDispatch();
   const user = useSelector((store: any) => store.userAccount);
   // ------- time pole values -------
@@ -195,6 +205,11 @@ function CreatePoleModal({
     } else {
       console.log("create on local storage");
     }
+    onClose();
+    const viewUrl = month
+      ? `/month/${year}/${month}/view`
+      : `/year/${year}/view`;
+    navigate(viewUrl);
   };
   // ------- date picker --------
   const [selectedDate, setSelectedDate] = useState(date);
@@ -208,9 +223,13 @@ function CreatePoleModal({
     HTMLInputElement,
     { value: any; onClick: any }
   >(({ value, onClick }, ref) => (
-    <button onClick={onClick} value={value} type="button">
-      {value}
-    </button>
+    <input
+      className={styles.datePickerInput}
+      onClick={onClick}
+      value={value}
+      type="button"
+      ref={ref}
+    />
   ));
 
   // ------- inital setup --------
@@ -284,7 +303,7 @@ function CreatePoleModal({
             </button>
           </div>
         </form>
-        <Timepole />
+        <Timepole style={{ backgroundColor: "rgb(100,100,100)" }} />
       </div>
     </>
   );

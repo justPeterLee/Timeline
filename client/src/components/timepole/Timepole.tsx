@@ -234,7 +234,7 @@ export function TimepoleMarker({
       from: { y: yPosMemo > 0 ? 25 : -25, scale: yPosMemo > 0 ? 25 : -25 },
       to: { y: yPosMemo, scale: yPosMemo > 0 ? yPosMemo : yPosMemo + 40 },
     });
-  }, [pageRender]);
+  }, [pageRender, yPosMemo]);
 
   // useEffect(() => {
   //   console.log(pageRender);
@@ -285,8 +285,8 @@ export function TimepoleMarker({
   );
 }
 
-export function Timepole() {
-  return <div className={styles.timepole}></div>;
+export function Timepole({ style }: { style?: { backgroundColor?: string } }) {
+  return <div className={styles.timepole} style={{ ...style }}></div>;
 }
 
 import { ValidInput } from "../elements/Links";
