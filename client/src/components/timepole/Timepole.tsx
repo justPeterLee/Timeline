@@ -63,9 +63,14 @@ export function TimePoleDisplay({
 
       if (addPoles.length) {
         console.log(addPoles);
-        insertSorData(addPoles);
+        const newSortData = insertSorData(
+          poles,
+          addPoles,
+          jsonLocalStorageData
+        );
+        const jsonSortData = JSON.stringify(newSortData);
+        updateWindowSort(jsonSortData);
       }
-
       setSortData(jsonLocalStorageData);
     } else {
       // create sort data
@@ -85,7 +90,7 @@ export function TimePoleDisplay({
 
   useEffect(() => {
     setPageRender(true);
-  }, [poleDatas]);
+  }, []);
 
   return (
     <>
@@ -224,11 +229,14 @@ export function TimepoleMarker({
   });
 
   useEffect(() => {
+    // if()
     api.start({
       from: { y: yPosMemo > 0 ? 25 : -25, scale: yPosMemo > 0 ? 25 : -25 },
       to: { y: yPosMemo, scale: yPosMemo > 0 ? yPosMemo : yPosMemo + 40 },
     });
-  }, [pageRender]);
+  }, [pageRender, yPosMemo]);
+
+  // if (!yPos) return <></>;
 
   return (
     <div
@@ -258,7 +266,7 @@ export function TimepoleMarker({
         id={`pole-${timePoleData.id}`}
         ref={targetElement}
         onClick={(e) => {
-          // console.log(e.currentTarget.getBoundingClientRect());
+          console.log(e.currentTarget.getBoundingClientRect());
           // console.log(window.innerHeight);
         }}
       >
@@ -270,10 +278,6 @@ export function TimepoleMarker({
 
 export function Timepole() {
   return <div className={styles.timepole}></div>;
-}
-
-export function AnimatedTimePole() {
-  return <animated.div className={styles.animatedTimePole}></animated.div>;
 }
 
 import { ValidInput } from "../elements/Links";

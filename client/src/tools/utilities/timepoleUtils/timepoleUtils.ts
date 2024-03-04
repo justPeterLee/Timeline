@@ -167,3 +167,43 @@ export function orientationlimits(length: number) {
 
   return orientationObj[selection as keyof OrientationObj];
 }
+
+export function generateOverLappingData(
+  oldPoles: StandardPoleData[],
+  sortData: PoleCordsData
+) {
+  const overlappingData: {
+    heaven: OverLappingDataObj;
+    hell: OverLappingDataObj;
+  } = { heaven: {}, hell: {} };
+
+  const windowhalf = window.innerHeight / 2;
+  for (let i = 0; i < oldPoles.length; i++) {
+    const _oldPole = oldPoles[i];
+    const _oldTarget = document.getElementById(`pole-${oldPoles[i].id}`);
+    const _sortDataTarget = sortData[oldPoles[i].id];
+    if (!_oldTarget || !_sortDataTarget) {
+      continue;
+    }
+    const _oldTargetBC = _oldTarget.getBoundingClientRect();
+
+    const orientation = _oldTargetBC.top + _sortDataTarget.yPos;
+    // console.log(orientation, windowhalf);
+
+    if (orientation <= windowhalf) {
+      overlappingData.heaven[`${_oldTargetBC.right}_${_oldTargetBC.left}`] = {
+        pole: _oldPole,
+        boundingClient: _oldTarget.getBoundingClientRect(),
+        y_pos: _sortDataTarget.yPos,
+      };
+    } else {
+      overlappingData.hell[`${_oldTargetBC.right}_${_oldTargetBC.left}`] = {
+        pole: _oldPole,
+        boundingClient: _oldTarget.getBoundingClientRect(),
+        y_pos: _sortDataTarget.yPos,
+      };
+    }
+  }
+
+  return overlappingData;
+}

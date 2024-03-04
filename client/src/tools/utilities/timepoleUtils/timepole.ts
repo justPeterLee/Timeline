@@ -1,5 +1,5 @@
 import sortBy from "lodash/sortBy";
-import { randomNumberInRange } from "../utilities";
+import { randomFifthyFifthy, randomNumberInRange } from "../utilities";
 import {
   Orientation,
   OverLappingDataObj,
@@ -10,6 +10,7 @@ import {
   calcNewCords,
   generateAccurateCords,
   orientationlimits,
+  generateOverLappingData,
 } from "./timepoleUtils";
 
 export function compareSortPoles(
@@ -99,7 +100,7 @@ export function sort(poleData: UnSortedPoleData) {
     sortedData[weekId].map((_poles, index) => {
       const lastPoleOrientation = lastPoleData[sortedDataKeys[i - 1]];
 
-      const currentTarget = document.querySelector(`#pole-${_poles.id}`);
+      const currentTarget = document.getElementById(`pole-${_poles.id}`);
       // console.log(currentTarget);
 
       const boundingClient = currentTarget
@@ -218,8 +219,77 @@ export function sort(poleData: UnSortedPoleData) {
   return poleCordsData;
 }
 
-export function insertSorData(poles: string[]) {
-  for (let i = 0; i < poles.length; i++) {
-    // console.log(document.querySelector(`#pole-${poles[i]}`));
+export function insertSorData(
+  oldPoles: StandardPoleData[],
+  newPoles: string[],
+  sortData: PoleCordsData
+) {
+  console.time("start");
+  const overlappingData = generateOverLappingData(oldPoles, sortData);
+  const newSortData = sortData;
+  for (let i = 0; i < newPoles.length; i++) {
+    const _newPoleTarget = document.getElementById(`pole-${newPoles[i]}`);
+    if (!_newPoleTarget) continue;
+
+    const _newPoleBC = _newPoleTarget.getBoundingClientRect();
+
+    // generate orientation
+    const selectedOrientation = randomFifthyFifthy() ? "heaven" : "hell";
+
+    // generate position
+    let generatedYPos = randomNumberInRange(90, 200);
+
+    if (selectedOrientation === "heaven") {
+      generatedYPos = -1 * (generatedYPos + 5 + _newPoleBC.height);
+    }
+
+    // get potential poles
+    const sameOrientationKeys = Object.keys(
+      overlappingData[selectedOrientation]
+    );
+
+    // check potential poles
+    const potentialPoles = sameOrientationKeys.filter((_cords) => {
+      const cords = _cords.split("_");
+      const right = parseInt(cords[0]);
+      const left = parseInt(cords[1]);
+
+      return right > _newPoleBC.left && left < _newPoleBC.right;
+    });
+
+    console.log(potentialPoles);
+
+    for (let i = 0; i < potentialPoles.length; i++) {
+      const _potenialTarget =
+        overlappingData[selectedOrientation][potentialPoles[i]];
+      const _potenialTargetBC = _potenialTarget.boundingClient;
+
+      // console.log(overlappingData[selectedOrientation][potentialPoles[i]]);
+
+      const potentialTop = _potenialTargetBC.top + _potenialTarget.y_pos;
+      const potentialBot = _potenialTargetBC.bottom + _potenialTarget.y_pos;
+
+      const newPoleTop = _newPoleBC.top + generatedYPos;
+      const newPoleBot = _newPoleBC.bottom + generatedYPos;
+
+      if (newPoleBot >= potentialTop && newPoleTop <= potentialBot) {
+        const potentialPolesObjArray = potentialPoles.map((_key) => {
+          return overlappingData[selectedOrientation][_key];
+        });
+        generatedYPos = generateAccurateCords(
+          potentialPolesObjArray,
+          _newPoleBC.height
+        );
+        break;
+      }
+    }
+
+    // update overlapping data
+    newSortData[newPoles[i]] = { yPos: generatedYPos };
+    // console.log(newSortData[newPoles[i]]);
   }
+
+  // return
+  console.timeEnd("start");
+  return newSortData;
 }
