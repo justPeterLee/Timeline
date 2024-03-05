@@ -57,6 +57,7 @@ export function TimePoleDisplay({
   useEffect(() => {
     //check if sort data already exist
     const localStorageData = window.localStorage.getItem("sortDataEffect");
+    console.log(poleDatas);
     if (localStorageData && localStorageData !== undefined) {
       const jsonLocalStorageData: PoleCordsData = JSON.parse(localStorageData);
       const addPoles = compareSortPoles(poles, jsonLocalStorageData);
@@ -99,17 +100,10 @@ export function TimePoleDisplay({
           return (
             <Fragment key={index}>
               {poleDatas[_week].polesList.map((_pole) => {
-                const isGroup =
-                  poleDatas[_week].polesList.length >= 3 ? true : false;
-
-                // if (isGroup) console.log(_pole);
-
                 return (
                   <TimepoleMarker
                     key={_pole.pole.id}
-                    xPercent={
-                      isGroup ? poleDatas[_week].midPoint : _pole.xPercent
-                    }
+                    xPercent={_pole.xPercent}
                     timePoleData={_pole.pole}
                     yPos={sortData[_pole.pole.id]}
                     setSelectedPole={(id) => {
@@ -491,7 +485,7 @@ function TimePoleModal({
                 }}
                 className={styles.modalDateYear}
               >
-                {timePoleData.year}
+                {new Date(timePoleData.full_date).getFullYear()}
               </p>
             </div>
             {/* <p className={styles.modalTitleView}>date</p> */}

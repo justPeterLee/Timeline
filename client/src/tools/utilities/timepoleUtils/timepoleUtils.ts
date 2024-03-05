@@ -6,10 +6,6 @@ export interface StandardPoleData {
   description: string;
   completed: boolean;
   user_id: number;
-  date: number;
-  month: number;
-  year: number;
-  day: number;
   full_date: string;
 }
 
@@ -156,13 +152,16 @@ export function generateAccurateCords(
 }
 
 export function orientationlimits(length: number) {
-  const selection = length <= 4 ? length : 4;
+  const selection = length <= 7 ? length : 7;
 
   const orientationObj: OrientationObj = {
-    1: { heaven: 1, hell: 1, total: 1 },
-    2: { heaven: 2, hell: 2, total: 2 },
-    3: { heaven: 2, hell: 2, total: 3 },
-    4: { heaven: 2, hell: 2, total: 4 },
+    1: { heaven: 1, hell: 1, total: length },
+    2: { heaven: 2, hell: 2, total: length },
+    3: { heaven: 2, hell: 2, total: length },
+    4: { heaven: 2, hell: 2, total: length },
+    5: { heaven: 3, hell: 3, total: length },
+    6: { heaven: 3, hell: 3, total: length },
+    7: { heaven: 4, hell: 4, total: length },
   };
 
   return orientationObj[selection as keyof OrientationObj];

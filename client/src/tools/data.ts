@@ -2,6 +2,8 @@
 // year data
 // today data
 
+import { StandardPoleData } from "./utilities/timepoleUtils/timepoleUtils";
+
 // constants
 const current_date = new Date();
 
@@ -173,9 +175,8 @@ export function getWeek(date: Date) {
   const sub = firstDayDay === 0 ? 1 : firstDayDay === 1 ? 0 : 8 - firstDayDay;
 
   const weekNumber = Math.floor((daysOffset - sub) / 7);
-  const midPoint = weekNumber * 7 + 3.5 + sub;
   // console.log(midPoint);
-  return { weekNumber: weekNumber + 1, midPoint };
+  return { weekNumber: weekNumber + 1 };
 }
 
 interface Pole {
@@ -197,7 +198,9 @@ export function getPoleData(pole: Pole, state: string) {
   const date = new Date(pole.full_date);
   const dateNumber = getDayOfYear(date);
   const limit =
-    state && state === "month" ? 100 / month_data[pole.month].day : 100 / 365;
+    state && state === "month"
+      ? 100 / month_data[date.getMonth()].day
+      : 100 / 365;
 
   // weekNumber
   const xPercent = limit * dateNumber;
@@ -208,24 +211,68 @@ export function getPoleData(pole: Pole, state: string) {
 
 export function getPoleDataList(poles: Pole[], state: string) {
   const poleWeekList: any = {};
+  const poleWeekListTwo: {
+    [key: string]: {
+      polesList: {
+        [key: string]: {
+          id: string;
+          poles: StandardPoleData[];
+          xPercent: number;
+        };
+      };
+    };
+  } = {};
+  // console.log(poles);
 
   for (let i = 0; i < poles.length; i++) {
     const poleData = getPoleData(poles[i], state);
 
     const poleWithX = { pole: poles[i], xPercent: poleData.xPercent };
-    const z = poleWeekList[poleData.weekInfo.weekNumber];
-    if (z) {
+
+    const weekPoles = poleWeekList[poleData.weekInfo.weekNumber];
+
+    const weekPoleTwo = poleWeekListTwo[poleData.weekInfo.weekNumber];
+    const pole = poles[i];
+    const poleDate = pole.full_date;
+    const poleId = pole.id;
+    const xPercent = poleData.xPercent;
+
+    // console.log(weekId, poles[i]);
+    if (weekPoles) {
+      // exists
       poleWeekList[poleData.weekInfo.weekNumber].polesList = [
         ...poleWeekList[poleData.weekInfo.weekNumber].polesList,
         poleWithX,
       ];
     } else {
+      // doesn't exist
       poleWeekList[poleData.weekInfo.weekNumber] = {
         polesList: [poleWithX],
-        midPoint: poleData.weekInfo.midPoint * (100 / 365),
+      };
+    }
+
+    if (weekPoleTwo) {
+      // check if date instance exists
+      if (weekPoleTwo.polesList[poleDate]) {
+        weekPoleTwo.polesList[poleDate].poles.push(pole);
+        weekPoleTwo.polesList[poleDate].id =
+          weekPoleTwo.polesList[poleDate].id.concat(poleId);
+      } else {
+        weekPoleTwo.polesList[poleDate] = {
+          id: poleId,
+          poles: [pole],
+          xPercent: xPercent,
+        };
+      }
+    } else {
+      poleWeekListTwo[poleData.weekInfo.weekNumber] = {
+        polesList: {
+          [poleDate]: { id: poleId, poles: [pole], xPercent: xPercent },
+        },
       };
     }
   }
 
+  console.log(poleWeekListTwo);
   return poleWeekList;
 }
