@@ -62,7 +62,7 @@ export function TimePoleDisplay({
       const addPoles = compareSortPoles(poles, jsonLocalStorageData);
 
       if (addPoles.length) {
-        // console.log(addPoles);
+        console.log(addPoles);
         const newSortData = insertSorData(
           poles,
           addPoles,

@@ -17,9 +17,22 @@ export function compareSortPoles(
   poles: StandardPoleData[],
   localData: PoleCordsData
 ): string[] {
-  const poleData = poles.map((_pole) => {
-    return _pole.id;
+  const poleDataObj: { [key: string]: string } = {};
+
+  for (let i = 0; i < poles.length; i++) {
+    if (poleDataObj[poles[i].full_date]) {
+      poleDataObj[poles[i].full_date] = poleDataObj[poles[i].full_date].concat(
+        poles[i].id
+      );
+    } else {
+      poleDataObj[poles[i].full_date] = poles[i].id;
+    }
+  }
+
+  const poleData = Object.keys(poleDataObj).map((_key) => {
+    return poleDataObj[_key];
   });
+
   const localDataKeys = Object.keys(localData);
 
   const addArray = [];
@@ -230,6 +243,7 @@ export function insertSorData(
 ) {
   console.time("start");
   const overlappingData = generateOverLappingData(oldPoles, sortData);
+  console.log(overlappingData);
   const newSortData = sortData;
   for (let i = 0; i < newPoles.length; i++) {
     const _newPoleTarget = document.getElementById(`pole-${newPoles[i]}`);

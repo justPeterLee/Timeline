@@ -182,6 +182,7 @@ export function generateOverLappingData(
   oldPoles: StandardPoleData[],
   sortData: PoleCordsData
 ) {
+  console.log(sortData, oldPoles);
   const overlappingData: {
     heaven: OverLappingDataObj;
     hell: OverLappingDataObj;
