@@ -208,7 +208,7 @@ export function TimepoleMarker({
         }
       }
 
-      updateSortData({ id: timePoleData[0].id, yPos: yPosRef.current });
+      updateSortData({ id: id, yPos: yPosRef.current });
     }
 
     if (down) {
@@ -218,7 +218,11 @@ export function TimepoleMarker({
       const offsetYPos = my + yPosRef.current;
       api.start({
         y: offsetYPos,
-        scale: offsetYPos > 0 ? offsetYPos : offsetYPos + 40,
+        scale:
+          offsetYPos > 0
+            ? offsetYPos
+            : offsetYPos +
+              targetElement.current!.getBoundingClientRect().height,
       });
     }
 
@@ -229,7 +233,13 @@ export function TimepoleMarker({
     // if()
     api.start({
       from: { y: yPosMemo > 0 ? 25 : -25, scale: yPosMemo > 0 ? 25 : -25 },
-      to: { y: yPosMemo, scale: yPosMemo > 0 ? yPosMemo : yPosMemo + 40 },
+      to: {
+        y: yPosMemo,
+        scale:
+          yPosMemo > 0
+            ? yPosMemo
+            : yPosMemo + targetElement.current!.getBoundingClientRect().height,
+      },
     });
   }, [pageRender, yPosMemo]);
 
