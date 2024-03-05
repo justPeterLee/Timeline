@@ -38,13 +38,7 @@
 }
 
 .textContainer {
-  background-color: rgb(245, 245, 245);
-  font-size: 14px;
-  color: rgb(125, 125, 125);
-  margin: 5px;
-  padding: 5px;
-  border-radius: 2px;
-
+  border-radius: 5px;
   text-align: center;
   user-select: none;
 
@@ -53,14 +47,22 @@
   position: absolute;
   top: -50%;
 
-  max-width: 1000px;
+  /* max-width: 1000px; */
   z-index: 100;
   /* transform: translateY(-100px); */
 }
 
+.textBubble {
+  background-color: rgb(245, 245, 245);
+  font-size: 14px;
+  color: rgb(125, 125, 125);
+  margin: 5px;
+  padding: 5px;
+  border-radius: 5px;
+}
 .textContainer:hover,
 .timepole:hover + .textContainer {
-  background-color: rgb(235, 235, 235);
+  background-color: rgb(240, 240, 240);
   cursor: pointer;
   color: black;
 }

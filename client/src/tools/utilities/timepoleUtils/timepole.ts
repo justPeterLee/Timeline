@@ -6,11 +6,11 @@ import {
   PoleCordsData,
   SortedPoleData,
   StandardPoleData,
-  UnSortedPoleData,
   calcNewCords,
   generateAccurateCords,
   orientationlimits,
   generateOverLappingData,
+  PoleData,
 } from "./timepoleUtils";
 
 export function compareSortPoles(
@@ -48,26 +48,33 @@ export function compareSortPoles(
   return addArray;
 }
 
-export function sortPoleData(poleData: UnSortedPoleData) {
+export function sortPoleData(poleData: PoleData) {
   if (!poleData) return;
   const unsortedPoleDataKeys: string[] = Object.keys(poleData);
   const sortedPoleData: SortedPoleData = {};
 
+  // console.log(poleData);
   for (let i = 0; i < unsortedPoleDataKeys.length; i++) {
-    const extractedPole = poleData[unsortedPoleDataKeys[i]].polesList.map(
-      (_poleInstance) => {
-        return _poleInstance.pole;
-      }
-    );
+    const extractedPole = Object.keys(
+      poleData[unsortedPoleDataKeys[i]].polesList
+    ).map((_poleInstance) => {
+      // console.log(poleData[unsortedPoleDataKeys[i]].polesList);
+      return {
+        id: poleData[unsortedPoleDataKeys[i]].polesList[_poleInstance].id,
+        date: _poleInstance,
+      };
+    });
 
-    const sortedExtractedPoles = sortBy(extractedPole, (obj) => obj.full_date);
+    // console.log(extractedPole);
+    const sortedExtractedPoles = sortBy(extractedPole, (obj) => obj.date);
     sortedPoleData[unsortedPoleDataKeys[i]] = sortedExtractedPoles;
   }
 
+  console.log(sortedPoleData);
   return sortedPoleData;
 }
 
-export function sort(poleData: UnSortedPoleData) {
+export function sort(poleData: PoleData) {
   const sortedData = sortPoleData(poleData);
 
   if (!sortedData) return;
@@ -148,7 +155,6 @@ export function sort(poleData: UnSortedPoleData) {
         overlappingData[selectedOrientation][boundingClient.right] = {
           boundingClient: boundingClient,
           y_pos: generatedYPos,
-          pole: _poles,
         };
       }
 
@@ -162,7 +168,6 @@ export function sort(poleData: UnSortedPoleData) {
         overlappingData[selectedOrientation][boundingClient.right] = {
           boundingClient: boundingClient,
           y_pos: generatedYPos,
-          pole: _poles,
         };
       } else {
         let isOverlapping = false;
@@ -207,7 +212,6 @@ export function sort(poleData: UnSortedPoleData) {
         overlappingData[selectedOrientation][boundingClient.right] = {
           boundingClient: boundingClient,
           y_pos: generatedYPos,
-          pole: _poles,
         };
       }
 
@@ -256,8 +260,6 @@ export function insertSorData(
 
       return right > _newPoleBC.left && left < _newPoleBC.right;
     });
-
-    console.log(potentialPoles);
 
     for (let i = 0; i < potentialPoles.length; i++) {
       const _potenialTarget =

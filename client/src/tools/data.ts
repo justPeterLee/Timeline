@@ -2,7 +2,10 @@
 // year data
 // today data
 
-import { StandardPoleData } from "./utilities/timepoleUtils/timepoleUtils";
+import {
+  PoleData,
+  StandardPoleData,
+} from "./utilities/timepoleUtils/timepoleUtils";
 
 // constants
 const current_date = new Date();
@@ -179,21 +182,7 @@ export function getWeek(date: Date) {
   return { weekNumber: weekNumber + 1 };
 }
 
-interface Pole {
-  xPercent?: number;
-  id: string;
-  title: string;
-  description: string;
-  completed: boolean;
-  user_id: number;
-  date: number;
-  month: number;
-  year: number;
-  day: number;
-  full_date: string;
-}
-
-export function getPoleData(pole: Pole, state: string) {
+export function getPoleData(pole: StandardPoleData, state: string) {
   // x-percent
   const date = new Date(pole.full_date);
   const dateNumber = getDayOfYear(date);
@@ -209,19 +198,9 @@ export function getPoleData(pole: Pole, state: string) {
   return { xPercent, weekInfo: weekNumber };
 }
 
-export function getPoleDataList(poles: Pole[], state: string) {
+export function getPoleDataList(poles: StandardPoleData[], state: string) {
   const poleWeekList: any = {};
-  const poleWeekListTwo: {
-    [key: string]: {
-      polesList: {
-        [key: string]: {
-          id: string;
-          poles: StandardPoleData[];
-          xPercent: number;
-        };
-      };
-    };
-  } = {};
+  const poleWeekListTwo: PoleData = {};
   // console.log(poles);
 
   for (let i = 0; i < poles.length; i++) {
@@ -273,6 +252,6 @@ export function getPoleDataList(poles: Pole[], state: string) {
     }
   }
 
-  console.log(poleWeekListTwo);
-  return poleWeekList;
+  // console.log(poleWeekListTwo);
+  return poleWeekListTwo;
 }

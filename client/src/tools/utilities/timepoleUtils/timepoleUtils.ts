@@ -17,6 +17,18 @@ export type PoleDatas = Record<
   }
 >;
 
+export interface PoleData {
+  [key: string]: {
+    polesList: {
+      [key: string]: {
+        id: string;
+        poles: StandardPoleData[];
+        xPercent: number;
+      };
+    };
+  };
+}
+
 export interface UnSortedPoleData {
   [key: string]: {
     polesList: { pole: StandardPoleData; xPercent: number }[];
@@ -25,12 +37,11 @@ export interface UnSortedPoleData {
 }
 
 export interface SortedPoleData {
-  [key: string]: StandardPoleData[];
+  [key: string]: { id: string; date: string }[];
 }
 
 export interface OverLappingData {
   boundingClient: DOMRect;
-  pole: StandardPoleData;
   y_pos: number;
 }
 
@@ -178,7 +189,6 @@ export function generateOverLappingData(
 
   const windowhalf = window.innerHeight / 2;
   for (let i = 0; i < oldPoles.length; i++) {
-    const _oldPole = oldPoles[i];
     const _oldTarget = document.getElementById(`pole-${oldPoles[i].id}`);
     const _sortDataTarget = sortData[oldPoles[i].id];
     if (!_oldTarget || !_sortDataTarget) {
@@ -191,13 +201,11 @@ export function generateOverLappingData(
 
     if (orientation <= windowhalf) {
       overlappingData.heaven[`${_oldTargetBC.right}_${_oldTargetBC.left}`] = {
-        pole: _oldPole,
         boundingClient: _oldTarget.getBoundingClientRect(),
         y_pos: _sortDataTarget.yPos,
       };
     } else {
       overlappingData.hell[`${_oldTargetBC.right}_${_oldTargetBC.left}`] = {
-        pole: _oldPole,
         boundingClient: _oldTarget.getBoundingClientRect(),
         y_pos: _sortDataTarget.yPos,
       };

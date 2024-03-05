@@ -14,7 +14,7 @@ import {
 
 import {
   PoleCordsData,
-  PoleDatas,
+  PoleData,
   StandardPoleData,
 } from "../../tools/utilities/timepoleUtils/timepoleUtils";
 
@@ -27,7 +27,7 @@ export function TimePoleDisplay({
 }) {
   const urlView = url ? url : "year";
 
-  const poleDatas: PoleDatas = useMemo(() => {
+  const poleDatas: PoleData = useMemo(() => {
     return getPoleDataList(poles, urlView);
   }, [poles, urlView]);
 
@@ -57,13 +57,12 @@ export function TimePoleDisplay({
   useEffect(() => {
     //check if sort data already exist
     const localStorageData = window.localStorage.getItem("sortDataEffect");
-    console.log(poleDatas);
     if (localStorageData && localStorageData !== undefined) {
       const jsonLocalStorageData: PoleCordsData = JSON.parse(localStorageData);
       const addPoles = compareSortPoles(poles, jsonLocalStorageData);
 
       if (addPoles.length) {
-        console.log(addPoles);
+        // console.log(addPoles);
         const newSortData = insertSorData(
           poles,
           addPoles,
@@ -77,7 +76,7 @@ export function TimePoleDisplay({
       // create sort data
       // check if data is generated
       if (!Object.keys(poleDatas).length) {
-        console.log("invalid poles data: ", poles);
+        // console.log("invalid poles data: ", poles);
         return;
       }
 
@@ -99,13 +98,15 @@ export function TimePoleDisplay({
         {Object.keys(poleDatas).map((_week, index) => {
           return (
             <Fragment key={index}>
-              {poleDatas[_week].polesList.map((_pole) => {
+              {Object.keys(poleDatas[_week].polesList).map((_poleKey) => {
+                const _pole = poleDatas[_week].polesList[_poleKey];
                 return (
                   <TimepoleMarker
-                    key={_pole.pole.id}
+                    key={_pole.id}
+                    id={_pole.id}
                     xPercent={_pole.xPercent}
-                    timePoleData={_pole.pole}
-                    yPos={sortData[_pole.pole.id]}
+                    timePoleData={_pole.poles}
+                    yPos={sortData[_pole.id]}
                     setSelectedPole={(id) => {
                       setSelectedPole(id);
                     }}
@@ -133,6 +134,7 @@ import { useSpring, animated, to as interpolate } from "react-spring";
 import { useDrag } from "@use-gesture/react";
 import { Modal } from "../elements/Links";
 export function TimepoleMarker({
+  id,
   xPercent,
   timePoleData,
   yPos,
@@ -141,8 +143,9 @@ export function TimepoleMarker({
   setSelectedPole,
   updateSortData,
 }: {
+  id: string;
   xPercent: number;
-  timePoleData: StandardPoleData;
+  timePoleData: StandardPoleData[];
   yPos: { yPos: number };
   pageRender: boolean;
 
@@ -205,7 +208,7 @@ export function TimepoleMarker({
         }
       }
 
-      updateSortData({ id: timePoleData.id, yPos: yPosRef.current });
+      updateSortData({ id: timePoleData[0].id, yPos: yPosRef.current });
     }
 
     if (down) {
@@ -247,7 +250,7 @@ export function TimepoleMarker({
       style={{ left: `${xPercent}%` }}
       onClick={() => {
         if (!wasDragging.current) {
-          setSelectedPole(timePoleData);
+          setSelectedPole(timePoleData[0]);
         }
         wasDragging.current = false;
       }}
@@ -266,14 +269,20 @@ export function TimepoleMarker({
         {...bind()}
         style={{ x, y, touchAction: "pan-y" }}
         className={styles.textContainer}
-        id={`pole-${timePoleData.id}`}
+        id={`pole-${id}`}
         ref={targetElement}
         onClick={(e) => {
           console.log(e.currentTarget.getBoundingClientRect());
           // console.log(window.innerHeight);
         }}
       >
-        <p style={{ margin: 0, whiteSpace: "nowrap" }}>{timePoleData.title}</p>
+        {timePoleData.map((_pole) => {
+          return (
+            <div className={styles.textBubble} key={_pole.id}>
+              <p style={{ margin: 0, whiteSpace: "nowrap" }}>{_pole.title}</p>
+            </div>
+          );
+        })}
       </animated.div>
     </div>
   );
