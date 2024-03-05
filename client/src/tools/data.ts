@@ -199,36 +199,17 @@ export function getPoleData(pole: StandardPoleData, state: string) {
 }
 
 export function getPoleDataList(poles: StandardPoleData[], state: string) {
-  const poleWeekList: any = {};
-  const poleWeekListTwo: PoleData = {};
+  const poleWeekList: PoleData = {};
   // console.log(poles);
 
   for (let i = 0; i < poles.length; i++) {
     const poleData = getPoleData(poles[i], state);
 
-    const poleWithX = { pole: poles[i], xPercent: poleData.xPercent };
-
-    const weekPoles = poleWeekList[poleData.weekInfo.weekNumber];
-
-    const weekPoleTwo = poleWeekListTwo[poleData.weekInfo.weekNumber];
+    const weekPoleTwo = poleWeekList[poleData.weekInfo.weekNumber];
     const pole = poles[i];
     const poleDate = pole.full_date;
     const poleId = pole.id;
     const xPercent = poleData.xPercent;
-
-    // console.log(weekId, poles[i]);
-    if (weekPoles) {
-      // exists
-      poleWeekList[poleData.weekInfo.weekNumber].polesList = [
-        ...poleWeekList[poleData.weekInfo.weekNumber].polesList,
-        poleWithX,
-      ];
-    } else {
-      // doesn't exist
-      poleWeekList[poleData.weekInfo.weekNumber] = {
-        polesList: [poleWithX],
-      };
-    }
 
     if (weekPoleTwo) {
       // check if date instance exists
@@ -244,7 +225,7 @@ export function getPoleDataList(poles: StandardPoleData[], state: string) {
         };
       }
     } else {
-      poleWeekListTwo[poleData.weekInfo.weekNumber] = {
+      poleWeekList[poleData.weekInfo.weekNumber] = {
         polesList: {
           [poleDate]: { id: poleId, poles: [pole], xPercent: xPercent },
         },
@@ -252,6 +233,5 @@ export function getPoleDataList(poles: StandardPoleData[], state: string) {
     }
   }
 
-  // console.log(poleWeekListTwo);
-  return poleWeekListTwo;
+  return poleWeekList;
 }
