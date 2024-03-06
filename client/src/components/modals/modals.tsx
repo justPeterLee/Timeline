@@ -4,7 +4,7 @@ import { Modal, ValidInput } from "../elements/Links";
 import format from "date-fns/format";
 import { BsTextCenter, BsCalendar3, BsTrash3 } from "react-icons/bs";
 import DatePicker from "react-datepicker";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StandardPoleData } from "../../tools/utilities/timepoleUtils/timepoleUtils";
 import {
   useAppDispatch,
@@ -302,3 +302,180 @@ function ConfirmationModal(props: {
 }
 
 // create timepole
+interface TimepoleType {
+  title: string;
+  description: string;
+  date: Date | null;
+}
+import { Timepole } from "../timepole/Timepole";
+import "react-datepicker/dist/react-datepicker.css";
+import { useNavigate, useParams } from "react-router-dom";
+
+export function CreatePoleModal({
+  xPercent,
+  date,
+  onClose,
+}: {
+  xPercent: number;
+  date: Date | null;
+  onClose: () => void;
+}) {
+  // dependencies
+  const { year, month } = useParams();
+  const navigate = useNavigate();
+
+  const dispatch = useAppDispatch();
+  const user = useAppSelector((store) => store.userAccount);
+  // ------- time pole values -------
+  const [value, setValue] = useState<TimepoleType>({
+    title: "",
+    description: "",
+    date: date,
+  });
+
+  const [isError, setIsError] = useState(false);
+
+  const validateTimePole = () => {
+    if (!value.title.replace(/\s/g, "")) {
+      setIsError(true);
+      return true;
+    } else {
+      setIsError(false);
+    }
+    return false;
+  };
+  const postTimepole = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (validateTimePole()) {
+      throw `error`;
+    }
+
+    if (!date) {
+      throw "invalid date";
+    }
+
+    const date_data = {
+      date: date.getDate(),
+      month: date.getMonth(),
+      year: date.getFullYear(),
+      day: date.getDay(),
+      full_date: date.toISOString(),
+    };
+
+    if (user) {
+      console.log("user is found");
+      dispatch({
+        type: "CREATE_TIMEPOLE_SERVER",
+        payload: {
+          title: value.title,
+          description: value.description,
+          date_data,
+        },
+      });
+    } else {
+      console.log("create on local storage");
+    }
+    onClose();
+    const viewUrl = month
+      ? `/month/${year}/${month}/view`
+      : `/year/${year}/view`;
+    navigate(viewUrl);
+  };
+  // ------- date picker --------
+  const [selectedDate, setSelectedDate] = useState(date);
+
+  const dateSelector = (e: Date) => {
+    setValue({ ...value, date: e });
+    setSelectedDate(e);
+  };
+
+  const CustomInput = React.forwardRef<
+    HTMLInputElement,
+    { value: any; onClick: any }
+  >(({ value, onClick }, ref) => (
+    <input
+      className={styles.datePickerInput}
+      onClick={onClick}
+      value={value}
+      type="button"
+      ref={ref}
+    />
+  ));
+
+  // ------- inital setup --------
+
+  useEffect(() => {
+    setValue({ ...value, date: date });
+    if (date) setSelectedDate(date);
+  }, [date]);
+
+  useEffect(() => {
+    // console.log("updated user");
+    dispatch({ type: "FETCH_USER" });
+  }, []);
+  if (!date) {
+    return <></>;
+  }
+
+  return (
+    <>
+      <div
+        className={styles.poleModalContainer}
+        style={{
+          transform: `translateX(${xPercent}%)`,
+          display: date ? "flex" : "none",
+          // opacity: date ? "100%" : "0%",
+        }}
+      >
+        <form
+          className={styles.inputContainer}
+          onSubmit={(e) => postTimepole(e)}
+        >
+          <ValidInput
+            label="title"
+            // errorLabel="invalid title"
+            error={{
+              label: "invalid title",
+              state: isError,
+            }}
+            setValue={(newValue) => {
+              setValue({ ...value, title: newValue });
+            }}
+            value={value.title}
+          />
+          <ValidInput
+            label="description"
+            placeholder="(optional)"
+            setValue={(newValue) => {
+              setValue({ ...value, description: newValue });
+            }}
+            value={value.description}
+          />
+
+          <DatePicker
+            selected={selectedDate}
+            onChange={(e: Date) => {
+              dateSelector(e);
+            }}
+            customInput={<CustomInput value={undefined} onClick={undefined} />}
+            dateFormat="EEEE, LLLL d"
+            minDate={new Date("2024-01-01")}
+            maxDate={new Date("2024-12-31")}
+          />
+
+          <div className={styles.buttonContainer}>
+            <button
+              className={styles.button}
+              id={styles.createButton}
+              type="submit"
+            >
+              create
+            </button>
+          </div>
+        </form>
+        <Timepole style={{ backgroundColor: "rgb(100,100,100)" }} />
+      </div>
+    </>
+  );
+}
