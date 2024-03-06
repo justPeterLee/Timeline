@@ -37,18 +37,16 @@ export function TimePoleDisplay({
   >(null);
 
   const onOpenSelectedPole = (_pole: StandardPoleData) => {
-    onCloseGroupPole();
+    // onCloseGroupPole();
     setSelectedPole(_pole);
   };
   const onClose = () => {
     setSelectedPole(null);
+    setSelectedGroupPole(null);
   };
 
   const onOpenSelectedGroupPole = (_pole: StandardPoleData[]) => {
     setSelectedGroupPole(_pole);
-  };
-  const onCloseGroupPole = () => {
-    setSelectedGroupPole(null);
   };
 
   const updateWindowSort = (data: string) => {
@@ -138,7 +136,7 @@ export function TimePoleDisplay({
         <GroupTimePoleSelectionModal
           timePoleDataArr={selectedGroupPole}
           setSelectedPole={onOpenSelectedPole}
-          onClose={onCloseGroupPole}
+          onClose={onClose}
         />
       )}
     </>

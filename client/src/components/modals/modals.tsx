@@ -292,8 +292,37 @@ export function GroupTimePoleSelectionModal({
 }) {
   return (
     <Modal onClose={onClose}>
-      <div>group selection</div>
+      <div className={styles.GroupPoleModalContainer}>
+        {timePoleDataArr.map((_pole) => {
+          return (
+            <GroupPole
+              key={_pole.id}
+              pole={_pole}
+              setSelectedPole={setSelectedPole}
+            />
+          );
+        })}
+      </div>
     </Modal>
+  );
+}
+
+function GroupPole({
+  pole,
+  setSelectedPole,
+}: {
+  pole: StandardPoleData;
+  setSelectedPole: (id: StandardPoleData) => void;
+}) {
+  return (
+    <div
+      className={styles.GroupPoleContainer}
+      onClick={() => {
+        setSelectedPole(pole);
+      }}
+    >
+      {pole.title}
+    </div>
   );
 }
 
