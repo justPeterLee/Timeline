@@ -70,6 +70,20 @@
 .timepole:hover {
   cursor: pointer;
 }
-.textContainer:hover + .timepole {
-  background-color: red;
+
+.textContainer:hover .poleDate {
+  opacity: 100%;
+}
+.poleDate {
+  position: absolute;
+
+  font-size: 12px;
+
+  opacity: 0%;
+
+  transition: opacity ease 0.3s;
+  white-space: nowrap;
+
+  color: rgb(100, 100, 100);
+  /* top: -100%; */
 }

@@ -147,6 +147,7 @@ import { useSpring, animated, to as interpolate } from "react-spring";
 import { useDrag } from "@use-gesture/react";
 import { Modal } from "../elements/Links";
 import { GroupTimePoleSelectionModal, TimePoleModal } from "../modals/modals";
+import { format } from "date-fns";
 export function TimepoleMarker({
   id,
   xPercent,
@@ -168,6 +169,7 @@ export function TimepoleMarker({
   setSelectedGroupPole: (_pole: StandardPoleData[]) => void;
   updateSortData: (_pole: { id: string; yPos: number }) => void;
 }) {
+  const date = format(new Date(timePoleDataArr[0].full_date), "EEEE, LLLL d");
   const wasDragging = useRef(false);
   const yPosRef = useRef(yPos ? yPos.yPos : 100);
   const targetElement = useRef<HTMLDivElement>(null);
@@ -306,6 +308,14 @@ export function TimepoleMarker({
           // console.log(window.innerHeight);
         }}
       >
+        {timePoleDataArr.length > 1 && (
+          <div
+            className={styles.poleDate}
+            style={yPos.yPos > 0 ? { bottom: "-20px" } : { top: "-20px" }}
+          >
+            {date}
+          </div>
+        )}
         {timePoleDataArr.map((_pole) => {
           return (
             <div className={styles.textBubble} key={_pole.id}>
