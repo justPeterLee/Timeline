@@ -11,27 +11,14 @@ import {
   orientationlimits,
   generateOverLappingData,
   PoleData,
+  groupedPoles,
 } from "./timepoleUtils";
 
 export function compareSortPoles(
   poles: StandardPoleData[],
   localData: PoleCordsData
 ): string[] {
-  const poleDataObj: { [key: string]: string } = {};
-
-  for (let i = 0; i < poles.length; i++) {
-    if (poleDataObj[poles[i].full_date]) {
-      poleDataObj[poles[i].full_date] = poleDataObj[poles[i].full_date].concat(
-        poles[i].id
-      );
-    } else {
-      poleDataObj[poles[i].full_date] = poles[i].id;
-    }
-  }
-
-  const poleData = Object.keys(poleDataObj).map((_key) => {
-    return poleDataObj[_key];
-  });
+  const poleData = groupedPoles(poles);
 
   const localDataKeys = Object.keys(localData);
 
@@ -83,7 +70,6 @@ export function sortPoleData(poleData: PoleData) {
     sortedPoleData[unsortedPoleDataKeys[i]] = sortedExtractedPoles;
   }
 
-  console.log(sortedPoleData);
   return sortedPoleData;
 }
 
@@ -131,7 +117,7 @@ export function sort(poleData: PoleData) {
 
       let selectedOrientation: "heaven" | "hell" = "heaven";
 
-      let generatedYPos = randomNumberInRange(90, 200);
+      let generatedYPos = randomNumberInRange(90, 120);
 
       // --------------------------------------------------
       // check if first pole of week
@@ -155,7 +141,7 @@ export function sort(poleData: PoleData) {
         lastPoleData[weekId] = selectedOrientation;
 
       if (selectedOrientation === "heaven") {
-        generatedYPos = -1 * (generatedYPos + 5 + boundingClient.height);
+        generatedYPos = -1 * (generatedYPos + (boundingClient.height - 2));
       }
 
       // --------------------------------------------------
@@ -201,8 +187,8 @@ export function sort(poleData: PoleData) {
 
           // ---------------------------------------------
           if (
-            currentCalcCords.bottom >= potentialCalcCords.top &&
-            currentCalcCords.top <= potentialCalcCords.bottom
+            currentCalcCords.bottom + 10 >= potentialCalcCords.top &&
+            currentCalcCords.top + 10 <= potentialCalcCords.bottom
           ) {
             isOverlapping = true;
             break;
@@ -217,7 +203,7 @@ export function sort(poleData: PoleData) {
 
           generatedYPos = generateAccurateCords(
             potentailPolesArr,
-            boundingClient.height
+            boundingClient
           );
         }
 
@@ -237,16 +223,18 @@ export function sort(poleData: PoleData) {
 }
 
 export function insertSorData(
-  oldPoles: StandardPoleData[],
-  newPoles: string[],
-  sortData: PoleCordsData
+  allPoles: StandardPoleData[],
+  addPoles: string[],
+  localSortData: PoleCordsData
 ) {
   console.time("start");
-  const overlappingData = generateOverLappingData(oldPoles, sortData);
-  console.log(overlappingData);
-  const newSortData = sortData;
-  for (let i = 0; i < newPoles.length; i++) {
-    const _newPoleTarget = document.getElementById(`pole-${newPoles[i]}`);
+  const overlappingData = generateOverLappingData(allPoles, localSortData);
+  const newSortData = localSortData;
+  const heavenBound = window.innerHeight / 2 - 30;
+  const hellBound = window.innerHeight / 2 + 30;
+
+  for (let i = 0; i < addPoles.length; i++) {
+    const _newPoleTarget = document.getElementById(`pole-${addPoles[i]}`);
     if (!_newPoleTarget) continue;
 
     const _newPoleBC = _newPoleTarget.getBoundingClientRect();
@@ -255,10 +243,10 @@ export function insertSorData(
     const selectedOrientation = randomFifthyFifthy() ? "heaven" : "hell";
 
     // generate position
-    let generatedYPos = randomNumberInRange(90, 200);
+    let generatedYPos = 90;
 
     if (selectedOrientation === "heaven") {
-      generatedYPos = -1 * (generatedYPos + 5 + _newPoleBC.height);
+      generatedYPos = -1 * (generatedYPos + (_newPoleBC.height - 2));
     }
 
     // get potential poles
@@ -272,36 +260,45 @@ export function insertSorData(
       const right = parseInt(cords[0]);
       const left = parseInt(cords[1]);
 
-      return right > _newPoleBC.left && left < _newPoleBC.right;
+      return right >= _newPoleBC.left - 10 && left <= _newPoleBC.right + 10;
     });
 
     for (let i = 0; i < potentialPoles.length; i++) {
-      const _potenialTarget =
+      // get potential from overlapping data
+      const _potentialTarget =
         overlappingData[selectedOrientation][potentialPoles[i]];
-      const _potenialTargetBC = _potenialTarget.boundingClient;
 
-      // console.log(overlappingData[selectedOrientation][potentialPoles[i]]);
+      const _potentialTargetBC = _potentialTarget.boundingClient;
+      let potentialTop = _potentialTargetBC.top;
+      let potentialBot = _potentialTargetBC.bottom;
 
-      const potentialTop = _potenialTargetBC.top + _potenialTarget.y_pos;
-      const potentialBot = _potenialTargetBC.bottom + _potenialTarget.y_pos;
-
+      if (
+        _potentialTargetBC.top >= heavenBound &&
+        _potentialTargetBC.top <= hellBound
+      ) {
+        potentialTop += _potentialTarget.y_pos;
+        potentialBot += _potentialTarget.y_pos;
+      }
       const newPoleTop = _newPoleBC.top + generatedYPos;
       const newPoleBot = _newPoleBC.bottom + generatedYPos;
 
-      if (newPoleBot >= potentialTop && newPoleTop <= potentialBot) {
+      if (
+        (newPoleBot + 10 >= potentialTop && newPoleTop - 10 <= potentialBot) ||
+        generatedYPos === _potentialTarget.y_pos
+      ) {
         const potentialPolesObjArray = potentialPoles.map((_key) => {
           return overlappingData[selectedOrientation][_key];
         });
         generatedYPos = generateAccurateCords(
           potentialPolesObjArray,
-          _newPoleBC.height
+          _newPoleBC
         );
         break;
       }
     }
 
     // update overlapping data
-    newSortData[newPoles[i]] = { yPos: generatedYPos };
+    newSortData[addPoles[i]] = { yPos: generatedYPos };
     // console.log(newSortData[newPoles[i]]);
   }
 

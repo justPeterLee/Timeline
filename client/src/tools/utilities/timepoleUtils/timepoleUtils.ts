@@ -139,8 +139,9 @@ export function calcNewCords(Ypos: number, height: number, margin = 5) {
 
 export function generateAccurateCords(
   potentialPoles: OverLappingData[],
-  height: number
+  bc: DOMRect
 ) {
+  const height = bc.height;
   const bounds = [];
 
   for (let i = 0; i < potentialPoles.length; i++) {
@@ -153,12 +154,37 @@ export function generateAccurateCords(
   }
 
   const topBound = Math.min(...bounds);
+
   const bottomBound = Math.max(...bounds);
 
-  if (random()) {
-    return topBound - (window.innerHeight / 2 + 5) - (20 + height);
+  const abovePos = topBound - (window.innerHeight / 2 + 5) - (10 + height);
+  const belowPos =
+    bottomBound - (window.innerHeight / 2 + height + 5) + (10 + height);
+
+  const aboveBC = calcNewCords(abovePos, height);
+  const belowBC = calcNewCords(belowPos, height);
+
+  const heavenBound = window.innerHeight / 2 - 30;
+  const hellBound = window.innerHeight / 2 + 30;
+
+  if (
+    (aboveBC.bottom > heavenBound && aboveBC.bottom < hellBound) ||
+    (aboveBC.top < heavenBound && aboveBC.bottom > hellBound) ||
+    (aboveBC.top > heavenBound && aboveBC.top < hellBound)
+  ) {
+    return belowPos;
+  } else if (
+    (belowBC.bottom > heavenBound && belowBC.bottom < hellBound) ||
+    (belowBC.top < heavenBound && belowBC.bottom > hellBound) ||
+    (belowBC.top > heavenBound && belowBC.top < hellBound)
+  ) {
+    return abovePos;
   } else {
-    return bottomBound - (window.innerHeight / 2 + height + 5) + (20 + height);
+    if (random()) {
+      return abovePos;
+    } else {
+      return belowPos;
+    }
   }
 }
 
@@ -182,16 +208,18 @@ export function generateOverLappingData(
   oldPoles: StandardPoleData[],
   sortData: PoleCordsData
 ) {
-  console.log(sortData, oldPoles);
+  // console.log(sortData, oldPoles);
   const overlappingData: {
     heaven: OverLappingDataObj;
     hell: OverLappingDataObj;
   } = { heaven: {}, hell: {} };
 
   const windowhalf = window.innerHeight / 2;
-  for (let i = 0; i < oldPoles.length; i++) {
-    const _oldTarget = document.getElementById(`pole-${oldPoles[i].id}`);
-    const _sortDataTarget = sortData[oldPoles[i].id];
+  const poleData = groupedPoles(oldPoles);
+
+  for (let i = 0; i < poleData.length; i++) {
+    const _oldTarget = document.getElementById(`pole-${poleData[i]}`);
+    const _sortDataTarget = sortData[poleData[i]];
     if (!_oldTarget || !_sortDataTarget) {
       continue;
     }
@@ -214,4 +242,24 @@ export function generateOverLappingData(
   }
 
   return overlappingData;
+}
+
+export function groupedPoles(poles: StandardPoleData[]) {
+  const poleDataObj: { [key: string]: string } = {};
+
+  for (let i = 0; i < poles.length; i++) {
+    if (poleDataObj[poles[i].full_date]) {
+      poleDataObj[poles[i].full_date] = poleDataObj[poles[i].full_date].concat(
+        poles[i].id
+      );
+    } else {
+      poleDataObj[poles[i].full_date] = poles[i].id;
+    }
+  }
+
+  const poleData = Object.keys(poleDataObj).map((_key) => {
+    return poleDataObj[_key];
+  });
+
+  return poleData;
 }
