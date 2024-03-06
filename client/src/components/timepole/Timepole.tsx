@@ -32,9 +32,23 @@ export function TimePoleDisplay({
   const [selectedPole, setSelectedPole] = useState<null | StandardPoleData>(
     null
   );
+  const [selectedGroupPole, setSelectedGroupPole] = useState<
+    null | StandardPoleData[]
+  >(null);
 
+  const onOpenSelectedPole = (_pole: StandardPoleData) => {
+    onCloseGroupPole();
+    setSelectedPole(_pole);
+  };
   const onClose = () => {
     setSelectedPole(null);
+  };
+
+  const onOpenSelectedGroupPole = (_pole: StandardPoleData[]) => {
+    setSelectedGroupPole(_pole);
+  };
+  const onCloseGroupPole = () => {
+    setSelectedGroupPole(null);
   };
 
   const updateWindowSort = (data: string) => {
@@ -100,11 +114,10 @@ export function TimePoleDisplay({
                     key={_pole.id}
                     id={_pole.id}
                     xPercent={_pole.xPercent}
-                    timePoleData={_pole.poles}
+                    timePoleDataArr={_pole.poles}
                     yPos={sortData[_pole.id]}
-                    setSelectedPole={(id) => {
-                      setSelectedPole(id);
-                    }}
+                    setSelectedPole={onOpenSelectedPole}
+                    setSelectedGroupPole={onOpenSelectedGroupPole}
                     updateSortData={(_pole: { id: string; yPos: number }) => {
                       updateSortData(_pole);
                     }}
@@ -121,6 +134,13 @@ export function TimePoleDisplay({
           <TimePoleModal onClose={onClose} timePoleData={selectedPole} />
         </Modal>
       )}
+      {selectedGroupPole && (
+        <GroupTimePoleSelectionModal
+          timePoleDataArr={selectedGroupPole}
+          setSelectedPole={onOpenSelectedPole}
+          onClose={onCloseGroupPole}
+        />
+      )}
     </>
   );
 }
@@ -128,24 +148,26 @@ export function TimePoleDisplay({
 import { useSpring, animated, to as interpolate } from "react-spring";
 import { useDrag } from "@use-gesture/react";
 import { Modal } from "../elements/Links";
-import { TimePoleModal } from "../modals/modals";
+import { GroupTimePoleSelectionModal, TimePoleModal } from "../modals/modals";
 export function TimepoleMarker({
   id,
   xPercent,
-  timePoleData,
+  timePoleDataArr,
   yPos,
   pageRender,
 
   setSelectedPole,
+  setSelectedGroupPole,
   updateSortData,
 }: {
   id: string;
   xPercent: number;
-  timePoleData: StandardPoleData[];
+  timePoleDataArr: StandardPoleData[];
   yPos: { yPos: number };
   pageRender: boolean;
 
-  setSelectedPole: (id: StandardPoleData) => void;
+  setSelectedPole: (_pole: StandardPoleData) => void;
+  setSelectedGroupPole: (_pole: StandardPoleData[]) => void;
   updateSortData: (_pole: { id: string; yPos: number }) => void;
 }) {
   const wasDragging = useRef(false);
@@ -256,7 +278,11 @@ export function TimepoleMarker({
       style={{ left: `${xPercent}%` }}
       onClick={() => {
         if (!wasDragging.current) {
-          setSelectedPole(timePoleData[0]);
+          if (timePoleDataArr.length > 1) {
+            setSelectedGroupPole(timePoleDataArr);
+          } else {
+            setSelectedPole(timePoleDataArr[0]);
+          }
         }
         wasDragging.current = false;
       }}
@@ -282,7 +308,7 @@ export function TimepoleMarker({
           // console.log(window.innerHeight);
         }}
       >
-        {timePoleData.map((_pole) => {
+        {timePoleDataArr.map((_pole) => {
           return (
             <div className={styles.textBubble} key={_pole.id}>
               <p style={{ margin: 0, whiteSpace: "nowrap" }}>{_pole.title}</p>

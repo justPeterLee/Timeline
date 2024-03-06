@@ -281,6 +281,22 @@ export function TimePoleModal({
 
 // group timepole
 
+export function GroupTimePoleSelectionModal({
+  timePoleDataArr,
+  setSelectedPole,
+  onClose,
+}: {
+  timePoleDataArr: StandardPoleData[];
+  setSelectedPole: (id: StandardPoleData) => void;
+  onClose: () => void;
+}) {
+  return (
+    <Modal onClose={onClose}>
+      <div>group selection</div>
+    </Modal>
+  );
+}
+
 // timepole confirmation
 function ConfirmationModal(props: {
   onClose: () => void;
