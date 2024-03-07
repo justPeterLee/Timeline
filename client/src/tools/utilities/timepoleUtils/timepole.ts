@@ -246,25 +246,25 @@ export function insertSorData(
     if (!_newPoleTarget) continue;
     if (!_newPoleTarget.dataset.length) continue;
 
-    // if (parseInt(_newPoleTarget.dataset.length) > 1) {
-    //   console.log("grouped");
+    if (parseInt(_newPoleTarget.dataset.length) > 1) {
+      console.log("grouped");
 
-    //   const findSortKey = addPoles[i].sortId
-    //     .split("_")
-    //     .filter((_key) => {
-    //       return _key !== addPoles[i].poleId;
-    //     })
-    //     .join("_");
-    //   console.log(findSortKey);
-    //   console.log(localSortData[findSortKey]);
-    //   // console.log(localSortData);
+      const findSortKey = addPoles[i].sortId
+        .split("_")
+        .filter((_key) => {
+          return _key !== addPoles[i].poleId;
+        })
+        .join("_");
+      console.log(findSortKey);
+      console.log(localSortData[findSortKey]);
+      // console.log(localSortData);
 
-    //   newSortData[addPoles[i].sortId] = {
-    //     yPos: localSortData[findSortKey].yPos,
-    //   };
+      newSortData[addPoles[i].sortId] = {
+        yPos: localSortData[findSortKey].yPos,
+      };
 
-    //   continue;
-    // }
+      continue;
+    }
 
     const _newPoleBC = _newPoleTarget.getBoundingClientRect();
 

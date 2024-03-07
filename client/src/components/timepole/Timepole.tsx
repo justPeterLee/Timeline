@@ -23,6 +23,7 @@ export function TimePoleDisplay({
   const urlView = url ? url : "year";
 
   const poleDatas: PoleData = useMemo(() => {
+    if (poles[0] === "loading") return {};
     return getPoleDataList(poles, urlView);
   }, [poles, urlView]);
 
@@ -75,7 +76,8 @@ export function TimePoleDisplay({
 
   useEffect(() => {
     //check if sort data already exist
-    // console.log(poles);
+    console.log(poles);
+    console.log(poleDatas);
     if (poles[0] === "loading") return;
     const localStorageData = window.localStorage.getItem("sortDataEffect");
     if (localStorageData && localStorageData !== undefined) {

@@ -7,7 +7,7 @@ const { rejectUnauthenticated } = require("../modules/authenication");
 
 router.get("/", rejectUnauthenticated, (req, res) => {
   const query = `
-    SELECT pd.full_date, pd.time_pole_id, pd.id AS "date_id", p.*
+    SELECT pd.year, pd.month, pd.date, pd.full_date, pd.time_pole_id, pd.id AS "date_id", p.*
     FROM time_pole p
     JOIN time_pole_date pd ON pd.time_pole_id = p.id
     JOIN "user" u ON p.user_id = u.id

@@ -7,6 +7,9 @@ export interface StandardPoleData {
   completed: boolean;
   user_id: number;
   full_date: string;
+  month: number;
+  date: number;
+  year: number;
 }
 
 export type PoleDatas = Record<
