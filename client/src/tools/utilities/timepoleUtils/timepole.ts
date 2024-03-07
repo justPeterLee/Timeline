@@ -11,14 +11,14 @@ import {
   orientationlimits,
   generateOverLappingData,
   PoleData,
-  groupedPoles,
+  generatePoleKey,
 } from "./timepoleUtils";
 
 export function compareSortPoles(
   poles: StandardPoleData[],
   localData: PoleCordsData
 ) {
-  const poleData = groupedPoles(poles);
+  // const poleData = groupedPoles(poles);
   const localDataKeys = Object.keys(localData);
 
   const addArray = [];
@@ -26,12 +26,11 @@ export function compareSortPoles(
   const addArrayObj: { [key: string]: string } = {};
   const poleMap = new Map();
 
-  for (let i = 0; i < poleData.length; i++) {
-    poleMap.set(
-      poleData[i].sortId,
-      !poleMap.get(poleData[i].sortId) ? 1 : poleMap.get(poleData[i].sortId) + 1
-    );
-    addArrayObj[poleData[i].sortId] = poleData[i].poleId;
+  for (let i = 0; i < poles.length; i++) {
+    const poleKey = generatePoleKey(poles[i].full_date);
+
+    poleMap.set(poleKey, 1);
+    addArrayObj[poleKey] = poles[i].id;
   }
 
   for (let i = 0; i < localDataKeys.length; i++) {
@@ -49,7 +48,8 @@ export function compareSortPoles(
       deleteArray.push({ sortId: key, poleId: addArrayObj[key] });
     }
   }
-  console.log(deleteArray);
+  console.log("delete: ", deleteArray);
+  console.log("add: ", addArray);
 
   return addArray;
 }
@@ -81,7 +81,6 @@ export function sortPoleData(poleData: PoleData) {
 
 export function sort(poleData: PoleData) {
   const sortedData = sortPoleData(poleData);
-
   if (!sortedData) return;
   if (Object.keys(sortedData).length === 0) return;
 
@@ -110,9 +109,10 @@ export function sort(poleData: PoleData) {
 
     // ----------------------------------------------------
     sortedData[weekId].map((_poles, index) => {
+      const PoleKey = generatePoleKey(_poles.date);
       const lastPoleOrientation = lastPoleData[sortedDataKeys[i - 1]];
 
-      const currentTarget = document.getElementById(`pole-${_poles.id}`);
+      const currentTarget = document.getElementById(`pole-${PoleKey}`);
       // console.log(currentTarget);
 
       const boundingClient = currentTarget
@@ -221,7 +221,7 @@ export function sort(poleData: PoleData) {
       }
 
       //
-      poleCordsData[_poles.id] = { yPos: generatedYPos };
+      poleCordsData[PoleKey] = { yPos: generatedYPos };
     });
   }
 
@@ -246,28 +246,7 @@ export function insertSorData(
     if (!_newPoleTarget) continue;
     if (!_newPoleTarget.dataset.length) continue;
 
-    if (parseInt(_newPoleTarget.dataset.length) > 1) {
-      console.log("grouped");
-
-      const findSortKey = addPoles[i].sortId
-        .split("_")
-        .filter((_key) => {
-          return _key !== addPoles[i].poleId;
-        })
-        .join("_");
-      console.log(findSortKey);
-      console.log(localSortData[findSortKey]);
-      // console.log(localSortData);
-
-      newSortData[addPoles[i].sortId] = {
-        yPos: localSortData[findSortKey].yPos,
-      };
-
-      continue;
-    }
-
     const _newPoleBC = _newPoleTarget.getBoundingClientRect();
-
     // generate orientation
     const selectedOrientation = randomFifthyFifthy() ? "heaven" : "hell";
 
@@ -292,6 +271,7 @@ export function insertSorData(
       return right >= _newPoleBC.left - 10 && left <= _newPoleBC.right + 10;
     });
 
+    // console.log(overlappingData);
     for (let i = 0; i < potentialPoles.length; i++) {
       // get potential from overlapping data
       const _potentialTarget =

@@ -218,12 +218,17 @@ export function generateOverLappingData(
   } = { heaven: {}, hell: {} };
 
   const windowhalf = window.innerHeight / 2;
-  // console.log(oldPoles);
-  const poleData = groupedPoles(oldPoles);
-  // console.log(poleData);
+
+  const poleDataSet: Set<string> = new Set();
+  oldPoles.map((_pole) => {
+    poleDataSet.add(generatePoleKey(_pole.full_date));
+  });
+  const poleData = [...poleDataSet];
+
   for (let i = 0; i < poleData.length; i++) {
-    const _oldTarget = document.getElementById(`pole-${poleData[i].sortId}`);
-    const _sortDataTarget = sortData[poleData[i].sortId];
+    const _oldTarget = document.getElementById(`pole-${poleData[i]}`);
+    // console.log(poleData[i]);
+    const _sortDataTarget = sortData[poleData[i]];
     if (!_oldTarget || !_sortDataTarget) {
       continue;
     }
@@ -285,4 +290,10 @@ export function deleteSortData(
   }
 
   return JSON.stringify(proxyLocalData);
+}
+
+export function generatePoleKey(_pole: string) {
+  const date = new Date(_pole);
+
+  return `${date.getFullYear()}${date.getMonth()}${date.getDate()}`;
 }

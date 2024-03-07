@@ -11,6 +11,7 @@ import {
   PoleCordsData,
   PoleData,
   StandardPoleData,
+  generatePoleKey,
 } from "../../tools/utilities/timepoleUtils/timepoleUtils";
 
 export function TimePoleDisplay({
@@ -76,8 +77,9 @@ export function TimePoleDisplay({
 
   useEffect(() => {
     //check if sort data already exist
-    console.log(poles);
-    console.log(poleDatas);
+    // console.log(poles);
+    // console.log(poleDatas);
+
     if (poles[0] === "loading") return;
     const localStorageData = window.localStorage.getItem("sortDataEffect");
     if (localStorageData && localStorageData !== undefined) {
@@ -85,7 +87,7 @@ export function TimePoleDisplay({
       const addPoles = compareSortPoles(poles, jsonLocalStorageData);
 
       if (addPoles.length) {
-        console.log(addPoles);
+        // console.log("add: ", addPoles);
         const newSortData = insertSorData(
           poles,
           addPoles,
@@ -100,6 +102,7 @@ export function TimePoleDisplay({
       // check if data is generated
       if (!Object.keys(poleDatas).length) {
         // console.log("invalid poles data: ", poles);
+        console.log("asdf");
         return;
       }
 
@@ -119,18 +122,19 @@ export function TimePoleDisplay({
   return (
     <>
       <div className={styles.timePoleDisplayContainer} id={"asdf"}>
-        {Object.keys(poleDatas).map((_week, index) => {
+        {Object.keys(poleDatas).map((_weekKey, index) => {
           return (
             <Fragment key={index}>
-              {Object.keys(poleDatas[_week].polesList).map((_poleKey) => {
-                const _pole = poleDatas[_week].polesList[_poleKey];
+              {Object.keys(poleDatas[_weekKey].polesList).map((_dateKey) => {
+                const poleKey = generatePoleKey(_dateKey);
+                const _pole = poleDatas[_weekKey].polesList[_dateKey];
                 return (
                   <TimepoleMarker
                     key={_pole.id}
-                    id={_pole.id}
+                    id={poleKey}
                     xPercent={_pole.xPercent}
                     timePoleDataArr={_pole.poles}
-                    yPos={sortData[_pole.id]}
+                    yPos={sortData[poleKey]}
                     setSelectedPole={onOpenSelectedPole}
                     setSelectedGroupPole={onOpenSelectedGroupPole}
                     updateSortData={(_pole: { id: string; yPos: number }) => {
