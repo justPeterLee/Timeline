@@ -17,19 +17,20 @@ import {
 export function compareSortPoles(
   poles: StandardPoleData[],
   localData: PoleCordsData
-): string[] {
+) {
   const poleData = groupedPoles(poles);
-
   const localDataKeys = Object.keys(localData);
 
   const addArray = [];
+  const addArrayObj: { [key: string]: string } = {};
   const poleMap = new Map();
 
   for (let i = 0; i < poleData.length; i++) {
     poleMap.set(
-      poleData[i],
-      !poleMap.get(poleData[i]) ? 1 : poleMap.get(poleData[i]) + 1
+      poleData[i].sortId,
+      !poleMap.get(poleData[i].sortId) ? 1 : poleMap.get(poleData[i].sortId) + 1
     );
+    addArrayObj[poleData[i].sortId] = poleData[i].poleId;
   }
 
   for (let i = 0; i < localDataKeys.length; i++) {
@@ -41,7 +42,7 @@ export function compareSortPoles(
 
   for (const [key, value] of poleMap.entries()) {
     if (value > 0) {
-      addArray.push(key);
+      addArray.push({ sortId: key, poleId: addArrayObj[key] });
     }
   }
 
@@ -224,7 +225,7 @@ export function sort(poleData: PoleData) {
 
 export function insertSorData(
   allPoles: StandardPoleData[],
-  addPoles: string[],
+  addPoles: { sortId: string; poleId: string }[],
   localSortData: PoleCordsData
 ) {
   console.time("start");
@@ -233,9 +234,32 @@ export function insertSorData(
   const heavenBound = window.innerHeight / 2 - 30;
   const hellBound = window.innerHeight / 2 + 30;
 
+  console.log(overlappingData);
   for (let i = 0; i < addPoles.length; i++) {
-    const _newPoleTarget = document.getElementById(`pole-${addPoles[i]}`);
+    const _newPoleTarget = document.querySelector(
+      `#pole-${addPoles[i].sortId}`
+    ) as HTMLElement;
     if (!_newPoleTarget) continue;
+    if (!_newPoleTarget.dataset.length) continue;
+
+    // if (parseInt(_newPoleTarget.dataset.length) > 1) {
+    //   console.log("grouped");
+
+    //   const findSortKey = addPoles[i].sortId
+    //     .split("_")
+    //     .filter((_key) => {
+    //       return _key !== addPoles[i].poleId;
+    //     })
+    //     .join("_");
+    //   // console.log(findSortKey, localSortData[findSortKey].yPos);
+    //   // console.log(localSortData);
+
+    //   newSortData[addPoles[i].sortId] = {
+    //     yPos: localSortData[findSortKey].yPos,
+    //   };
+
+    //   continue;
+    // }
 
     const _newPoleBC = _newPoleTarget.getBoundingClientRect();
 
@@ -262,6 +286,8 @@ export function insertSorData(
 
       return right >= _newPoleBC.left - 10 && left <= _newPoleBC.right + 10;
     });
+
+    console.log(_newPoleTarget);
 
     for (let i = 0; i < potentialPoles.length; i++) {
       // get potential from overlapping data
@@ -298,7 +324,7 @@ export function insertSorData(
     }
 
     // update overlapping data
-    newSortData[addPoles[i]] = { yPos: generatedYPos };
+    newSortData[addPoles[i].sortId] = { yPos: generatedYPos };
     // console.log(newSortData[newPoles[i]]);
   }
 

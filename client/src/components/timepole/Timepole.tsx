@@ -307,15 +307,16 @@ export function TimepoleMarker({
           console.log(e.currentTarget.getBoundingClientRect());
           // console.log(window.innerHeight);
         }}
+        data-length={timePoleDataArr.length}
       >
-        {timePoleDataArr.length > 1 && (
+        {/* {timePoleDataArr.length > 1 && (
           <div
             className={styles.poleDate}
             style={yPos.yPos > 0 ? { bottom: "-20px" } : { top: "-20px" }}
           >
             {date}
           </div>
-        )}
+        )} */}
         {timePoleDataArr.map((_pole) => {
           return (
             <div className={styles.textBubble} key={_pole.id}>

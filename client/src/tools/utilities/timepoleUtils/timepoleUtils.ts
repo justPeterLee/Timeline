@@ -215,11 +215,12 @@ export function generateOverLappingData(
   } = { heaven: {}, hell: {} };
 
   const windowhalf = window.innerHeight / 2;
+  // console.log(oldPoles);
   const poleData = groupedPoles(oldPoles);
-
+  // console.log(poleData);
   for (let i = 0; i < poleData.length; i++) {
-    const _oldTarget = document.getElementById(`pole-${poleData[i]}`);
-    const _sortDataTarget = sortData[poleData[i]];
+    const _oldTarget = document.getElementById(`pole-${poleData[i].sortId}`);
+    const _sortDataTarget = sortData[poleData[i].sortId];
     if (!_oldTarget || !_sortDataTarget) {
       continue;
     }
@@ -245,15 +246,20 @@ export function generateOverLappingData(
 }
 
 export function groupedPoles(poles: StandardPoleData[]) {
-  const poleDataObj: { [key: string]: string } = {};
+  // key is pole date
+  const poleDataObj: { [key: string]: { sortId: string; poleId: string } } = {};
 
   for (let i = 0; i < poles.length; i++) {
     if (poleDataObj[poles[i].full_date]) {
-      poleDataObj[poles[i].full_date] = poleDataObj[poles[i].full_date].concat(
-        poles[i].id
-      );
+      poleDataObj[poles[i].full_date] = {
+        sortId: poleDataObj[poles[i].full_date].sortId.concat("_", poles[i].id),
+        poleId: poles[i].id,
+      };
     } else {
-      poleDataObj[poles[i].full_date] = poles[i].id;
+      poleDataObj[poles[i].full_date] = {
+        sortId: poles[i].id,
+        poleId: poles[i].id,
+      };
     }
   }
 

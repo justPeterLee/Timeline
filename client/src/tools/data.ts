@@ -215,8 +215,9 @@ export function getPoleDataList(poles: StandardPoleData[], state: string) {
       // check if date instance exists
       if (weekPoleTwo.polesList[poleDate]) {
         weekPoleTwo.polesList[poleDate].poles.push(pole);
-        weekPoleTwo.polesList[poleDate].id =
-          weekPoleTwo.polesList[poleDate].id.concat(poleId);
+        weekPoleTwo.polesList[poleDate].id = weekPoleTwo.polesList[
+          poleDate
+        ].id.concat("_", poleId);
       } else {
         weekPoleTwo.polesList[poleDate] = {
           id: poleId,
