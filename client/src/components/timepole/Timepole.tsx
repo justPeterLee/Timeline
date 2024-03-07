@@ -61,8 +61,22 @@ export function TimePoleDisplay({
     updateWindowSort(jsonSortData);
   };
 
+  const deleteSortData = (_pole: { id: string }) => {
+    console.log(_pole);
+    const proxyLocalData = sortData;
+
+    if (proxyLocalData[_pole.id]) {
+      delete proxyLocalData[_pole.id];
+    }
+
+    const jsonSortData = JSON.stringify(proxyLocalData);
+    updateWindowSort(jsonSortData);
+  };
+
   useEffect(() => {
     //check if sort data already exist
+    // console.log(poles);
+    if (poles[0] === "loading") return;
     const localStorageData = window.localStorage.getItem("sortDataEffect");
     if (localStorageData && localStorageData !== undefined) {
       const jsonLocalStorageData: PoleCordsData = JSON.parse(localStorageData);
@@ -93,12 +107,13 @@ export function TimePoleDisplay({
       updateWindowSort(jsonSortData);
       setSortData(JSON.parse(window.localStorage.getItem("sortDataEffect")!));
     }
-  }, [poles, poleDatas, window.localStorage.getItem("sortDataEffect")]);
+  }, [poles, poleDatas]);
 
   useEffect(() => {
     setPageRender(true);
   }, []);
 
+  if (poles[0] === "loading") return <></>;
   return (
     <>
       <div className={styles.timePoleDisplayContainer} id={"asdf"}>
@@ -129,7 +144,11 @@ export function TimePoleDisplay({
       </div>
       {selectedPole && (
         <Modal onClose={onClose} styles={{ minWidth: "20rem" }}>
-          <TimePoleModal onClose={onClose} timePoleData={selectedPole} />
+          <TimePoleModal
+            onClose={onClose}
+            timePoleData={selectedPole}
+            deleteSortData={deleteSortData}
+          />
         </Modal>
       )}
       {selectedGroupPole && (

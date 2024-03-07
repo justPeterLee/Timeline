@@ -154,7 +154,6 @@ export function Modal(props: {
           backdropClick.current = false;
         }}
         onMouseLeave={() => {
-          console.log("leave");
           backdropClick.current = true;
 
           if (heldInModal.current) {

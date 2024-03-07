@@ -4,7 +4,7 @@ interface action {
   payload: any;
 }
 
-function getTimePole(state = [], action: action) {
+function getTimePole(state = ["loading"], action: action) {
   switch (action.type) {
     case "SET_TIME_POLE":
       return [...action.payload];

@@ -269,3 +269,17 @@ export function groupedPoles(poles: StandardPoleData[]) {
 
   return poleData;
 }
+
+// local sort data "server action"
+export function deleteSortData(
+  _pole: { id: string },
+  sortData: { [key: string]: { yPos: string } }
+) {
+  const proxyLocalData = sortData;
+
+  if (proxyLocalData[_pole.id]) {
+    delete proxyLocalData[_pole.id];
+  }
+
+  return JSON.stringify(proxyLocalData);
+}

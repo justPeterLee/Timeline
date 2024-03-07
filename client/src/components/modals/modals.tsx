@@ -14,9 +14,11 @@ import {
 export function TimePoleModal({
   timePoleData,
   onClose,
+  deleteSortData,
 }: {
   timePoleData: StandardPoleData;
   onClose: () => void;
+  deleteSortData: (_pole: { id: string }) => void;
 }) {
   // ------------ redux -----------------------
   const dispatch = useAppDispatch();
@@ -121,6 +123,8 @@ export function TimePoleModal({
     } else {
       console.log("not logged in");
     }
+
+    // deleteSortData({ id: timePoleData.id });
     onClose();
   };
 
