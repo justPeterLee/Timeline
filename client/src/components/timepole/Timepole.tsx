@@ -5,6 +5,7 @@ import {
   sort,
   compareSortPoles,
   sortDataUpdater,
+  extractPoleData,
 } from "../../tools/utilities/timepoleUtils/timepole";
 
 import {
@@ -28,7 +29,19 @@ export function TimePoleDisplay({
     return getPoleDataList(poles, urlView);
   }, [poles, urlView]);
 
-  const [sortData, setSortData] = useState<any>({});
+  // console.log(poleDatas);
+
+  const extractedPoleDatas: any = useMemo(() => {
+    return extractPoleData(poleDatas);
+  }, [poleDatas]);
+
+  // console.log(extractedPoleDatas);
+
+  const localStorageData = window.localStorage.getItem("sortDataEffect");
+  const [sortData, setSortData] = useState<PoleCordsData>(
+    localStorageData !== null ? JSON.parse(localStorageData) : {}
+  );
+
   const [pageRender, setPageRender] = useState(false);
 
   const [selectedPole, setSelectedPole] = useState<null | StandardPoleData>(
@@ -113,29 +126,23 @@ export function TimePoleDisplay({
   return (
     <>
       <div className={styles.timePoleDisplayContainer} id={"asdf"}>
-        {Object.keys(poleDatas).map((_weekKey, index) => {
+        {Object.keys(extractedPoleDatas).map((_dateKey) => {
+          const poleKey = generatePoleKey(_dateKey);
+          const _pole = extractedPoleDatas[_dateKey];
           return (
-            <Fragment key={index}>
-              {Object.keys(poleDatas[_weekKey].polesList).map((_dateKey) => {
-                const poleKey = generatePoleKey(_dateKey);
-                const _pole = poleDatas[_weekKey].polesList[_dateKey];
-                return (
-                  <TimepoleMarker
-                    key={_pole.id}
-                    id={poleKey}
-                    xPercent={_pole.xPercent}
-                    timePoleDataArr={_pole.poles}
-                    yPos={sortData[poleKey]}
-                    setSelectedPole={onOpenSelectedPole}
-                    setSelectedGroupPole={onOpenSelectedGroupPole}
-                    updateSortData={(_pole: { id: string; yPos: number }) => {
-                      updateSortData(_pole);
-                    }}
-                    pageRender={pageRender}
-                  />
-                );
-              })}
-            </Fragment>
+            <TimepoleMarker
+              key={_pole.id}
+              id={poleKey}
+              xPercent={_pole.xPercent}
+              timePoleDataArr={_pole.poles}
+              yPos={sortData[poleKey]}
+              setSelectedPole={onOpenSelectedPole}
+              setSelectedGroupPole={onOpenSelectedGroupPole}
+              updateSortData={(_pole: { id: string; yPos: number }) => {
+                updateSortData(_pole);
+              }}
+              pageRender={pageRender}
+            />
           );
         })}
       </div>
@@ -263,6 +270,7 @@ export function TimepoleMarker({
 
   useEffect(() => {
     // if()
+    // console.log
     api.start({
       from: { y: yPosMemo > 0 ? 25 : -25, scale: yPosMemo > 0 ? 25 : -25 },
       to: {
@@ -275,6 +283,9 @@ export function TimepoleMarker({
     });
   }, [pageRender, yPosMemo]);
 
+  useEffect(() => {
+    // console.log(yPosMemo);
+  }, [yPosMemo]);
   // useEffect(() => {
   //   console.log(pageRender);
   //   if (pageRender) {

@@ -50,8 +50,8 @@ export function compareSortPoles(
       deleteArray.push({ sortId: key, poleId: addArrayObj[key] });
     }
   }
-  console.log("delete: ", deleteArray);
-  console.log("add: ", addArray);
+  // console.log("delete: ", deleteArray);
+  // console.log("add: ", addArray);
 
   return { addArray, deleteArray };
 }
@@ -342,4 +342,35 @@ export function sortDataUpdater(
   }
 
   return JSON.stringify(persistedSortData);
+}
+
+export function extractPoleData(poleData: PoleData) {
+  const poleDataKeys = Object.keys(poleData);
+  const polesList: {
+    [key: string]: {
+      id: string;
+      poles: StandardPoleData[];
+      xPercent: number;
+    };
+  } = {};
+
+  for (let weekIndex = 0; weekIndex < poleDataKeys.length; weekIndex++) {
+    const targetPolesListKeys = Object.keys(
+      poleData[poleDataKeys[weekIndex]].polesList
+    );
+
+    for (
+      let dateIndex = 0;
+      dateIndex < targetPolesListKeys.length;
+      dateIndex++
+    ) {
+      polesList[targetPolesListKeys[dateIndex]] =
+        poleData[poleDataKeys[weekIndex]].polesList[
+          targetPolesListKeys[dateIndex]
+        ];
+    }
+  }
+
+  // console.log(polesList);
+  return polesList;
 }
