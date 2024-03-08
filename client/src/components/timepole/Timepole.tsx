@@ -5,12 +5,14 @@ import {
   sort,
   insertSorData,
   compareSortPoles,
+  sortDataUpdater,
 } from "../../tools/utilities/timepoleUtils/timepole";
 
 import {
   PoleCordsData,
   PoleData,
   StandardPoleData,
+  deleteSortDatas,
   generatePoleKey,
 } from "../../tools/utilities/timepoleUtils/timepoleUtils";
 
@@ -86,16 +88,31 @@ export function TimePoleDisplay({
       const jsonLocalStorageData: PoleCordsData = JSON.parse(localStorageData);
       const addPoles = compareSortPoles(poles, jsonLocalStorageData);
 
-      if (addPoles.length) {
-        // console.log("add: ", addPoles);
-        const newSortData = insertSorData(
-          poles,
-          addPoles,
-          jsonLocalStorageData
-        );
-        const jsonSortData = JSON.stringify(newSortData);
-        updateWindowSort(jsonSortData);
-      }
+      // if (addPoles.addArray.length) {
+      //   // console.log("add: ", addPoles);
+      //   const newSortData = insertSorData(
+      //     poles,
+      //     addPoles.addArray,
+      //     jsonLocalStorageData
+      //   );
+      //   const jsonSortData = JSON.stringify(newSortData);
+      //   updateWindowSort(jsonSortData);
+      // }
+
+      // if (addPoles.deleteArray.length) {
+      //   const newSortData = deleteSortDatas(
+      //     addPoles.deleteArray,
+      //     jsonLocalStorageData
+      //   );
+      //   const jsonSortData = JSON.stringify(newSortData);
+      // }
+      const updatedSortData = sortDataUpdater(
+        addPoles,
+        jsonLocalStorageData,
+        poles
+      );
+      updateWindowSort(updatedSortData);
+
       setSortData(jsonLocalStorageData);
     } else {
       // create sort data

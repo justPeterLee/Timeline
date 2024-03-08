@@ -279,17 +279,20 @@ export function groupedPoles(poles: StandardPoleData[]) {
 }
 
 // local sort data "server action"
-export function deleteSortData(
-  _pole: { id: string },
-  sortData: { [key: string]: { yPos: string } }
+export function deleteSortDatas(
+  deletePoles: { sortId: string; poleId: string | undefined }[],
+  localSortData: PoleCordsData
 ) {
-  const proxyLocalData = sortData;
+  const newSortData = localSortData;
 
-  if (proxyLocalData[_pole.id]) {
-    delete proxyLocalData[_pole.id];
+  for (let i = 0; i < deletePoles.length; i++) {
+    if (newSortData[deletePoles[i].sortId]) {
+      delete newSortData[deletePoles[i].sortId];
+    }
   }
 
-  return JSON.stringify(proxyLocalData);
+  console.log(newSortData);
+  return newSortData;
 }
 
 export function generatePoleKey(_pole: string) {

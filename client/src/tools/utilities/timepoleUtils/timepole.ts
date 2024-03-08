@@ -12,6 +12,7 @@ import {
   generateOverLappingData,
   PoleData,
   generatePoleKey,
+  deleteSortDatas,
 } from "./timepoleUtils";
 
 export function compareSortPoles(
@@ -51,7 +52,7 @@ export function compareSortPoles(
   console.log("delete: ", deleteArray);
   console.log("add: ", addArray);
 
-  return addArray;
+  return { addArray, deleteArray };
 }
 
 export function sortPoleData(poleData: PoleData) {
@@ -234,8 +235,10 @@ export function insertSorData(
   localSortData: PoleCordsData
 ) {
   console.time("start");
+  // console.log(JSON.parse(window.localStorage.getItem("sortDataEffect")));
   const overlappingData = generateOverLappingData(allPoles, localSortData);
   const newSortData = localSortData;
+  console.log(newSortData);
   const heavenBound = window.innerHeight / 2 - 30;
   const hellBound = window.innerHeight / 2 + 30;
 
@@ -314,4 +317,34 @@ export function insertSorData(
   // return
   console.timeEnd("start");
   return newSortData;
+}
+
+type UpdateSortData = { sortId: string; poleId: string }[];
+interface SortDataChanges {
+  addArray: UpdateSortData;
+  deleteArray: UpdateSortData;
+}
+export function sortDataUpdater(
+  sortDataChanges: SortDataChanges,
+  localSortData: PoleCordsData,
+  poles: StandardPoleData[]
+) {
+  let persistedSortData = localSortData;
+
+  if (sortDataChanges.addArray.length) {
+    persistedSortData = insertSorData(
+      poles,
+      sortDataChanges.addArray,
+      localSortData
+    );
+  }
+
+  if (sortDataChanges.deleteArray.length) {
+    persistedSortData = deleteSortDatas(
+      sortDataChanges.deleteArray,
+      persistedSortData
+    );
+  }
+
+  return JSON.stringify(persistedSortData);
 }
