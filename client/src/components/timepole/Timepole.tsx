@@ -3,7 +3,6 @@ import { useEffect, Fragment, useRef, useState, useMemo } from "react";
 import { getPoleDataList } from "../../tools/data";
 import {
   sort,
-  insertSorData,
   compareSortPoles,
   sortDataUpdater,
 } from "../../tools/utilities/timepoleUtils/timepole";
@@ -12,7 +11,6 @@ import {
   PoleCordsData,
   PoleData,
   StandardPoleData,
-  deleteSortDatas,
   generatePoleKey,
 } from "../../tools/utilities/timepoleUtils/timepoleUtils";
 
@@ -79,51 +77,27 @@ export function TimePoleDisplay({
 
   useEffect(() => {
     //check if sort data already exist
-    // console.log(poles);
-    // console.log(poleDatas);
-
     if (poles[0] === "loading") return;
     const localStorageData = window.localStorage.getItem("sortDataEffect");
     if (localStorageData && localStorageData !== undefined) {
       const jsonLocalStorageData: PoleCordsData = JSON.parse(localStorageData);
       const addPoles = compareSortPoles(poles, jsonLocalStorageData);
 
-      // if (addPoles.addArray.length) {
-      //   // console.log("add: ", addPoles);
-      //   const newSortData = insertSorData(
-      //     poles,
-      //     addPoles.addArray,
-      //     jsonLocalStorageData
-      //   );
-      //   const jsonSortData = JSON.stringify(newSortData);
-      //   updateWindowSort(jsonSortData);
-      // }
-
-      // if (addPoles.deleteArray.length) {
-      //   const newSortData = deleteSortDatas(
-      //     addPoles.deleteArray,
-      //     jsonLocalStorageData
-      //   );
-      //   const jsonSortData = JSON.stringify(newSortData);
-      // }
-      const updatedSortData = sortDataUpdater(
-        addPoles,
-        jsonLocalStorageData,
-        poles
-      );
-      updateWindowSort(updatedSortData);
+      if (addPoles.addArray.length || addPoles.deleteArray.length) {
+        const updatedSortData = sortDataUpdater(
+          addPoles,
+          jsonLocalStorageData,
+          poles
+        );
+        updateWindowSort(updatedSortData);
+      }
 
       setSortData(jsonLocalStorageData);
     } else {
       // create sort data
-      // check if data is generated
       if (!Object.keys(poleDatas).length) {
-        // console.log("invalid poles data: ", poles);
-        console.log("asdf");
         return;
       }
-
-      // if data is done generated
       const newSortData = sort(poleDatas);
       const jsonSortData = JSON.stringify(newSortData);
       updateWindowSort(jsonSortData);
@@ -189,7 +163,6 @@ import { useSpring, animated, to as interpolate } from "react-spring";
 import { useDrag } from "@use-gesture/react";
 import { Modal } from "../elements/Links";
 import { GroupTimePoleSelectionModal, TimePoleModal } from "../modals/modals";
-import { format } from "date-fns";
 export function TimepoleMarker({
   id,
   xPercent,
@@ -211,7 +184,6 @@ export function TimepoleMarker({
   setSelectedGroupPole: (_pole: StandardPoleData[]) => void;
   updateSortData: (_pole: { id: string; yPos: number }) => void;
 }) {
-  const date = format(new Date(timePoleDataArr[0].full_date), "EEEE, LLLL d");
   const wasDragging = useRef(false);
   const yPosRef = useRef(yPos ? yPos.yPos : 100);
   const targetElement = useRef<HTMLDivElement>(null);
@@ -351,14 +323,6 @@ export function TimepoleMarker({
         }}
         data-length={timePoleDataArr.length}
       >
-        {/* {timePoleDataArr.length > 1 && (
-          <div
-            className={styles.poleDate}
-            style={yPos.yPos > 0 ? { bottom: "-20px" } : { top: "-20px" }}
-          >
-            {date}
-          </div>
-        )} */}
         {timePoleDataArr.map((_pole) => {
           return (
             <div className={styles.textBubble} key={_pole.id}>

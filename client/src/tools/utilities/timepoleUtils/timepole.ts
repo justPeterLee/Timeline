@@ -13,6 +13,7 @@ import {
   PoleData,
   generatePoleKey,
   deleteSortDatas,
+  SortDataChanges,
 } from "./timepoleUtils";
 
 export function compareSortPoles(
@@ -311,7 +312,6 @@ export function insertSorData(
 
     // update overlapping data
     newSortData[addPoles[i].sortId] = { yPos: generatedYPos };
-    // console.log(newSortData[newPoles[i]]);
   }
 
   // return
@@ -319,11 +319,6 @@ export function insertSorData(
   return newSortData;
 }
 
-type UpdateSortData = { sortId: string; poleId: string }[];
-interface SortDataChanges {
-  addArray: UpdateSortData;
-  deleteArray: UpdateSortData;
-}
 export function sortDataUpdater(
   sortDataChanges: SortDataChanges,
   localSortData: PoleCordsData,

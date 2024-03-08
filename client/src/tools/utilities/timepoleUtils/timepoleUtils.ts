@@ -60,6 +60,12 @@ interface OrientationObj {
   [key: string]: { heaven: number; hell: number; total: number };
 }
 
+type UpdateSortData = { sortId: string; poleId: string }[];
+export interface SortDataChanges {
+  addArray: UpdateSortData;
+  deleteArray: UpdateSortData;
+}
+
 export class Orientation {
   _week: string;
   _heaven: number;
@@ -253,32 +259,6 @@ export function generateOverLappingData(
   return overlappingData;
 }
 
-export function groupedPoles(poles: StandardPoleData[]) {
-  // key is pole date
-  const poleDataObj: { [key: string]: { sortId: string; poleId: string } } = {};
-
-  for (let i = 0; i < poles.length; i++) {
-    if (poleDataObj[poles[i].full_date]) {
-      poleDataObj[poles[i].full_date] = {
-        sortId: poleDataObj[poles[i].full_date].sortId.concat("_", poles[i].id),
-        poleId: poles[i].id,
-      };
-    } else {
-      poleDataObj[poles[i].full_date] = {
-        sortId: poles[i].id,
-        poleId: poles[i].id,
-      };
-    }
-  }
-
-  const poleData = Object.keys(poleDataObj).map((_key) => {
-    return poleDataObj[_key];
-  });
-
-  return poleData;
-}
-
-// local sort data "server action"
 export function deleteSortDatas(
   deletePoles: { sortId: string; poleId: string | undefined }[],
   localSortData: PoleCordsData
@@ -291,7 +271,6 @@ export function deleteSortDatas(
     }
   }
 
-  console.log(newSortData);
   return newSortData;
 }
 
