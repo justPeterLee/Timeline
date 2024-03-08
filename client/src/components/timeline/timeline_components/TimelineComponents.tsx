@@ -29,14 +29,19 @@ export function TimelineSVG() {
         y1="50%"
         x2="100%"
         y2="50%"
-        style={{ stroke: "rgb(150,150,150)", strokeWidth: "2" }}
+        style={{
+          stroke: "rgb(150,150,150)",
+          strokeWidth: "2",
+          pointerEvents: "none",
+          userSelect: "none",
+        }}
       />
     </svg>
   );
 }
 
 import { format } from "date-fns";
-import { CreatePoleModal } from "../../modals/modals";
+import { CreatePoleModal } from "../../modals/Modals";
 type MonthDataSection = {
   month: string;
   day: number;

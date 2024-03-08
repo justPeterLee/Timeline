@@ -3,6 +3,7 @@
   height: 100%;
   display: flex;
   position: absolute;
+  pointer-events: none;
 }
 
 .timepole,
@@ -23,6 +24,7 @@
   transition: y2 0.5s ease;
 }
 .timePoleMarkerContainer {
+  pointer-events: all;
   position: absolute;
 
   display: flex;

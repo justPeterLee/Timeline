@@ -9,7 +9,7 @@ import {
 
 import { TimePoleDisplay } from "../../timepole/Timepole";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import {
   useAppDispatch,
   useAppSelector,
@@ -19,15 +19,8 @@ export default function TimelineYearPage() {
 
   const dispatch = useAppDispatch();
   const { mode } = useParams();
-  const [monthSelected, setMonthSelected] = useState<number>(-1);
 
-  const setSelectedMonth = (index: number) => {
-    setMonthSelected(() => index);
-  };
-
-  useEffect(() => {
-    setSelectedMonth(-1);
-  }, [location.pathname]);
+  useEffect(() => {}, [location.pathname]);
 
   useEffect(() => {
     dispatch({ type: "FETCH_USER" });
@@ -41,30 +34,18 @@ export default function TimelineYearPage() {
       <WeekMarkers />
       <TodayTrackerYear accurate={false} />
       {mode === "view" || !mode ? (
-        <MonthDivYearContainer
-          selectMonth={setSelectedMonth}
-          selectedMonth={monthSelected}
-        />
+        <MonthDivYearContainer />
       ) : (
         <CreateTimeline />
       )}
-      <MonthMarkersYearContainer
-        selectMonth={setSelectedMonth}
-        selectedMonth={monthSelected}
-      />
+      <MonthMarkersYearContainer />
       <TimePoleDisplay url={"year"} poles={poles} />
     </>
   );
 }
 
 // Month Markers (year page)
-export function MonthMarkersYearContainer({
-  selectMonth,
-  selectedMonth,
-}: {
-  selectMonth: (index: number) => void;
-  selectedMonth: number;
-}) {
+export function MonthMarkersYearContainer() {
   return (
     <div className={styles.timeLineMonthLine}>
       {Object.keys(month_data).map((_: string, index: number) => {
@@ -73,8 +54,6 @@ export function MonthMarkersYearContainer({
             key={index}
             monthData={month_data[index]}
             index={index}
-            selectMonth={selectMonth}
-            selectedMonth={selectedMonth}
           />
         );
       })}
@@ -85,14 +64,9 @@ export function MonthMarkersYearContainer({
 export function MonthMarkerYear({
   monthData,
   index,
-  selectMonth,
-  selectedMonth,
 }: {
   monthData: { month: string; day: number; weeks: number; startDay: number };
   index: number;
-
-  selectMonth: (index: number) => void;
-  selectedMonth: number;
 }) {
   const navigate = useNavigate();
   const { year, mode } = useParams();
@@ -119,20 +93,11 @@ export function MonthMarkerYear({
           bottom: `${index % 2 === 0 ? "" : "0"}`,
           userSelect: "none",
         }}
-        onMouseOver={() => {
-          selectMonth(index);
-          // console.log("over");
-        }}
-        onMouseOut={() => {
-          selectMonth(-1);
-        }}
         onClick={() => {
           navigate(monthRoute);
         }}
       >
-        <p style={{ opacity: selectedMonth === index ? "80%" : "30%" }}>
-          {monthData.month}
-        </p>
+        <p>{monthData.month}</p>
       </div>
     </div>
   );
@@ -149,13 +114,7 @@ export function MonthMarkerYear({
  */
 
 // Month Divs Container(year page)
-export function MonthDivYearContainer({
-  selectMonth,
-  selectedMonth,
-}: {
-  selectMonth: (index: number) => void;
-  selectedMonth: number;
-}) {
+export function MonthDivYearContainer() {
   return (
     <div className={styles.timeLineMonthContainer}>
       {Object.keys(month_data).map((_instance: string, index: number) => {
@@ -164,8 +123,6 @@ export function MonthDivYearContainer({
             key={index}
             monthData={month_data[index]}
             index={index}
-            selectMonth={selectMonth}
-            selectedMonth={selectedMonth}
           />
         );
       })}
@@ -177,14 +134,9 @@ export function MonthDivYearContainer({
 function MonthDivYear({
   monthData,
   index,
-  selectMonth,
-  selectedMonth,
 }: {
   monthData: { month: string; day: number; weeks: number };
   index: number;
-
-  selectMonth: (index: number) => void;
-  selectedMonth: number;
 }) {
   const navigate = useNavigate();
   const { year, mode } = useParams();
@@ -201,20 +153,8 @@ function MonthDivYear({
       onClick={() => {
         navigate(monthRoute);
       }}
-      onMouseOver={() => {
-        selectMonth(index);
-      }}
-      onMouseOut={() => {
-        selectMonth(-1);
-      }}
     >
-      <div
-        className={styles.container}
-        style={{
-          backgroundColor:
-            selectedMonth === index ? "rgb(242,242,242)" : "initial",
-        }}
-      ></div>
+      <div className={styles.container}></div>
     </div>
   );
 }

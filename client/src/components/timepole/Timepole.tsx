@@ -1,5 +1,5 @@
 import styles from "./Timepole.module.css";
-import { useEffect, Fragment, useRef, useState, useMemo } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 import { getPoleDataList } from "../../tools/data";
 import {
   sort,
@@ -169,7 +169,7 @@ export function TimePoleDisplay({
 import { useSpring, animated, to as interpolate } from "react-spring";
 import { useDrag } from "@use-gesture/react";
 import { Modal } from "../elements/Links";
-import { GroupTimePoleSelectionModal, TimePoleModal } from "../modals/modals";
+import { GroupTimePoleSelectionModal, TimePoleModal } from "../modals/Modals";
 export function TimepoleMarker({
   id,
   xPercent,

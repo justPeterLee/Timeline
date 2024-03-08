@@ -58,8 +58,12 @@
   margin: 0;
   font-size: 12px;
   opacity: 30%;
-  transition: opacity 0.3s;
+  transition: opacity 0.2s;
   user-select: none;
+}
+
+.monthAbrContainer p:hover {
+  opacity: 100%;
 }
 
 .weekLineContainer {

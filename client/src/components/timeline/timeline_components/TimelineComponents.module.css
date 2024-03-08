@@ -106,6 +106,7 @@
   width: 100%;
   display: flex;
   position: absolute;
+  pointer-events: none;
 }
 
 .weekLine {
