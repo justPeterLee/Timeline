@@ -15,23 +15,30 @@ import {
   generatePoleKey,
 } from "../../tools/utilities/timepoleUtils/timepoleUtils";
 
+// let sortDataConst: PoleCordsData | (() => PoleCordsData) | null = null;
 export function TimePoleDisplay({
   url,
   poles,
 }: {
-  url: string | undefined;
-  poles: any[];
+  url: "year" | "month";
+  poles: StandardPoleData[];
 }) {
+  // console.log(poles);
   const urlView = url ? url : "year";
 
   const poleDatas: PoleData = useMemo(() => {
-    if (poles[0] === "loading") return {};
     return getPoleDataList(poles, urlView);
   }, [poles, urlView]);
 
   // console.log(poleDatas);
 
   const extractedPoleDatas: any = useMemo(() => {
+    // console.log("asdf");
+    // if (!sortData) {
+    //   return extractPoleData(poleDatas);
+    // } else {
+    //   // return
+    // }
     return extractPoleData(poleDatas);
   }, [poleDatas]);
 
@@ -39,7 +46,7 @@ export function TimePoleDisplay({
 
   const localStorageData = window.localStorage.getItem("sortDataEffect");
   const [sortData, setSortData] = useState<PoleCordsData>(
-    localStorageData !== null ? JSON.parse(localStorageData) : {}
+    localStorageData ? JSON.parse(localStorageData) : {}
   );
 
   const [pageRender, setPageRender] = useState(false);
@@ -74,6 +81,7 @@ export function TimePoleDisplay({
 
     const jsonSortData = JSON.stringify(proxyLocalData);
     updateWindowSort(jsonSortData);
+    setSortData(JSON.parse(jsonSortData));
   };
 
   const deleteSortData = (_pole: { id: string }) => {
@@ -90,7 +98,7 @@ export function TimePoleDisplay({
 
   useEffect(() => {
     //check if sort data already exist
-    if (poles[0] === "loading") return;
+    console.log(poleDatas);
     const localStorageData = window.localStorage.getItem("sortDataEffect");
     if (localStorageData && localStorageData !== undefined) {
       const jsonLocalStorageData: PoleCordsData = JSON.parse(localStorageData);
@@ -100,42 +108,47 @@ export function TimePoleDisplay({
         const updatedSortData = sortDataUpdater(
           addPoles,
           jsonLocalStorageData,
-          poles
+          poles,
+          url
         );
         updateWindowSort(updatedSortData);
       }
-
-      setSortData(jsonLocalStorageData);
     } else {
       // create sort data
       if (!Object.keys(poleDatas).length) {
         return;
       }
-      const newSortData = sort(poleDatas);
-      const jsonSortData = JSON.stringify(newSortData);
+      const newSortDatas = sort(poleDatas);
+      // console.log(newSortDatas);
+      const jsonSortData = JSON.stringify(newSortDatas);
       updateWindowSort(jsonSortData);
-      setSortData(JSON.parse(window.localStorage.getItem("sortDataEffect")!));
     }
-  }, [poles, poleDatas]);
+  }, [poleDatas]);
 
   useEffect(() => {
     setPageRender(true);
+    // console.log("rerre");
   }, []);
 
-  if (poles[0] === "loading") return <></>;
+  useEffect(() => {
+    // console.log("window");
+  }, []);
+
   return (
     <>
       <div className={styles.timePoleDisplayContainer} id={"asdf"}>
         {Object.keys(extractedPoleDatas).map((_dateKey) => {
           const poleKey = generatePoleKey(_dateKey);
           const _pole = extractedPoleDatas[_dateKey];
+          const sortIsNull =
+            sortData === null ? { yPos: 90 } : sortData[poleKey];
           return (
             <TimepoleMarker
               key={_pole.id}
               id={poleKey}
               xPercent={_pole.xPercent}
               timePoleDataArr={_pole.poles}
-              yPos={sortData[poleKey]}
+              yPos={sortIsNull}
               setSelectedPole={onOpenSelectedPole}
               setSelectedGroupPole={onOpenSelectedGroupPole}
               updateSortData={(_pole: { id: string; yPos: number }) => {
@@ -191,6 +204,7 @@ export function TimepoleMarker({
   setSelectedGroupPole: (_pole: StandardPoleData[]) => void;
   updateSortData: (_pole: { id: string; yPos: number }) => void;
 }) {
+  // console.log(yPos);
   const wasDragging = useRef(false);
   const yPosRef = useRef(yPos ? yPos.yPos : 100);
   const targetElement = useRef<HTMLDivElement>(null);
@@ -271,6 +285,10 @@ export function TimepoleMarker({
   useEffect(() => {
     // if()
     // console.log
+    // if(pageRe)
+    // if (!pageRender) {
+
+    // console.log("hello");
     api.start({
       from: { y: yPosMemo > 0 ? 25 : -25, scale: yPosMemo > 0 ? 25 : -25 },
       to: {
@@ -281,21 +299,8 @@ export function TimepoleMarker({
             : yPosMemo + targetElement.current!.getBoundingClientRect().height,
       },
     });
-  }, [pageRender, yPosMemo]);
-
-  useEffect(() => {
-    // console.log(yPosMemo);
-  }, [yPosMemo]);
-  // useEffect(() => {
-  //   console.log(pageRender);
-  //   if (pageRender) {
-  //     api.start({
-  //       from: { y: yPosMemo > 0 ? 25 : -25, scale: yPosMemo > 0 ? 25 : -25 },
-  //       to: { y: yPosMemo, scale: yPosMemo > 0 ? yPosMemo : yPosMemo + 40 },
-  //     });
-  //   }
-  // }, [yPosMemo, pageRender]);
-  // if (!yPos) return <></>;
+    // }
+  }, []);
 
   return (
     <div
@@ -328,16 +333,18 @@ export function TimepoleMarker({
         className={styles.textContainer}
         id={`pole-${id}`}
         ref={targetElement}
-        onClick={(e) => {
-          console.log(e.currentTarget.getBoundingClientRect());
-          // console.log(window.innerHeight);
-        }}
+        // onClick={(e) => {
+        //   console.log(e.currentTarget.getBoundingClientRect());
+        //   // console.log(window.innerHeight);
+        // }}
         data-length={timePoleDataArr.length}
       >
         {timePoleDataArr.map((_pole) => {
           return (
             <div className={styles.textBubble} key={_pole.id}>
-              <p style={{ margin: 0, whiteSpace: "nowrap" }}>{_pole.title}</p>
+              <p style={{ margin: 0, whiteSpace: "nowrap" }}>
+                {_pole.title} {pageRender ? "true" : "false"}
+              </p>
             </div>
           );
         })}

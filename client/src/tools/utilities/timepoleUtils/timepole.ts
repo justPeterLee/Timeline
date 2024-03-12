@@ -226,7 +226,7 @@ export function sort(poleData: PoleData) {
       poleCordsData[PoleKey] = { yPos: generatedYPos };
     });
   }
-
+  console.log(poleCordsData);
   return poleCordsData;
 }
 
@@ -239,7 +239,7 @@ export function insertSorData(
   // console.log(JSON.parse(window.localStorage.getItem("sortDataEffect")));
   const overlappingData = generateOverLappingData(allPoles, localSortData);
   const newSortData = localSortData;
-  console.log(newSortData);
+  // console.log(newSortData);
   const heavenBound = window.innerHeight / 2 - 30;
   const hellBound = window.innerHeight / 2 + 30;
 
@@ -322,7 +322,8 @@ export function insertSorData(
 export function sortDataUpdater(
   sortDataChanges: SortDataChanges,
   localSortData: PoleCordsData,
-  poles: StandardPoleData[]
+  poles: StandardPoleData[],
+  url: "year" | "month"
 ) {
   let persistedSortData = localSortData;
 
@@ -334,11 +335,13 @@ export function sortDataUpdater(
     );
   }
 
-  if (sortDataChanges.deleteArray.length) {
-    persistedSortData = deleteSortDatas(
-      sortDataChanges.deleteArray,
-      persistedSortData
-    );
+  if (url !== "month") {
+    if (sortDataChanges.deleteArray.length) {
+      persistedSortData = deleteSortDatas(
+        sortDataChanges.deleteArray,
+        persistedSortData
+      );
+    }
   }
 
   return JSON.stringify(persistedSortData);
@@ -373,4 +376,19 @@ export function extractPoleData(poleData: PoleData) {
 
   // console.log(polesList);
   return polesList;
+}
+
+export function sortPolesMonths(
+  poles: StandardPoleData[],
+  month: string | undefined
+) {
+  if (!month) return "error";
+  const monthNumber = parseInt(month) - 1;
+
+  const polesMonth = poles.filter((_pole) => {
+    const poleData = new Date(_pole.full_date);
+    return poleData.getMonth() === monthNumber;
+  });
+
+  return polesMonth;
 }

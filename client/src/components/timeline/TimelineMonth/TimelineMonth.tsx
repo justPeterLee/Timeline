@@ -6,6 +6,16 @@ import {
   CreateTimeline,
 } from "../timeline_components/TimelineComponents";
 // import {}
+// import { UseAppDis } from "react-redux";
+import {
+  useAppDispatch,
+  useAppSelector,
+} from "../../../redux/redux-hooks/redux.hook";
+import { useEffect, useMemo } from "react";
+import { sortPolesMonths } from "../../../tools/utilities/timepoleUtils/timepole";
+import { TimePoleDisplay } from "../../timepole/Timepole";
+import { StandardPoleData } from "../../../tools/utilities/timepoleUtils/timepoleUtils";
+
 interface MonthsData {
   current: MonthDataSection;
   previous: MonthDataSection;
@@ -22,6 +32,17 @@ type MonthDataSection = {
 
 export default function TimelineMonthPage() {
   const { month, mode } = useParams();
+  const poles = useAppSelector((store) => store.timepole.getTimePole);
+
+  const polesByMonth = useMemo(() => {
+    if (poles[0] === "loading") return "loading";
+    const poleMonthData = sortPolesMonths(poles, month);
+    if (poleMonthData === "error") return "error";
+
+    return poleMonthData;
+  }, [poles, month]);
+
+  const dispatch = useAppDispatch();
 
   const selectedMonthData = () => {
     const monthInt = month ? parseInt(month) : -1;
@@ -37,12 +58,19 @@ export default function TimelineMonthPage() {
 
   const data = selectedMonthData();
 
+  useEffect(() => {
+    dispatch({ type: "FETCH_USER" });
+    dispatch({ type: "GET_TIMEPOLE_SERVER" });
+  }, []);
+
+  if (polesByMonth === "loading") return <>loading</>;
+  if (polesByMonth === "error") return <>error</>;
   return (
     <>
       {mode === "create" && (
         <CreateTimeline monthData={month_data[parseInt(month!) - 1]} />
       )}
-      <MonthDivMonthContainer monthsData={data} />
+      <MonthDivMonthContainer monthsData={data} polesByMonth={polesByMonth} />
     </>
   );
 }
@@ -61,8 +89,10 @@ export default function TimelineMonthPage() {
 // Month Divs Container (month)
 export function MonthDivMonthContainer({
   monthsData,
+  polesByMonth,
 }: {
   monthsData: MonthsData;
+  polesByMonth: StandardPoleData[];
 }) {
   return (
     <div className={styles.timeLineMonthContainer}>
@@ -73,6 +103,7 @@ export function MonthDivMonthContainer({
             key={index}
             state={month}
             data={monthsData[month as keyof MonthsData]}
+            polesByMonth={polesByMonth}
           />
         );
       })}
@@ -84,6 +115,7 @@ export function MonthDivMonthContainer({
 function MonthDivMonth({
   state,
   data,
+  polesByMonth,
 }: {
   state: string;
   data: {
@@ -93,12 +125,14 @@ function MonthDivMonth({
     startDay: number;
     index: number;
   };
+  polesByMonth: StandardPoleData[];
 }) {
   const navigate = useNavigate();
   const { year, mode } = useParams();
 
   return (
     <div
+      id={state}
       className={styles.monthViewDiv}
       style={{
         width: state === "current" ? "90%" : "5%",
@@ -119,6 +153,9 @@ function MonthDivMonth({
         )
       ) : (
         <></>
+      )}
+      {state === "current" && (
+        <TimePoleDisplay url={"month"} poles={polesByMonth} />
       )}
     </div>
   );
@@ -212,6 +249,7 @@ export function AccurateWeekMarkersContainer({
 }
 
 export function WeekMarker({ index, day }: { index: number; day: number }) {
+  console.log(day, index);
   return (
     <div
       className={styles.weekMarker}

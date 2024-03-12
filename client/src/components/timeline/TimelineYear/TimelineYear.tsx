@@ -29,6 +29,8 @@ export default function TimelineYearPage() {
 
   // useEffect(() => {
   // }, [dispatch]);
+  if (poles[0] === "loading") return <></>;
+
   return (
     <>
       <WeekMarkers />
