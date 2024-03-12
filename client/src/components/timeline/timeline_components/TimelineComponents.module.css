@@ -103,9 +103,9 @@
 
 /* Markers */
 .weekMarkersContainer {
-  width: 100%;
+  /* width: 100%;
   display: flex;
-  position: absolute;
+  position: absolute; */
   pointer-events: none;
 }
 
@@ -118,4 +118,5 @@
   z-index: 10;
   /* top: -500%; */
   /* transform: translateY(100%); */
+  pointer-events: none;
 }

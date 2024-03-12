@@ -7,9 +7,15 @@ import {
   WeekMarkers,
 } from "../timeline_components/TimelineComponents";
 
+import {
+  VisualBox,
+  LinkBox,
+  DataBox,
+  VisualBoxContext,
+} from "../timelineBox/TimelineBox";
 import { TimePoleDisplay } from "../../timepole/Timepole";
 
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import {
   useAppDispatch,
   useAppSelector,
@@ -33,15 +39,25 @@ export default function TimelineYearPage() {
 
   return (
     <>
-      <WeekMarkers />
-      <TodayTrackerYear accurate={false} />
+      <VisualBox url="year">
+        {/* <> */}
+        <WeekMarkers />
+        <MonthMarkersYearContainer />
+        <TodayTrackerYear accurate={false} />
+        {/* </> */}
+      </VisualBox>
+
       {mode === "view" || !mode ? (
-        <MonthDivYearContainer />
+        <LinkBox>
+          <MonthDivYearContainer />
+        </LinkBox>
       ) : (
         <CreateTimeline />
       )}
-      <MonthMarkersYearContainer />
-      <TimePoleDisplay url={"year"} poles={poles} />
+
+      <DataBox data={""}>
+        <TimePoleDisplay url={"year"} poles={poles} />
+      </DataBox>
     </>
   );
 }
@@ -160,3 +176,5 @@ function MonthDivYear({
     </div>
   );
 }
+
+// function yea

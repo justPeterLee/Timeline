@@ -135,9 +135,11 @@ export function CreateTimeline({
 export function WeekMarkers() {
   return (
     <div className={styles.weekMarkersContainer}>
-      {Array.from({ length: 52 }, (_, index) => {
-        return <MiniMarkers key={index} index={index} />;
-      })}
+      <>
+        {Array.from({ length: 52 }, (_, index) => {
+          return <MiniMarkers key={index} index={index} />;
+        })}
+      </>
     </div>
   );
 }

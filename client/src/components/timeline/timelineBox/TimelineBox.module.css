@@ -1,0 +1,8 @@
+.timelineBoxContainer {
+  position: absolute;
+  width: 100%;
+}
+
+#view {
+  z-index: 10000;
+}
