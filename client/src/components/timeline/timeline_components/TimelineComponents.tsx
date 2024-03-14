@@ -1,6 +1,6 @@
 import styles from "./TimelineComponents.module.css";
 import { current, month_data, getDateFromDayOfYear } from "../../../tools/data";
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 import { Backdrop } from "../../elements/Links";
 // identifies todays date (on YEAR timeline)
 export function TodayTrackerYear({ accurate }: { accurate: boolean }) {
@@ -42,6 +42,7 @@ export function TimelineSVG() {
 
 import { format } from "date-fns";
 import { CreatePoleModal } from "../../modals/Modals";
+import { useNavigate } from "react-router-dom";
 type MonthDataSection = {
   month: string;
   day: number;
@@ -157,3 +158,30 @@ function MiniMarkers({ index }: { index: number }) {
     ></div>
   );
 }
+
+export function LinkSection({
+  url,
+  style,
+}: {
+  url: string;
+  style: { height: string; width: string; left?: string; right?: string };
+}) {
+  const navigate = useNavigate();
+  const onClickEvent = () => {
+    console.log("adf");
+    navigate(url);
+  };
+  return (
+    <div
+      className={styles.linkSection}
+      style={style}
+      onClick={onClickEvent}
+    ></div>
+  );
+}
+
+// export function MainView({children, style} : {children:ReactNode, style:{width:string, height?:string}}){
+//   return (<div>
+
+//   </div>)
+// }

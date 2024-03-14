@@ -4,7 +4,10 @@ import { useParams, useNavigate } from "react-router-dom";
 import {
   TodayTrackerYear,
   CreateTimeline,
+  LinkSection,
 } from "../timeline_components/TimelineComponents";
+
+import { LinkBox, VisualBox, DataBox } from "../timelineBox/TimelineBox";
 // import {}
 // import { UseAppDis } from "react-redux";
 import {
@@ -31,7 +34,7 @@ type MonthDataSection = {
 };
 
 export default function TimelineMonthPage() {
-  const { month, mode } = useParams();
+  const { month, mode, year } = useParams();
   const poles = useAppSelector((store) => store.timepole.getTimePole);
 
   const polesByMonth = useMemo(() => {
@@ -67,10 +70,55 @@ export default function TimelineMonthPage() {
   if (polesByMonth === "error") return <>error</>;
   return (
     <>
+      <VisualBox url={"month"}>
+        <div id={"monthMarkers"}>
+          {/* <MonthMarker state=/> */}
+          {Object.keys(data).map((month, index) => {
+            return (
+              <MonthMarker
+                key={index}
+                state={month}
+                data={data[month as keyof MonthsData]}
+              />
+            );
+          })}
+        </div>
+
+        <div className={styles.mainView} id={"dayMarkers"}>
+          {Array.from({ length: data.current.day - 1 }, (_, index) => {
+            return (
+              <WeekMarker
+                key={index}
+                index={index + 1}
+                day={data.current.day}
+              />
+            );
+          })}
+        </div>
+      </VisualBox>
+
+      <LinkBox>
+        <LinkSection
+          url={`/month/${year}/${data.previous.index}/${mode}`}
+          style={{ width: "5%", height: "30px", left: "0" }}
+        />
+        <LinkSection
+          url={`/month/${year}/${data.following.index}/${mode}`}
+          style={{ width: "5%", height: "30px", right: "0" }}
+        />
+        {/* <div></div> */}
+      </LinkBox>
+
+      <DataBox data={""}>
+        <div className={styles.mainView}>
+          <TimePoleDisplay url={"month"} poles={polesByMonth} />
+        </div>
+      </DataBox>
+
       {mode === "create" && (
         <CreateTimeline monthData={month_data[parseInt(month!) - 1]} />
       )}
-      <MonthDivMonthContainer monthsData={data} polesByMonth={polesByMonth} />
+      {/* <MonthDivMonthContainer monthsData={data} polesByMonth={polesByMonth} /> */}
     </>
   );
 }
@@ -94,10 +142,11 @@ export function MonthDivMonthContainer({
   monthsData: MonthsData;
   polesByMonth: StandardPoleData[];
 }) {
+  console.log(monthsData);
   return (
     <div className={styles.timeLineMonthContainer}>
       {/* {JSON.stringify(viewMonth)} */}
-      {Object.keys(monthsData).map((month: string, index: number) => {
+      {Object.keys(monthsData).map((month, index) => {
         return (
           <MonthDivMonth
             key={index}
@@ -127,8 +176,8 @@ function MonthDivMonth({
   };
   polesByMonth: StandardPoleData[];
 }) {
-  const navigate = useNavigate();
-  const { year, mode } = useParams();
+  // const navigate = useNavigate();
+  // const { year, mode } = useParams();
 
   return (
     <div
@@ -137,14 +186,14 @@ function MonthDivMonth({
       style={{
         width: state === "current" ? "90%" : "5%",
       }}
-      onClick={() => {
-        if (state === "previous" || state === "following") {
-          navigate(`/month/${year}/${data.index}/${mode}`);
-        }
-      }}
+      // onClick={() => {
+      //   if (state === "previous" || state === "following") {
+      //     navigate(`/month/${year}/${data.index}/${mode}`);
+      //   }
+      // }}
     >
-      <MonthMarker state={state} data={data} />
-      {state === "current" && <AccurateWeekMarkersContainer data={data} />}
+      {/* <MonthMarker state={state} data={data} /> */}
+      {/* {state === "current" && <AccurateWeekMarkersContainer data={data} />} */}
       {state === "current" ? (
         data.index - 1 === current.today.month ? (
           <TodayTrackerYear accurate={true} />
@@ -195,6 +244,7 @@ export function MonthMarkersMonthContainer({
 
 // Month Marker (month)
 function MonthMarker({
+  state,
   data,
 }: // index,
 {
@@ -208,12 +258,8 @@ function MonthMarker({
       className={styles.month}
       style={{
         top: (data.index - 1) % 2 <= 0 ? "0%" : "-15px",
-        // left:
-        //   state === "previous"
-        //     ? "0%"
-        //     : state === "following"
-        //     ? "91.5068493151%"
-        //     : "10%",
+        left:
+          state === "previous" ? "0%" : state === "following" ? "95%" : "5%",
       }}
     >
       <div className={styles.monthLine}></div>
@@ -249,7 +295,7 @@ export function AccurateWeekMarkersContainer({
 }
 
 export function WeekMarker({ index, day }: { index: number; day: number }) {
-  console.log(day, index);
+  // console.log(day, index);
   return (
     <div
       className={styles.weekMarker}

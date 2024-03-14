@@ -120,3 +120,16 @@
   /* transform: translateY(100%); */
   pointer-events: none;
 }
+
+.linkSection {
+  position: absolute;
+  /* background-color: ; */
+  transition: background-color ease 0.3s;
+  transform: translateY(-50%);
+  z-index: 10;
+  cursor: pointer;
+}
+
+.linkSection:hover {
+  background-color: rgb(240, 240, 240);
+}
