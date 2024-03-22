@@ -1,10 +1,12 @@
+interface MonthData {
+  month: string;
+  abb: string;
+  days: number;
+  dayOfYear: number;
+}
+
 export const monthByDate: {
-  [key: number]: {
-    month: string;
-    abb: string;
-    days: number;
-    dayOfYear: number;
-  };
+  [key: number]: MonthData;
 } = {
   1: { month: "January", abb: "Jan", days: 31, dayOfYear: 1 },
   32: { month: "February", abb: "Feb", days: 28, dayOfYear: 32 },
@@ -20,7 +22,7 @@ export const monthByDate: {
   335: { month: "December", abb: "Dec", days: 31, dayOfYear: 335 },
 };
 
-export const monthByIndex = {
+export const monthByIndex: { [key: number]: MonthData } = {
   1: monthByDate[1],
   2: monthByDate[32],
   3: monthByDate[60],
