@@ -1,11 +1,11 @@
 import { monthByIndex } from "../../../tools/data/monthData";
 
 export function calcOriginPercent(
-  selectedMonth: string,
+  selectedMonth: number,
   scaleRatio: number,
   timelineContainer: HTMLDivElement
 ) {
-  const index = parseInt(selectedMonth);
+  const index = selectedMonth;
 
   if (index <= 1) {
     return 0;
