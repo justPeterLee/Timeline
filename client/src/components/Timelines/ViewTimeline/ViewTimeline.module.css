@@ -11,9 +11,9 @@
 
   overflow: hidden;
 
-  z-index: 1000;
-  user-select: none;
-  pointer-events: none;
+  /* z-index: 1000; */
+  /* user-select: none;
+  pointer-events: none; */
 }
 
 .OriginMarker {

@@ -1,21 +1,32 @@
 import styles from "./LinkTimeline.module.css";
-import { monthByIndex } from "../../../tools/data/monthData";
+import { current, monthByIndex } from "../../../tools/data/monthData";
 
-import { TimelineCard } from "../Timeline/Timeline";
-import { useNavigate } from "react-router-dom";
+import {
+  TimelineCard,
+  TimelineCardAnimation,
+  TimelineSpringValue,
+} from "../Timeline/Timeline";
+import { useNavigate, useParams } from "react-router-dom";
 // import
 
-export function LinktTimelineYear() {
+export function LinktTimelineYear({
+  timelineSpring,
+}: {
+  timelineSpring: TimelineSpringValue;
+}) {
   const navigate = useNavigate();
+  const { year } = useParams();
+
   const months = monthByIndex;
 
   return (
-    <TimelineCard id="year-link">
+    <TimelineCardAnimation timelineSpring={timelineSpring} id="year-link">
       <>
         {Array.from({ length: Object.keys(months).length }, (_, index) => {
           const width = (100 / 365) * months[index + 1].days;
+          // get year
           const onNavigate = () => {
-            navigate(`/month/${index + 1}`);
+            navigate(`/month/${year ? year : current.year}/${index + 1}/view`);
           };
           // console.log(width);
           return (
@@ -31,7 +42,7 @@ export function LinktTimelineYear() {
           );
         })}
       </>
-    </TimelineCard>
+    </TimelineCardAnimation>
   );
 }
 

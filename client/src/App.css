@@ -37,4 +37,5 @@
 #month-link {
   display: flex;
   flex-direction: row;
+  z-index: 10;
 }

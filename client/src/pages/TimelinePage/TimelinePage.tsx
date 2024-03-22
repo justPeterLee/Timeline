@@ -9,7 +9,7 @@ export default function TimelinePage() {
     <>
       <Outlet />
 
-      {mode === "create" ? <ViewTimeline /> : <CreateTimeline />}
+      {mode === "create" ? <CreateTimeline /> : <ViewTimeline />}
       <ViewLinks page={month ? "month" : "year"} />
     </>
   );

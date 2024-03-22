@@ -4,11 +4,7 @@ import "../../App.css";
 // import TimelineYearPage from "../../components/timeline/TimelineYear/TimelineYear";
 
 function YearPage() {
-  return (
-    <div className="Page">
-      <LinktTimelineYear />
-    </div>
-  );
+  return <div className="Page">{/* <LinktTimelineYear /> */}</div>;
 }
 
 export default YearPage;

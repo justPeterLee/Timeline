@@ -8,6 +8,7 @@ import { useEffect, useRef } from "react";
 
 import { calcOriginPercent, findScaleRatio } from "./ViewAnimation";
 import { monthByIndex } from "../../../tools/data/monthData";
+import { LinktTimelineYear } from "../LinkTimeline/LinkTimelineYear";
 // import {Dis}
 
 export default function ViewTimeline() {
@@ -117,6 +118,7 @@ export default function ViewTimeline() {
       ref={timelineContainer}
     >
       <Timeline timelineSpring={timelineSpring}></Timeline>
+      <LinktTimelineYear timelineSpring={timelineSpring} />
       {/* <DisplayTimeline timelineSpring={timelineSpring} /> */}
       {/* <div
         className={styles.OriginMarker}
