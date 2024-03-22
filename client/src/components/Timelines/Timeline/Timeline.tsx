@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import styles from "./Timeline.module.css";
 import { SpringValues, animated, to } from "react-spring";
+import { MarkerAllContainer } from "./Marker";
 
 export type TimelineSpringValue = SpringValues<{
   x: number;
@@ -60,6 +61,7 @@ export function Timeline({
   return (
     <TimelineCardAnimation timelineSpring={timelineSpring} id={"timeline"}>
       <div className={styles.TimelineCover}></div>
+      <MarkerAllContainer timelineSpring={timelineSpring} />
     </TimelineCardAnimation>
   );
 }
