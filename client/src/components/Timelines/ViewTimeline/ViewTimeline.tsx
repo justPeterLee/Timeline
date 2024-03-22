@@ -1,4 +1,4 @@
-import style from "./ViewTimeline.module.css";
+import styles from "./ViewTimeline.module.css";
 
 import { Timeline } from "../Timeline/Timeline";
 
@@ -110,4 +110,22 @@ export default function ViewTimeline() {
       }
     }
   }, [timelineContainer, location]);
+  return (
+    <div
+      className={styles.ViewTimelineContainer}
+      id={"view-timeline-container"}
+      ref={timelineContainer}
+    >
+      <Timeline timelineSpring={timelineSpring}></Timeline>
+      {/* <DisplayTimeline timelineSpring={timelineSpring} /> */}
+      {/* <div
+        className={styles.OriginMarker}
+        style={{ transform: "translateX(5%)" }}
+      >
+        <div
+          style={{ height: "10px", width: "1px", backgroundColor: "black" }}
+        ></div>
+      </div> */}
+    </div>
+  );
 }
