@@ -2,7 +2,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import { current } from "../../tools/data";
 import ReactDOM from "react-dom";
 import { ReactNode } from "react";
-export function GlobalLinks({ page }: { page: string }) {
+
+export function ViewLinks({ page }: { page: string }) {
   const navigate = useNavigate();
   const { year, month, mode } = useParams();
 
@@ -42,6 +43,7 @@ export function GlobalLinks({ page }: { page: string }) {
     </div>
   );
 }
+
 export function ValidInput(props: {
   value: string;
   setValue: (value: string) => void;
