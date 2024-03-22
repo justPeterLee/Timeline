@@ -1,0 +1,42 @@
+.TimelineContainer {
+  border-radius: 5px;
+  height: 5rem;
+  width: 90%;
+  background-color: rgb(230, 230, 230);
+
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  overflow: hidden;
+
+  cursor: pointer;
+}
+
+.TetherContainer {
+  position: relative;
+  top: 50%;
+
+  height: 7px;
+}
+
+.Dot {
+  height: 8px;
+  width: 8px;
+
+  background-color: rgb(90, 90, 90);
+  border-radius: 100%;
+
+  position: absolute;
+}
+
+.Tether {
+  position: absolute;
+
+  transform-origin: center left;
+
+  border-top: 3px solid transparent;
+  border-bottom: 2px solid transparent;
+  border-right: 1px solid rgb(90, 90, 90);
+}
