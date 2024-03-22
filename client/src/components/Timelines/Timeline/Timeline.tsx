@@ -9,7 +9,7 @@ export function TimelineCard({
 }: {
   children: ReactNode;
   id: string;
-  style: {};
+  style?: {};
 }) {
   return (
     <div className={styles.TimelineCard} id={id} style={{ ...style }}>
@@ -18,7 +18,7 @@ export function TimelineCard({
   );
 }
 
-type TimelineSpringVlaue = SpringValues<{
+type TimelineSpringValue = SpringValues<{
   x: number;
   scale: number;
   origin: number;
@@ -31,7 +31,7 @@ export function TimelineCardAnimation({
   id,
   children,
 }: {
-  timelineSpring: TimelineSpringVlaue;
+  timelineSpring: TimelineSpringValue;
   id: string;
   children: ReactNode;
 }) {
@@ -49,5 +49,17 @@ export function TimelineCardAnimation({
     >
       {children}
     </animated.div>
+  );
+}
+
+export function Timeline({
+  timelineSpring,
+}: {
+  timelineSpring: TimelineSpringValue;
+}) {
+  return (
+    <TimelineCardAnimation timelineSpring={timelineSpring} id={"timeline"}>
+      <div className={styles.TimelineCover}></div>
+    </TimelineCardAnimation>
   );
 }
