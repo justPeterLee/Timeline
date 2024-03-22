@@ -2,6 +2,14 @@ import { ReactNode } from "react";
 import styles from "./Timeline.module.css";
 import { SpringValues, animated, to } from "react-spring";
 
+export type TimelineSpringValue = SpringValues<{
+  x: number;
+  scale: number;
+  origin: number;
+  markerX: number;
+  markerDayOpacity: number;
+}>;
+
 export function TimelineCard({
   children,
   id = "timeline",
@@ -17,14 +25,6 @@ export function TimelineCard({
     </div>
   );
 }
-
-type TimelineSpringValue = SpringValues<{
-  x: number;
-  scale: number;
-  origin: number;
-  markerX: number;
-  markerDayOpacity: number;
-}>;
 
 export function TimelineCardAnimation({
   timelineSpring,

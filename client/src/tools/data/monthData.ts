@@ -1,4 +1,11 @@
-export const monthByDate = {
+export const monthByDate: {
+  [key: number]: {
+    month: string;
+    abb: string;
+    days: number;
+    dayOfYear: number;
+  };
+} = {
   1: { month: "January", abb: "Jan", days: 31, dayOfYear: 1 },
   32: { month: "February", abb: "Feb", days: 28, dayOfYear: 32 },
   60: { month: "March", abb: "Mar", days: 31, dayOfYear: 60 },
