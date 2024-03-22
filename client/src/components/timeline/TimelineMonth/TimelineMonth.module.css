@@ -93,11 +93,12 @@
 
 /* week marker */
 .weekMarker {
-  height: 12px;
-  width: 1px;
-  /* background-color: red; */
-  background-color: rgb(200, 200, 200);
   position: absolute;
+  height: 10px;
+  width: 1px;
+  background-color: rgb(200, 200, 200);
+  /* z-index: 10; */
+  pointer-events: none;
 }
 
 .weekMarkerContainer {
