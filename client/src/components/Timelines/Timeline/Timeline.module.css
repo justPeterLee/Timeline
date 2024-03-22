@@ -1,0 +1,63 @@
+.Timeline {
+  height: 2px;
+  width: 100%;
+
+  position: absolute;
+  top: 50%;
+}
+
+.TimelineCover {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 2px;
+  width: 100%;
+  background-color: rgb(150, 150, 150);
+  z-index: 100;
+}
+
+.Markers {
+  height: 15px;
+  width: 2px;
+  background-color: rgb(150, 150, 150);
+  position: absolute;
+}
+
+.DateMarkerContainer {
+  height: 2px;
+  width: 100%;
+
+  position: absolute;
+  top: 50%;
+
+  transform: translateY(-50%);
+}
+
+.MarkerWeek {
+  position: absolute;
+  left: 10px;
+  height: 12px;
+  width: 1px;
+  background-color: rgb(175, 175, 175);
+  z-index: 1;
+}
+
+.MarkerDay {
+  position: absolute;
+  left: 10px;
+  height: 10px;
+  width: 1px;
+  background-color: rgb(200, 200, 200);
+  z-index: 1;
+}
+
+.TimelineCard {
+  height: 2px;
+  width: 90%;
+
+  position: absolute;
+  top: 50%;
+  left: 50%;
+
+  transform: translate(-50%, -50%);
+}
