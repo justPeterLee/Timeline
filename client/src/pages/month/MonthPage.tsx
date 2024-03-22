@@ -7,7 +7,6 @@ export default function MonthPage() {
   return (
     <>
       <TimelineCard children={<TimelineMonthPage />} />
-      <GlobalLinks page="month" />
     </>
   );
 }
