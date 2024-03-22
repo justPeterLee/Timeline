@@ -23,3 +23,18 @@
 
   transform: translateX(-50%);
 }
+
+.Page {
+  max-width: 1280px;
+  margin: 0 auto;
+  text-align: center;
+
+  height: 100vh;
+  width: 100vw;
+}
+
+#year-link,
+#month-link {
+  display: flex;
+  flex-direction: row;
+}
