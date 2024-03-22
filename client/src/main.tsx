@@ -1,7 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+
+import TimelinePage from "./pages/TimelinePage/TimelinePage.tsx";
 import YearPage from "./pages/year/YearPage.tsx";
 import MonthPage from "./pages/month/MonthPage.tsx";
+
 import "./index.css";
 
 import { Provider } from "react-redux";
@@ -41,16 +44,19 @@ async function redirectURL(url: string) {
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <YearPage />,
+    element: <TimelinePage />,
+    children: [
+      {
+        path: "/year/:year/:mode",
+        element: <YearPage />,
+      },
+      {
+        path: "/month/:year/:month/:mode",
+        element: <MonthPage />,
+      },
+    ],
   },
-  {
-    path: "/year/:year/:mode",
-    element: <YearPage />,
-  },
-  {
-    path: "/month/:year/:month/:mode",
-    element: <MonthPage />,
-  },
+
   {
     path: "/user",
     element: <UserPage />,
