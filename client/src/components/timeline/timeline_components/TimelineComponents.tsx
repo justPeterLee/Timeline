@@ -1,6 +1,6 @@
 import styles from "./TimelineComponents.module.css";
 import { current, month_data, getDateFromDayOfYear } from "../../../tools/data";
-import { ReactNode, useState } from "react";
+import { useState } from "react";
 import { Backdrop } from "../../elements/Links";
 // identifies todays date (on YEAR timeline)
 export function TodayTrackerYear({ accurate }: { accurate: boolean }) {

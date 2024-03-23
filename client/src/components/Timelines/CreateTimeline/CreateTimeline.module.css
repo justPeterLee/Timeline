@@ -2,7 +2,7 @@
   border-radius: 5px;
   height: 5rem;
   width: 90%;
-  background-color: rgb(230, 230, 230);
+  background-color: rgb(240, 240, 240);
 
   position: absolute;
   top: 50%;
@@ -19,6 +19,8 @@
   top: 50%;
 
   height: 7px;
+
+  z-index: 2000;
 }
 
 .Dot {
@@ -39,4 +41,104 @@
   border-top: 3px solid transparent;
   border-bottom: 2px solid transparent;
   border-right: 1px solid rgb(90, 90, 90);
+}
+
+/* ------------------------------------------ */
+
+.CreateTimelineModal {
+  /* height: 10rem;
+  width: 10rem; */
+  min-width: 20rem;
+
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+
+  background-color: white;
+  border-radius: 5px;
+  /* box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px; */
+}
+
+.datePickerInput {
+  background-color: transparent;
+  border: none;
+  outline: none;
+}
+
+.datePickerInput:hover {
+  cursor: pointer;
+}
+
+.modalDateButton {
+  min-width: 175px;
+  background-color: rgb(235, 235, 235);
+  padding: 10px;
+  border-radius: 5px;
+  position: relative;
+  border: none;
+}
+
+.modalDateButton:hover {
+  cursor: pointer;
+}
+
+.modalTextarea {
+  resize: none;
+  border: none;
+  background-color: rgb(235, 235, 235);
+  border-radius: 5px;
+  height: 50px;
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+
+  padding: 10px;
+  outline: none;
+
+  transition: background-color ease 0.1s;
+
+  width: 100%;
+}
+
+.modalTextarea:hover {
+  background-color: rgb(210, 210, 210);
+}
+
+.ModalActionButton {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.ModalActionButton button {
+  background-color: #1b66c9;
+  border-radius: 5px;
+  padding: 10px 20px 10px 20px;
+  color: white;
+  /* padding-right: 20; */
+}
+/* 
+.ModalTitle {
+  width: 100%;
+} */
+
+.ModalTitle,
+.ModalDate,
+.ModalDesc {
+  display: flex;
+  gap: 10px;
+}
+
+.modalIcon {
+  transform: translateY(10px);
+}
+
+.ModalIconContainer {
+  width: 15px;
+}
+
+.DatePickerContainer {
+  /* height: 1px; */
+  z-index: 1000;
+  position: absolute;
+  top: 50%;
+
+  transform: translateY(90px);
 }

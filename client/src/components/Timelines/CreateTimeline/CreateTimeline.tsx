@@ -1,10 +1,38 @@
 import styles from "./CreateTimeline.module.css";
 import { animated, useSpring, to, SpringValues } from "react-spring";
 import { useGesture } from "@use-gesture/react";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { Timeline } from "../Timeline/Timeline";
+import { CreateTimelineModal, DatePickerModal } from "./CreateTimelineModal";
+import { useParams } from "react-router-dom";
+import { percentToDate } from "../../../tools/utilities/dateFunction";
 
 export function CreateTimeline() {
+  const { year } = useParams();
+
+  const [createDate, setCreateDate] = useState<null | Date>(null);
+
+  const [hoverDate, setHoverDate] = useState(new Date());
+  const hoverDateRef = useRef(new Date());
+
+  const closeModal = () => {
+    setCreateDate(null);
+    isStopped.current = false;
+
+    // reset timeline state
+    timelineBoundaries.current = { left: -10000, right: 10000 };
+    timelineDeltaRef.current = 0;
+    timelineMovementRef.current = 0;
+
+    // reset timeline animation
+    // timelineApi.set({ origin: percentValueRef.current });
+
+    timelineApi.start({ scale: 1, x: 0 });
+
+    // reset dot animation
+    dotApi.start({ tetherOpacity: 0, opacity: 0, scale: 1 });
+  };
+
   const timelineContainer = useRef<null | HTMLDivElement>(null);
   const scale = 10;
   const percentValueRef = useRef(0);
@@ -17,8 +45,19 @@ export function CreateTimeline() {
 
   const isStopped = useRef(false);
 
-  const timelineStep = () => {
-    console.log("step");
+  const timelineStep = (event: PointerEvent) => {
+    const percent = percentToDate(event, year);
+
+    if (
+      percent.getFullYear() === hoverDateRef.current.getFullYear() &&
+      percent.getMonth() === hoverDateRef.current.getMonth() &&
+      percent.getDate() === hoverDateRef.current.getDate()
+    ) {
+    } else {
+      hoverDateRef.current = percent;
+      setHoverDate(percent);
+    }
+
     // boundaries
     const bound = timelineBoundaries.current;
 
@@ -42,7 +81,9 @@ export function CreateTimeline() {
     });
 
     // recalls stepper
-    timelineStepperRef.current = requestAnimationFrame(timelineStep);
+    timelineStepperRef.current = requestAnimationFrame(() => {
+      timelineStep(event);
+    });
   };
 
   const [timelineSpring, timelineApi] = useSpring(() => ({
@@ -57,12 +98,15 @@ export function CreateTimeline() {
     scale: 1,
     x: 0,
     opacity: 0,
+    tetherOpacity: 0,
   }));
 
   const bind = useGesture({
-    onMove: ({ xy, delta }) => {
+    onMove: ({ xy, delta, event }) => {
       // calculate percent
-      if (timelineContainer.current) {
+      if (timelineContainer.current && !isStopped.current) {
+        // setHoverDate(percentToDate(event, year));
+
         const BCR = timelineContainer.current.getBoundingClientRect();
         const percent =
           ((xy[0] - Math.floor(BCR.x)) / Math.floor(BCR.width)) * 100;
@@ -90,7 +134,9 @@ export function CreateTimeline() {
           !timelineStepperRef.current &&
           !isStopped.current
         ) {
-          timelineStepperRef.current = requestAnimationFrame(timelineStep);
+          timelineStepperRef.current = requestAnimationFrame(() => {
+            timelineStep(event);
+          });
         }
 
         // cancel stepper animation
@@ -104,7 +150,7 @@ export function CreateTimeline() {
       }
     },
     onHover: ({ active, xy }) => {
-      if (timelineContainer.current) {
+      if (timelineContainer.current && !isStopped.current) {
         const BCR = timelineContainer.current.getBoundingClientRect();
 
         // calculate percent (mouse position)
@@ -127,8 +173,9 @@ export function CreateTimeline() {
         // inital hover effect & reset hover effect
         if (active) {
           // inital dot aniamtion
+
           dotApi.set({ x: (percent / 100) * BCR.width });
-          dotApi.start({ opacity: 1 });
+          dotApi.start({ opacity: 1, tetherOpacity: 1 });
 
           // inital timeline animation
           timelineApi.set({ origin: percent });
@@ -150,36 +197,56 @@ export function CreateTimeline() {
           timelineApi.start({ scale: 1, x: 0 });
 
           // reset dot animation
-          dotApi.start({ opacity: 0, scale: 1 });
+          dotApi.start({ tetherOpacity: 0, opacity: 0, scale: 1 });
         }
       }
     },
   });
 
-  return (
-    <div
-      {...bind()}
-      className={styles.TimelineContainer}
-      onClick={(e) => {
-        isStopped.current = true;
-        if (timelineStepperRef.current) {
-          cancelAnimationFrame(timelineStepperRef.current);
-        }
+  //   useEffect(() => {
+  //     console.log(hoverDate);
+  //     // console.log(hoverDateRef.current);
+  //   }, [hoverDate]);
 
-        const timelineBCR = document
-          .getElementById("timeline")!
-          .getBoundingClientRect();
-        const mousePos = e.clientX;
-        const timelineX = timelineBCR.x;
-        const timelineWidth = timelineBCR.width;
-        const timelinePercent = Math.abs(timelineX - mousePos) / timelineWidth;
-        console.log(timelinePercent);
-      }}
-      ref={timelineContainer}
-    >
-      <Timeline timelineSpring={timelineSpring} />
-      <Dot dotSpringValue={dotSpring} />
-    </div>
+  return (
+    <>
+      <div
+        {...bind()}
+        className={styles.TimelineContainer}
+        onClick={(e) => {
+          isStopped.current = true;
+          if (timelineStepperRef.current) {
+            cancelAnimationFrame(timelineStepperRef.current);
+          }
+
+          timelineApi.start({
+            scale: scale,
+            x: timelineMovementRef.current / (scale / 2),
+          });
+
+          dotApi.start({ tetherOpacity: 0 });
+
+          setCreateDate(percentToDate(e, year));
+        }}
+        ref={timelineContainer}
+      >
+        <Timeline timelineSpring={timelineSpring} />
+        <Dot dotSpringValue={dotSpring} />
+      </div>
+
+      <div className={styles.DatePickerContainer}>
+        <DatePickerModal
+          date={hoverDate}
+          setValue={(date) => {
+            setCreateDate(date);
+          }}
+        />
+      </div>
+
+      {createDate && (
+        <CreateTimelineModal date={createDate} onClose={closeModal} />
+      )}
+    </>
   );
 }
 
@@ -187,6 +254,7 @@ type DotSpringValue = SpringValues<{
   scale: number;
   x: number;
   opacity: number;
+  tetherOpacity: number;
 }>;
 function Dot({ dotSpringValue }: { dotSpringValue: DotSpringValue }) {
   return (
@@ -200,7 +268,7 @@ function Dot({ dotSpringValue }: { dotSpringValue: DotSpringValue }) {
       <animated.div
         className={styles.Tether}
         style={{
-          // opacity: springValue.opacity,
+          opacity: dotSpringValue.tetherOpacity,
           transform: to(
             [dotSpringValue.scale],
             (scale) => `scaleX(${scale}) translateY(-50%)`

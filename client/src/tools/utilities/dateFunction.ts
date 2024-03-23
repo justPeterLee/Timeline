@@ -1,5 +1,7 @@
 // turns DATE to Number (2024-12-31 => 365)
 
+import { current } from "../data/monthData";
+
 export function getDayOfYear(date: Date): number {
   // gets start of date
   const start = new Date(date.getFullYear(), 0, 0);
@@ -41,4 +43,20 @@ export function getWeek(date: Date) {
   const weekNumber = Math.floor((daysOffset - sub) / 7);
   // console.log(midPoint);
   return { weekNumber: weekNumber + 1 };
+}
+
+export function percentToDate(
+  e: PointerEvent | React.MouseEvent<HTMLDivElement, MouseEvent>,
+  year: string | undefined
+) {
+  const timelineBCR = document
+    .getElementById("timeline")!
+    .getBoundingClientRect();
+  const timelinePercent =
+    Math.abs(timelineBCR.x - e.clientX) / timelineBCR.width;
+
+  const dayOfYear = Math.ceil(365 * timelinePercent);
+  const selectedYear = year ? parseInt(year) : current.year;
+  // const date = getDateFromDayOfYear(dayOfYear, selectedYear);
+  return getDateFromDayOfYear(dayOfYear, selectedYear);
 }

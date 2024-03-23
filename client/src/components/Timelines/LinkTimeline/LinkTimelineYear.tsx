@@ -2,12 +2,11 @@ import styles from "./LinkTimeline.module.css";
 import { current, monthByIndex } from "../../../tools/data/monthData";
 
 import {
-  TimelineCard,
   TimelineCardAnimation,
   TimelineSpringValue,
 } from "../Timeline/Timeline";
+
 import { useNavigate, useParams } from "react-router-dom";
-// import
 
 export function LinktTimelineYear({
   timelineSpring,

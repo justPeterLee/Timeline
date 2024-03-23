@@ -94,7 +94,13 @@ export function ValidInput(props: {
   );
 }
 
-export function Backdrop({ onClose }: { onClose: () => void }) {
+export function Backdrop({
+  onClose,
+  backdropStyle = {},
+}: {
+  onClose: () => void;
+  backdropStyle?: {};
+}) {
   // const closeBackdrop = () => {
   //   onClose
   // };
@@ -105,6 +111,7 @@ export function Backdrop({ onClose }: { onClose: () => void }) {
   return (
     <div
       className={"backdrop"}
+      style={{ ...backdropStyle }}
       onClick={() => {
         onClose();
         console.log("click");
@@ -119,6 +126,7 @@ export function Modal(props: {
   children: ReactNode;
   onClose: () => void;
   styles?: { minWidth: string };
+  backdropStyle?: {};
 }) {
   const backdropClick = useRef(true);
   const heldInModal = useRef(false);
@@ -140,7 +148,7 @@ export function Modal(props: {
 
   return ReactDOM.createPortal(
     <animated.div
-      style={{ ...backgroundSpring }}
+      style={{ ...backgroundSpring, ...props.backdropStyle }}
       className="modal-background"
       onClick={() => {
         if (backdropClick.current && !wasClickedInModal.current) {
