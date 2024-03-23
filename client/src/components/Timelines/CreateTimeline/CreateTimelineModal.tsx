@@ -3,9 +3,7 @@ import { ValidInput } from "../../elements/Links";
 import { Modal } from "../../elements/Links";
 
 import { ReactNode, useEffect, useState } from "react";
-// import DatePicker from "react-datepicker";
-// import Date from "react-datepicker";
-// import
+
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -42,6 +40,7 @@ export function CreateTimelineModal({
     }
     return false;
   };
+
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (validateTimePole()) {
@@ -52,33 +51,24 @@ export function CreateTimelineModal({
       throw "invalid date";
     }
 
-    const date_data = {
-      date: date.getDate(),
-      month: date.getMonth(),
-      year: date.getFullYear(),
-      day: date.getDay(),
-      full_date: date.toISOString(),
-    };
-
-    if (true) {
-      console.log("user is found");
-      console.log(newTimePole.title, newTimePole.description, date_data);
-      dispatch({
-        type: "CREATE_TIMEPOLE_SERVER",
-        payload: {
-          title: newTimePole.title,
-          description: newTimePole.description,
-          date_data,
+    dispatch({
+      type: "CREATE_TIMEPOLE_SERVER",
+      payload: {
+        title: newTimePole.title,
+        description: newTimePole.description,
+        date_data: {
+          date: date.getDate(),
+          month: date.getMonth(),
+          year: date.getFullYear(),
+          day: date.getDay(),
+          full_date: date.toISOString(),
         },
-      });
-    } else {
-      console.log("create on local storage");
-    }
+      },
+    });
+
     onClose();
-    const viewUrl = month
-      ? `/month/${year}/${month}/view`
-      : `/year/${year}/view`;
-    navigate(viewUrl);
+
+    navigate(month ? `/month/${year}/${month}/view` : `/year/${year}/view`);
   };
   return (
     <Modal onClose={onClose} backdropStyle={{ backgroundColor: "transparent" }}>
