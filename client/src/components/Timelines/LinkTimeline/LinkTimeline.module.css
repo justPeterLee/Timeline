@@ -4,7 +4,7 @@
   z-index: 1;
 }
 
-.LinkSection:hover {
+#InactiveLink:hover {
   background-color: rgba(235, 235, 235);
   cursor: pointer;
 }

@@ -15,7 +15,7 @@ export function LinktTimelineYear({
   timelineSpring: TimelineSpringValue;
 }) {
   const navigate = useNavigate();
-  const { year } = useParams();
+  const { year, month } = useParams();
 
   const months = monthByIndex;
 
@@ -24,7 +24,13 @@ export function LinktTimelineYear({
       <>
         {Array.from({ length: Object.keys(months).length }, (_, index) => {
           const width = (100 / 365) * months[index + 1].days;
-          // get year
+          const parseMonth = month ? parseInt(month) : null;
+
+          const isActive = month
+            ? parseMonth === index + 1
+              ? true
+              : false
+            : false;
           const onNavigate = () => {
             navigate(`/month/${year ? year : current.year}/${index + 1}/view`);
           };
@@ -38,6 +44,7 @@ export function LinktTimelineYear({
                 width: `${width}%`,
               }}
               onNavigate={onNavigate}
+              isActive={isActive}
             />
           );
         })}
@@ -49,14 +56,22 @@ export function LinktTimelineYear({
 function LinkSection({
   style = {},
   onNavigate,
+  isActive,
 }: {
   style?: {};
   onNavigate: () => void;
+  isActive: boolean;
 }) {
   return (
     <div
       className={styles.LinkSection}
-      onClick={onNavigate}
+      id={isActive ? styles.ActiveLink : styles.InactiveLink}
+      onClick={() => {
+        console.log(isActive);
+        if (!isActive) {
+          onNavigate();
+        }
+      }}
       style={{ ...style }}
     ></div>
   );
