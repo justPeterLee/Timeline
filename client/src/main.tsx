@@ -12,6 +12,7 @@ import { store } from "./redux/store.ts";
 
 import {
   createBrowserRouter,
+  json,
   redirect,
   RouterProvider,
 } from "react-router-dom";
@@ -41,14 +42,50 @@ async function redirectURL(url: string) {
 // user();
 // getUser();
 
+async function userLoader() {
+  try {
+    store.dispatch({ type: "FETCH_USER" });
+    return null;
+  } catch (e: any) {
+    throw json(
+      { message: "Error occured while fetching user" },
+      { status: e.status }
+    );
+  }
+}
+async function yearLoad() {
+  try {
+    store.dispatch({ type: "GET_TIMEPOLE_SERVER" });
+    return null;
+  } catch (e: any) {
+    throw json(
+      { message: "Error occured while fetching year data" },
+      { status: e.status }
+    );
+  }
+}
+
 const router = createBrowserRouter([
   {
     path: "/",
     element: <TimelinePage />,
+    loader: async () => {
+      try {
+        await userLoader();
+        await yearLoad();
+        return null;
+      } catch (e: any) {
+        throw json(
+          { message: "Error occured while fetching data" },
+          { status: e.status }
+        );
+      }
+    },
     children: [
       {
         path: "/year/:year/:mode",
         element: <YearPage />,
+        loader: yearLoad,
       },
       {
         path: "/month/:year/:month/:mode",
