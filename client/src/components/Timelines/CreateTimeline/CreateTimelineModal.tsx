@@ -160,6 +160,7 @@ export function DatePickerModal({
       value={value}
       type="button"
       className={styles.modalDateButton}
+      id="date-picker-modal"
       ref={ref}
     ></input>
   ));

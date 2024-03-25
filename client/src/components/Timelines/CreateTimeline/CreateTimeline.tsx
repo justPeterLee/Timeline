@@ -6,6 +6,7 @@ import { Timeline } from "../Timeline/Timeline";
 import { CreateTimelineModal, DatePickerModal } from "./CreateTimelineModal";
 import { useParams } from "react-router-dom";
 import { percentToDate } from "../../../tools/utilities/dateFunction";
+import { format } from "date-fns";
 
 export function CreateTimeline() {
   const { year } = useParams();
@@ -48,6 +49,8 @@ export function CreateTimeline() {
   const timelineStep = (event: PointerEvent) => {
     const percent = percentToDate(event, year);
 
+    const dateModal = document.getElementById("date-picker-modal");
+
     if (
       percent.getFullYear() === hoverDateRef.current.getFullYear() &&
       percent.getMonth() === hoverDateRef.current.getMonth() &&
@@ -55,7 +58,10 @@ export function CreateTimeline() {
     ) {
     } else {
       hoverDateRef.current = percent;
-      setHoverDate(percent);
+      if (dateModal) {
+        const newDate = format(hoverDateRef.current, "iiii, LLLL d");
+        (dateModal as HTMLInputElement).value = newDate;
+      }
     }
 
     // boundaries
@@ -198,6 +204,8 @@ export function CreateTimeline() {
 
           // reset dot animation
           dotApi.start({ tetherOpacity: 0, opacity: 0, scale: 1 });
+
+          setHoverDate(hoverDateRef.current);
         }
       }
     },
@@ -213,7 +221,7 @@ export function CreateTimeline() {
       <div
         {...bind()}
         className={styles.TimelineContainer}
-        onClick={(e) => {
+        onClick={() => {
           isStopped.current = true;
           if (timelineStepperRef.current) {
             cancelAnimationFrame(timelineStepperRef.current);
@@ -226,7 +234,8 @@ export function CreateTimeline() {
 
           dotApi.start({ tetherOpacity: 0 });
 
-          setCreateDate(percentToDate(e, year));
+          setCreateDate(hoverDateRef.current);
+          setHoverDate(hoverDateRef.current);
         }}
         ref={timelineContainer}
       >
