@@ -34,7 +34,8 @@
 }
 
 #year-link,
-#month-link {
+#month-link,
+#link-timeline {
   display: flex;
   flex-direction: row;
   z-index: 10;

@@ -19,7 +19,7 @@ export function LinktTimelineYear({
   const months = monthByIndex;
 
   return (
-    <TimelineCardAnimation timelineSpring={timelineSpring} id="year-link">
+    <TimelineCardAnimation timelineSpring={timelineSpring} id="link-timeline">
       <>
         {Array.from({ length: Object.keys(months).length }, (_, index) => {
           const width = (100 / 365) * months[index + 1].days;

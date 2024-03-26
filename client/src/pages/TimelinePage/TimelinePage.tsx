@@ -12,6 +12,8 @@ import {
 import { useEffect } from "react";
 import { TimeSpringContext } from "../../components/Timelines/Context/TimelineContext";
 // import { TimePoleDisplay } from "../../components/timepole/Timepole";
+
+import { DisplayTimeline } from "../../components/Timelines/DisplayTimeline/DisplayTimeline";
 export default function TimelinePage() {
   const { month, mode } = useParams();
   // const location
@@ -27,6 +29,7 @@ export default function TimelinePage() {
       <TimeSpringContext>
         <Outlet />
 
+        <DisplayTimeline />
         {mode === "create" ? <CreateTimeline /> : <ViewTimeline />}
         {/* <CreateTimePole /> */}
 
