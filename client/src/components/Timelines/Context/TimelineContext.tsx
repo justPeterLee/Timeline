@@ -25,6 +25,7 @@ export function TimeSpringContext({ children }: { children: ReactNode }) {
   const isMonthSwitch = useRef(false);
 
   const [timelineSpring, timelineApi] = useSpring(() => ({
+    opacity: 0,
     x: 0,
     scale: month ? 10.8 : 1,
     origin: 0,
@@ -78,6 +79,7 @@ export function TimeSpringContext({ children }: { children: ReactNode }) {
 
     if (previousState.current) {
       // transition
+      // console.log("trans");
 
       if (normalMonth) {
         //month
@@ -101,16 +103,21 @@ export function TimeSpringContext({ children }: { children: ReactNode }) {
       }
     } else {
       // render
+      // console.log("render");
 
-      if (!normalMonth) {
+      if (normalMonth != null) {
         //month
 
+        // console.log("render month");
         timelineApi.set({ scale: scale, origin: op });
+        timelineApi.start({ opacity: 1 });
+
         isMonthSwitch.current = true;
       } else {
         // year
 
-        timelineApi.set({ scale: 1, origin: 0 });
+        // console.log("render year", normalMonth);
+        timelineApi.set({ scale: 1, origin: 0, opacity: 1 });
         isMonthSwitch.current = false;
       }
     }

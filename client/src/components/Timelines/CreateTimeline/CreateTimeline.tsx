@@ -93,6 +93,7 @@ export function CreateTimeline() {
   };
 
   const [timelineSpring, timelineApi] = useSpring(() => ({
+    opacity: 1,
     scale: 1,
     x: 0,
     origin: 0,

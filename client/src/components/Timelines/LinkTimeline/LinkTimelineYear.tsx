@@ -33,7 +33,6 @@ export function LinktTimelineYear({
           const onNavigate = () => {
             navigate(`/month/${year ? year : current.year}/${index + 1}/view`);
           };
-          // console.log(width);
           return (
             <LinkSection
               key={index}

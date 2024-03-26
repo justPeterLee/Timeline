@@ -4,6 +4,7 @@ import { SpringValues, animated, to } from "react-spring";
 import { MarkerAllContainer } from "./Marker";
 
 export type TimelineSpringValue = SpringValues<{
+  opacity: number;
   x: number;
   scale: number;
   origin: number;
@@ -41,6 +42,7 @@ export function TimelineCardAnimation({
       className={styles.Timeline}
       id={id}
       style={{
+        opacity: timelineSpring.opacity,
         transformOrigin: timelineSpring.origin.to((value) => `${value}%`),
         transform: to(
           [timelineSpring.scale, timelineSpring.x],
