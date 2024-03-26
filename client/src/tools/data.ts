@@ -185,7 +185,7 @@ export function getWeek(date: Date) {
 export function getPoleData(pole: StandardPoleData, state: string) {
   // x-percent
   const date = new Date(pole.full_date);
-  // console.log(date.getDate());
+  console.log(pole);
   const dateNumber = state === "year" ? getDayOfYear(date) : date.getDate();
 
   const limit =

@@ -117,7 +117,10 @@ export default function ViewTimeline() {
       id={"view-timeline-container"}
       ref={timelineContainer}
     >
-      <Timeline timelineSpring={timelineSpring}></Timeline>
+      <Timeline
+        timelineSpring={timelineSpring}
+        isMonth={month ? true : false}
+      ></Timeline>
       <LinktTimelineYear timelineSpring={timelineSpring} />
       {/* <DisplayTimeline timelineSpring={timelineSpring} /> */}
       {/* <div

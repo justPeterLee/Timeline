@@ -4,7 +4,7 @@ import ViewTimeline from "../../components/Timelines/ViewTimeline/ViewTimeline";
 import { CreateTimeline } from "../../components/Timelines/CreateTimeline/CreateTimeline";
 // import { CreateTimeline as CreateTimePole } from "../../components/timeline/timeline_components/TimelineComponents";
 // import { useDispatc } from "react-redux";
-
+import { TimePoleDisplay } from "../../components/timepole/Timepole";
 import {
   useAppDispatch,
   useAppSelector,
@@ -27,6 +27,7 @@ export default function TimelinePage() {
 
       {mode === "create" ? <CreateTimeline /> : <ViewTimeline />}
       {/* <CreateTimePole /> */}
+
       <ViewLinks page={month ? "month" : "year"} />
     </>
   );

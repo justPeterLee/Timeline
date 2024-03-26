@@ -2,6 +2,7 @@ import styles from "./Timeline.module.css";
 import { animated, to } from "react-spring";
 import { monthByDate } from "../../../tools/data/monthData";
 import { TimelineSpringValue } from "./Timeline";
+import { Fragment } from "react";
 
 function MarkerMonth({
   timelineSpring,
@@ -66,7 +67,6 @@ function MarkerDay({
   return (
     <animated.div
       style={{
-        opacity: timelineSpring.markerDayOpacity,
         left: `${left}%`,
         transformOrigin: "center left",
         transform: to(
@@ -82,8 +82,10 @@ function MarkerDay({
 
 export function MarkerAllContainer({
   timelineSpring,
+  isMonth,
 }: {
   timelineSpring: TimelineSpringValue;
+  isMonth: boolean;
 }) {
   let monthTracker = 0;
   let week = 0;
@@ -128,12 +130,16 @@ export function MarkerAllContainer({
           );
         } else {
           return (
-            <MarkerDay
-              key={index}
-              timelineSpring={timelineSpring}
-              left={left}
-              day={indexDay}
-            />
+            <Fragment key={index}>
+              {isMonth && (
+                <MarkerDay
+                  key={index}
+                  timelineSpring={timelineSpring}
+                  left={left}
+                  day={indexDay}
+                />
+              )}
+            </Fragment>
           );
         }
       })}
