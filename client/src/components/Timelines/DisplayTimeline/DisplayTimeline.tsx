@@ -3,7 +3,9 @@ import { useContext } from "react";
 import { TimelineSpringContext } from "../Context/TimelineContext";
 // import { Timeline } from "../Timeline/Timeline";
 import { TimelineCardAnimation } from "../Timeline/Timeline";
-export function DisplayTimeline() {
+import { TimePoleDisplay } from "../../timepole/Timepole";
+import { StandardPoleData } from "../../../tools/utilities/timepoleUtils/timepoleUtils";
+export function DisplayTimeline({ poles }: { poles: StandardPoleData[] }) {
   const springContext = useContext(TimelineSpringContext);
 
   return (
@@ -12,7 +14,7 @@ export function DisplayTimeline() {
         timelineSpring={springContext!.timelineSpring}
         id="display-timeline"
       >
-        <></>
+        <TimePoleDisplay url="year" poles={poles} />
       </TimelineCardAnimation>
     </div>
   );

@@ -29,7 +29,7 @@ export default function TimelinePage() {
       <TimeSpringContext>
         <Outlet />
 
-        <DisplayTimeline />
+        <DisplayTimeline poles={timepole} />
         {mode === "create" ? <CreateTimeline /> : <ViewTimeline />}
         {/* <CreateTimePole /> */}
 
