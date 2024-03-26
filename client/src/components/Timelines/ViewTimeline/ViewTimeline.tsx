@@ -69,6 +69,7 @@ export default function ViewTimeline() {
       if (month) {
         originOffset.current = simplifyOP;
       }
+
       if (previousState.current) {
         // is transition
 
