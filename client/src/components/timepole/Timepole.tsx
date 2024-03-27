@@ -137,14 +137,14 @@ export function TimePoleDisplay({
   return (
     <>
       <div className={styles.timePoleDisplayContainer} id={"asdf"}>
-        {Object.keys(extractedPoleDatas).map((_dateKey) => {
+        {Object.keys(extractedPoleDatas).map((_dateKey, index) => {
           const poleKey = generatePoleKey(_dateKey);
           const _pole = extractedPoleDatas[_dateKey];
           const sortIsNull =
             sortData === null ? { yPos: 90 } : sortData[poleKey];
           return (
             <TimepoleMarker
-              key={_pole.id}
+              key={index}
               id={poleKey}
               xPercent={_pole.xPercent}
               timePoleDataArr={_pole.poles}
@@ -339,9 +339,9 @@ export function TimepoleMarker({
         // }}
         data-length={timePoleDataArr.length}
       >
-        {timePoleDataArr.map((_pole) => {
+        {timePoleDataArr.map((_pole, index) => {
           return (
-            <div className={styles.textBubble} key={_pole.id}>
+            <div className={styles.textBubble} key={index}>
               <p style={{ margin: 0, whiteSpace: "nowrap" }}>
                 {_pole.title} {pageRender ? "true" : "false"}
               </p>

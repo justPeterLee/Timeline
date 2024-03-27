@@ -21,7 +21,7 @@ export default function TimelinePage() {
   // const dispatch = useAppDispatch();
 
   useEffect(() => {
-    console.log(timepole);
+    // console.log(timepole);
   }, [timepole]);
 
   return (
@@ -29,7 +29,7 @@ export default function TimelinePage() {
       <TimeSpringContext>
         <Outlet />
 
-        <DisplayTimeline poles={timepole} />
+        {/* <DisplayTimeline poles={timepole} /> */}
         {mode === "create" ? <CreateTimeline /> : <ViewTimeline />}
         {/* <CreateTimePole /> */}
 

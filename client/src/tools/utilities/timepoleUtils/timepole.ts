@@ -235,7 +235,7 @@ export function insertSorData(
   addPoles: { sortId: string; poleId: string }[],
   localSortData: PoleCordsData
 ) {
-  console.time("start");
+  // console.time("start");
   // console.log(JSON.parse(window.localStorage.getItem("sortDataEffect")));
   const overlappingData = generateOverLappingData(allPoles, localSortData);
   const newSortData = localSortData;
@@ -315,7 +315,7 @@ export function insertSorData(
   }
 
   // return
-  console.timeEnd("start");
+  // console.timeEnd("start");
   return newSortData;
 }
 

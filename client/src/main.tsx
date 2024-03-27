@@ -12,7 +12,6 @@ import { store } from "./redux/store.ts";
 
 import {
   createBrowserRouter,
-  json,
   redirect,
   RouterProvider,
 } from "react-router-dom";
@@ -20,76 +19,36 @@ import RegistarPage from "./pages/user/Register.tsx";
 import LoginPage from "./pages/user/LoginPage.tsx";
 import UserPage from "./pages/user/UserPage.tsx";
 
-import axios from "axios";
-
-async function rescricted(url: string) {
-  try {
-    await axios.get("/api/v1/userAction");
-    return null;
-  } catch (err) {
-    return redirect(url);
-  }
-}
-
-async function redirectURL(url: string) {
-  try {
-    await axios.get("/api/v1/userAction");
-    return redirect(url);
-  } catch (err) {
-    return null;
-  }
-}
-// user();
-// getUser();
-
-async function userLoader() {
-  try {
-    store.dispatch({ type: "FETCH_USER" });
-    return null;
-  } catch (e: any) {
-    throw json(
-      { message: "Error occured while fetching user" },
-      { status: e.status }
-    );
-  }
-}
-async function yearLoad() {
-  try {
-    store.dispatch({ type: "GET_TIMEPOLE_SERVER" });
-    return null;
-  } catch (e: any) {
-    throw json(
-      { message: "Error occured while fetching year data" },
-      { status: e.status }
-    );
-  }
-}
+import {
+  yearLoader,
+  rescrictedURL,
+  redirectURL,
+} from "./tools/loaders/loader.ts";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <TimelinePage />,
-    loader: async () => {
-      try {
-        await userLoader();
-        await yearLoad();
-        return null;
-      } catch (e: any) {
-        throw json(
-          { message: "Error occured while fetching data" },
-          { status: e.status }
-        );
-      }
+    loader: async ({ params }) => {
+      await yearLoader(params.year);
+      return null;
     },
     children: [
       {
         path: "/year/:year/:mode",
         element: <YearPage />,
-        loader: yearLoad,
+        loader: async ({ params }) => {
+          await yearLoader(params.year);
+          return null;
+        },
       },
       {
         path: "/month/:year/:month/:mode",
         element: <MonthPage />,
+        loader: async ({ params }) => {
+          await yearLoader(params.year);
+          return null;
+        },
       },
     ],
   },
@@ -97,23 +56,32 @@ const router = createBrowserRouter([
   {
     path: "/user",
     element: <UserPage />,
-    loader: () => {
-      return rescricted("/login");
+    loader: async () => {
+      await rescrictedURL("/login");
+      return null;
     },
   },
   {
     path: "/register",
     element: <RegistarPage />,
-    loader: () => {
-      return redirectURL("/user");
+    loader: async () => {
+      const user = await redirectURL();
+
+      if (user) {
+        throw redirect("/user");
+      }
+      return null;
     },
-    // loader:
   },
   {
     path: "/login",
     element: <LoginPage />,
-    loader: () => {
-      return redirectURL("/user");
+    loader: async () => {
+      const user = await redirectURL();
+      if (user) {
+        throw redirect("/user");
+      }
+      return null;
     },
   },
 ]);

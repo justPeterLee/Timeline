@@ -156,7 +156,7 @@ export function CreateTimeline() {
         }
       }
     },
-    onHover: ({ active, xy }) => {
+    onHover: ({ active, xy, event }) => {
       if (timelineContainer.current && !isStopped.current) {
         const BCR = timelineContainer.current.getBoundingClientRect();
 
@@ -187,6 +187,16 @@ export function CreateTimeline() {
           // inital timeline animation
           timelineApi.set({ origin: percent });
           timelineApi.start({ scale: scale });
+
+          const percentDate = percentToDate(event, year);
+
+          const dateModal = document.getElementById("date-picker-modal");
+
+          hoverDateRef.current = percentDate;
+          if (dateModal) {
+            const newDate = format(hoverDateRef.current, "iiii, LLLL d");
+            (dateModal as HTMLInputElement).value = newDate;
+          }
         } else {
           // stop stepper animation
           if (timelineStepperRef.current) {
