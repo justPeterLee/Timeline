@@ -14,7 +14,11 @@ export function DisplayTimeline({ poles }: { poles: StandardPoleData[] }) {
         timelineSpring={springContext!.timelineSpring}
         id="display-timeline"
       >
-        <TimePoleDisplay url="year" poles={poles} />
+        <TimePoleDisplay
+          url="year"
+          poles={poles}
+          timelineSpring={springContext!.timelineSpring}
+        />
       </TimelineCardAnimation>
     </div>
   );

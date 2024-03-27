@@ -19,9 +19,11 @@ import {
 export function TimePoleDisplay({
   url,
   poles,
+  timelineSpring,
 }: {
   url: "year" | "month";
   poles: StandardPoleData[];
+  timelineSpring: TimelineSpringValue;
 }) {
   // console.log(poles);
   const urlView = url ? url : "year";
@@ -155,6 +157,7 @@ export function TimePoleDisplay({
                 updateSortData(_pole);
               }}
               pageRender={pageRender}
+              timelineSpring={timelineSpring}
             />
           );
         })}
@@ -179,16 +182,18 @@ export function TimePoleDisplay({
   );
 }
 
-import { useSpring, animated, to as interpolate } from "react-spring";
+import { useSpring, animated, to as interpolate, to } from "react-spring";
 import { useDrag } from "@use-gesture/react";
 import { Modal } from "../elements/Links";
 import { GroupTimePoleSelectionModal, TimePoleModal } from "../modals/Modals";
+import { TimelineSpringValue } from "../Timelines/Timeline/Timeline";
 export function TimepoleMarker({
   id,
   xPercent,
   timePoleDataArr,
   yPos,
   pageRender,
+  timelineSpring,
 
   setSelectedPole,
   setSelectedGroupPole,
@@ -199,6 +204,7 @@ export function TimepoleMarker({
   timePoleDataArr: StandardPoleData[];
   yPos: { yPos: number };
   pageRender: boolean;
+  timelineSpring: TimelineSpringValue;
 
   setSelectedPole: (_pole: StandardPoleData) => void;
   setSelectedGroupPole: (_pole: StandardPoleData[]) => void;
@@ -303,9 +309,16 @@ export function TimepoleMarker({
   }, []);
 
   return (
-    <div
+    <animated.div
       className={styles.timePoleMarkerContainer}
-      style={{ left: `${xPercent}%` }}
+      style={{
+        left: `${xPercent}%`,
+        transformOrigin: "center left",
+        transform: to(
+          [timelineSpring.scale, timelineSpring.markerX],
+          (scale) => `scaleX(${1 / scale}) `
+        ),
+      }}
       onClick={() => {
         if (!wasDragging.current) {
           if (timePoleDataArr.length > 1) {
@@ -349,7 +362,7 @@ export function TimepoleMarker({
           );
         })}
       </animated.div>
-    </div>
+    </animated.div>
   );
 }
 
