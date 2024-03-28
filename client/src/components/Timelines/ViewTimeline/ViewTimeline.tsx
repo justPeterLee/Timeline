@@ -18,7 +18,7 @@ export default function ViewTimeline() {
 
   useEffect(() => {
     if (timelineContainer.current) {
-      timelineSpringContext?.calculateOP(timelineContainer.current);
+      timelineSpringContext!.calculateOP(timelineContainer.current);
     }
   }, [timelineContainer, location]);
   return (

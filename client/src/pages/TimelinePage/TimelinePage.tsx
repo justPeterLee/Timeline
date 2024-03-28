@@ -9,20 +9,32 @@ import {
   // useAppDispatch,
   useAppSelector,
 } from "../../redux/redux-hooks/redux.hook";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { TimeSpringContext } from "../../components/Timelines/Context/TimelineContext";
 // import { TimePoleDisplay } from "../../components/timepole/Timepole";
 
 import { DisplayTimeline } from "../../components/Timelines/DisplayTimeline/DisplayTimeline";
+import { StandardPoleData } from "../../tools/utilities/timepoleUtils/timepoleUtils";
 export default function TimelinePage() {
   const { month, mode } = useParams();
   // const location
-  const timepole = useAppSelector((store) => store.timepole.getTimePole);
+  const poles = useAppSelector((store) => store.timepole.getTimePole);
   // const dispatch = useAppDispatch();
+
+  const filterPoles = useMemo(() => {
+    if (!month) {
+      return poles;
+    }
+
+    return poles.filter((_pole: StandardPoleData) => {
+      const poleDate = new Date(_pole.full_date);
+      return poleDate.getMonth() + 1 == parseInt(month!);
+    });
+  }, [poles]);
 
   useEffect(() => {
     // console.log(timepole);
-  }, [timepole]);
+  }, [poles]);
 
   return (
     <>
@@ -30,7 +42,10 @@ export default function TimelinePage() {
         <Outlet />
 
         {/* <DisplayTimeline poles={timepole} /> */}
+
+        {poles[0] !== "loading" && <DisplayTimeline poles={filterPoles} />}
         {mode === "create" ? <CreateTimeline /> : <ViewTimeline />}
+
         {/* <CreateTimePole /> */}
 
         <ViewLinks page={month ? "month" : "year"} />

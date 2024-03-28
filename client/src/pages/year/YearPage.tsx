@@ -18,7 +18,7 @@ function YearPage() {
   return (
     <div className="Page">
       {/* <LinktTimelineYear /> */}
-      <DisplayTimeline poles={poles} />
+      {/* <DisplayTimeline poles={poles} /> */}
     </div>
   );
 }

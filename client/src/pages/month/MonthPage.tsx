@@ -19,9 +19,5 @@ export default function MonthPage() {
 
   console.log(filterPoles);
 
-  return (
-    <>
-      <DisplayTimeline poles={filterPoles} />
-    </>
-  );
+  return <>{/* <DisplayTimeline poles={filterPoles} /> */}</>;
 }
