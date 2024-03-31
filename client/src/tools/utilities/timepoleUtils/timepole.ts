@@ -230,6 +230,7 @@ export function sort(poleData: PoleData) {
   return poleCordsData;
 }
 
+// CHECK THIS FUNCTION
 export function insertSorData(
   allPoles: StandardPoleData[],
   addPoles: { sortId: string; poleId: string }[],
@@ -238,6 +239,7 @@ export function insertSorData(
   // console.time("start");
   // console.log(JSON.parse(window.localStorage.getItem("sortDataEffect")));
   const overlappingData = generateOverLappingData(allPoles, localSortData);
+  console.log(overlappingData);
   const newSortData = localSortData;
   // console.log(newSortData);
   const heavenBound = window.innerHeight / 2 - 30;

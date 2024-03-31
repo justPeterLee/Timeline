@@ -25,33 +25,23 @@ export function TimePoleDisplay({
   poles: StandardPoleData[];
   timelineSpring: TimelineSpringValue;
 }) {
-  // console.log(poles);
   const urlView = url ? url : "year";
 
   const poleDatas: PoleData = useMemo(() => {
     return getPoleDataList(poles, urlView);
   }, [poles, urlView]);
 
-  // console.log(poleDatas);
-
   const extractedPoleDatas: any = useMemo(() => {
-    // console.log("asdf");
-    // if (!sortData) {
-    //   return extractPoleData(poleDatas);
-    // } else {
-    //   // return
-    // }
     return extractPoleData(poleDatas);
   }, [poleDatas]);
 
   // console.log(extractedPoleDatas);
 
   const localStorageData = window.localStorage.getItem("sortDataEffect");
+
   const [sortData, setSortData] = useState<PoleCordsData>(
     localStorageData ? JSON.parse(localStorageData) : {}
   );
-
-  const [pageRender, setPageRender] = useState(false);
 
   const [selectedPole, setSelectedPole] = useState<null | StandardPoleData>(
     null
@@ -68,7 +58,6 @@ export function TimePoleDisplay({
     setSelectedPole(null);
     setSelectedGroupPole(null);
   };
-
   const onOpenSelectedGroupPole = (_pole: StandardPoleData[]) => {
     setSelectedGroupPole(_pole);
   };
@@ -100,21 +89,22 @@ export function TimePoleDisplay({
 
   useEffect(() => {
     //check if sort data already exist
-    console.log(poleDatas);
+    // console.log(poleDatas);
     const localStorageData = window.localStorage.getItem("sortDataEffect");
     if (localStorageData && localStorageData !== undefined) {
       const jsonLocalStorageData: PoleCordsData = JSON.parse(localStorageData);
       const addPoles = compareSortPoles(poles, jsonLocalStorageData);
 
-      if (addPoles.addArray.length || addPoles.deleteArray.length) {
-        const updatedSortData = sortDataUpdater(
-          addPoles,
-          jsonLocalStorageData,
-          poles,
-          url
-        );
-        updateWindowSort(updatedSortData);
-      }
+      // console.log(addPoles);
+      // if (addPoles.addArray.length || addPoles.deleteArray.length) {
+      //   const updatedSortData = sortDataUpdater(
+      //     addPoles,
+      //     jsonLocalStorageData,
+      //     poles,
+      //     url
+      //   );
+      //   updateWindowSort(updatedSortData);
+      // }
     } else {
       // create sort data
       if (!Object.keys(poleDatas).length) {
@@ -128,11 +118,6 @@ export function TimePoleDisplay({
   }, [poleDatas]);
 
   useEffect(() => {
-    setPageRender(true);
-    // console.log("rerre");
-  }, []);
-
-  useEffect(() => {
     // console.log("window");
   }, []);
 
@@ -142,8 +127,8 @@ export function TimePoleDisplay({
         {Object.keys(extractedPoleDatas).map((_dateKey, index) => {
           const poleKey = generatePoleKey(_dateKey);
           const _pole = extractedPoleDatas[_dateKey];
-          const sortIsNull =
-            sortData === null ? { yPos: 90 } : sortData[poleKey];
+          const sortIsNull = sortData === null ? null : sortData[poleKey];
+
           return (
             <TimepoleMarker
               key={index}
@@ -156,7 +141,6 @@ export function TimePoleDisplay({
               updateSortData={(_pole: { id: string; yPos: number }) => {
                 updateSortData(_pole);
               }}
-              pageRender={pageRender}
               timelineSpring={timelineSpring}
             />
           );
@@ -192,7 +176,6 @@ export function TimepoleMarker({
   xPercent,
   timePoleDataArr,
   yPos,
-  pageRender,
   timelineSpring,
 
   setSelectedPole,
@@ -202,8 +185,7 @@ export function TimepoleMarker({
   id: string;
   xPercent: number;
   timePoleDataArr: StandardPoleData[];
-  yPos: { yPos: number };
-  pageRender: boolean;
+  yPos: { yPos: number } | null;
   timelineSpring: TimelineSpringValue;
 
   setSelectedPole: (_pole: StandardPoleData) => void;
@@ -215,13 +197,30 @@ export function TimepoleMarker({
   const yPosRef = useRef(yPos ? yPos.yPos : 100);
   const targetElement = useRef<HTMLDivElement>(null);
 
+  const yPosNull = yPos;
+
+  if (!yPosNull) {
+    const localSortData = window.localStorage.getItem("sortDataEffect");
+
+    if (localSortData !== null) {
+      console.log(timePoleDataArr);
+      console.log("need to generate sort data", id);
+    } else {
+      console.log("sort data doesnt exists");
+      return;
+    }
+
+    // console.log(localSortData);
+    // console.log("generate sort data");
+  }
+
   const yPosMemo = useMemo(() => {
     yPosRef.current = yPos ? yPos.yPos : -100;
     return yPos ? yPos.yPos : -100;
   }, [yPos]);
 
   const [{ x, y, scale }, api] = useSpring(() => ({
-    y: 0,
+    y: yPosMemo,
     x: 0,
     scale: 0,
   }));
@@ -295,15 +294,15 @@ export function TimepoleMarker({
     // if (!pageRender) {
 
     // console.log("hello");
-    api.start({
-      from: { y: yPosMemo > 0 ? 25 : -25, scale: yPosMemo > 0 ? 25 : -25 },
-      to: {
-        y: yPosMemo,
-        scale:
-          yPosMemo > 0
-            ? yPosMemo
-            : yPosMemo + targetElement.current!.getBoundingClientRect().height,
-      },
+    api.set({
+      // from: { y: yPosMemo > 0 ? 25 : -25, scale: yPosMemo > 0 ? 25 : -25 },
+      // to: {
+      y: yPosMemo,
+      scale:
+        yPosMemo > 0
+          ? yPosMemo
+          : yPosMemo + targetElement.current!.getBoundingClientRect().height,
+      // },
     });
     // }
   }, []);
@@ -312,6 +311,7 @@ export function TimepoleMarker({
     <animated.div
       className={styles.timePoleMarkerContainer}
       style={{
+        opacity: yPos ? "100%" : "0%",
         left: `${xPercent}%`,
         transformOrigin: "center left",
         transform: to(
@@ -346,18 +346,16 @@ export function TimepoleMarker({
         className={styles.textContainer}
         id={`pole-${id}`}
         ref={targetElement}
-        // onClick={(e) => {
-        //   console.log(e.currentTarget.getBoundingClientRect());
-        //   // console.log(window.innerHeight);
-        // }}
+        onClick={(e) => {
+          console.log(e.currentTarget.getBoundingClientRect());
+          // console.log(window.innerHeight);
+        }}
         data-length={timePoleDataArr.length}
       >
         {timePoleDataArr.map((_pole, index) => {
           return (
             <div className={styles.textBubble} key={index}>
-              <p style={{ margin: 0, whiteSpace: "nowrap" }}>
-                {_pole.title} {pageRender ? "true" : "false"}
-              </p>
+              <p style={{ margin: 0, whiteSpace: "nowrap" }}>{_pole.title}</p>
             </div>
           );
         })}

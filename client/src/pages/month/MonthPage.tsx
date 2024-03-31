@@ -10,14 +10,14 @@ export default function MonthPage() {
 
   // console.log(poles);
 
-  const filterPoles = useMemo(() => {
-    return poles.filter((_pole: StandardPoleData) => {
-      const poleDate = new Date(_pole.full_date);
-      return poleDate.getMonth() + 1 == parseInt(month!);
-    });
-  }, [poles]);
+  // const filterPoles = useMemo(() => {
+  //   return poles.filter((_pole: StandardPoleData) => {
+  //     const poleDate = new Date(_pole.full_date);
+  //     return poleDate.getMonth() + 1 == parseInt(month!);
+  //   });
+  // }, [poles]);
 
-  console.log(filterPoles);
+  // console.log(filterPoles);
 
   return <>{/* <DisplayTimeline poles={filterPoles} /> */}</>;
 }

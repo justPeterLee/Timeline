@@ -10,6 +10,7 @@ import {
 } from "../ViewTimeline/ViewAnimation";
 
 export const TimelineSpringContext = createContext<null | {
+  setTimelineSpring: TimelineSpringValue;
   timelineSpring: TimelineSpringValue;
   calculateOP: (params: HTMLDivElement) => void;
 }>(null);
@@ -25,6 +26,15 @@ export function TimeSpringContext({ children }: { children: ReactNode }) {
   const isMonthSwitch = useRef(false);
 
   const [timelineSpring, timelineApi] = useSpring(() => ({
+    opacity: 1,
+    x: 0,
+    scale: month ? 10.8 : 1,
+    origin: 0,
+    markerX: 0,
+    markerDayOpacity: 0,
+  }));
+
+  const [setTimelineSpring, setTimelineApi] = useSpring(() => ({
     opacity: 0,
     x: 0,
     scale: month ? 10.8 : 1,
@@ -87,6 +97,7 @@ export function TimeSpringContext({ children }: { children: ReactNode }) {
         if (!isMonthSwitch.current) {
           timelineApi.set({ origin: op });
           timelineApi.start({ scale: scale });
+
           isMonthSwitch.current = true;
         } else {
           timelineApi.start({
@@ -94,12 +105,15 @@ export function TimeSpringContext({ children }: { children: ReactNode }) {
             origin: op,
           });
         }
+        setTimelineApi.set({ origin: op, scale: scale });
       } else {
         // year
 
         timelineApi.set({ origin: originOffset.current });
         timelineApi.start({ scale: 1 });
         isMonthSwitch.current = false;
+
+        setTimelineApi.set({ origin: originOffset.current, scale: 1 });
       }
     } else {
       // render
@@ -113,19 +127,27 @@ export function TimeSpringContext({ children }: { children: ReactNode }) {
         timelineApi.start({ opacity: 1 });
 
         isMonthSwitch.current = true;
+
+        setTimelineApi.set({ opacity: 1, origin: op, scale: scale });
       } else {
         // year
 
         // console.log("render year", normalMonth);
         timelineApi.set({ scale: 1, origin: 0, opacity: 1 });
         isMonthSwitch.current = false;
+
+        setTimelineApi.set({ opacity: 1, origin: 0, scale: 1 });
       }
     }
   }
 
   return (
     <TimelineSpringContext.Provider
-      value={{ timelineSpring: timelineSpring, calculateOP: calculateOP }}
+      value={{
+        setTimelineSpring: setTimelineSpring,
+        timelineSpring: timelineSpring,
+        calculateOP: calculateOP,
+      }}
     >
       {children}
     </TimelineSpringContext.Provider>

@@ -1,0 +1,49 @@
+.TimePole {
+  width: 1px;
+  position: absolute;
+
+  display: flex;
+  align-items: center;
+}
+
+.TimePoleText {
+  position: absolute;
+  /* left: -50%; */
+  /* top: -50%; */
+
+  touch-action: none;
+  user-select: none;
+
+  text-align: center;
+  white-space: nowrap;
+
+  transition: background-color 0.1s linear;
+  border-radius: 5px;
+  z-index: 10;
+}
+
+.TimePoleText:hover {
+  cursor: pointer;
+  background-color: rgb(240, 240, 240);
+  color: black;
+}
+
+.TimePoleBubble {
+  /* position: absolute; */
+  background-color: rgb(245, 245, 245);
+  font-size: 14px;
+  color: rgb(125, 125, 125);
+  margin: 5px;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.TimePolePole {
+  transform-origin: top;
+  position: absolute;
+
+  height: 1px;
+  width: 1px;
+  border-left: 1px solid rgb(200, 200, 200);
+  z-index: 1;
+}

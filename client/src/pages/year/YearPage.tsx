@@ -8,13 +8,13 @@ import { useEffect } from "react";
 import { DisplayTimeline } from "../../components/Timelines/DisplayTimeline/DisplayTimeline";
 
 function YearPage() {
-  const poles = useAppSelector((store) => store.timepole.getTimePole);
+  // const poles = useAppSelector((store) => store.timepole.getTimePole);
 
-  useEffect(() => {
-    console.log(poles);
-  }, [poles]);
+  // useEffect(() => {
+  //   console.log(poles);
+  // }, [poles]);
 
-  if (poles[0] === "loading") return <></>;
+  // if (poles[0] === "loading") return <></>;
   return (
     <div className="Page">
       {/* <LinktTimelineYear /> */}
