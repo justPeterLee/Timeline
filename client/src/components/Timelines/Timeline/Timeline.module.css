@@ -6,6 +6,7 @@
   top: 50%;
 
   z-index: 100;
+  /* pointer-events: none; */
 }
 
 .TimelineCover {
@@ -23,6 +24,9 @@
   width: 2px;
   background-color: rgb(150, 150, 150);
   position: absolute;
+
+  pointer-events: none;
+  /* user-select: none; */
 }
 
 .DateMarkerContainer {
@@ -42,9 +46,11 @@
   width: 1px;
   background-color: rgb(175, 175, 175);
   z-index: 1;
+  pointer-events: none;
 }
 
 .MarkerDay {
+  pointer-events: none;
   position: absolute;
   left: 10px;
   height: 10px;

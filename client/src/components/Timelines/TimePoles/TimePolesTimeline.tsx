@@ -1,23 +1,26 @@
 import styles from "./TimePolesTimeline.module.css";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import {
   StandardPoleData,
   generatePoleKey,
 } from "../../../tools/utilities/timepoleUtils/timepoleUtils";
 import { getPoleDataList } from "../../../tools/data";
 import {
+  compareSortPoles,
   extractPoleData,
   sort,
+  sortDataUpdater,
 } from "../../../tools/utilities/timepoleUtils/timepole";
 import { animated, to } from "react-spring";
 
 export function TimePolesTimeline({
   poles,
-
+  showPoles,
   func,
 }: //   showPoles,
 {
   poles: StandardPoleData[];
+  showPoles: StandardPoleData[];
   func: {
     onOpenSelectedPole: (_pole: StandardPoleData) => void;
     onOpenSelectedGroupPole: (_pole: StandardPoleData[]) => void;
@@ -26,7 +29,6 @@ export function TimePolesTimeline({
 }) {
   const poleData = useMemo(() => {
     const polesData = getPoleDataList(poles, "year");
-
     return polesData;
   }, [poles]);
 
@@ -34,24 +36,66 @@ export function TimePolesTimeline({
     return extractPoleData(poleData);
   }, [poleData]);
 
+  const showPoleData = useMemo(() => {
+    const extractShowData = extractPoleData(getPoleDataList(showPoles, "year"));
+
+    const extractShowDatakey = Object.keys(extractShowData);
+    const showDataKey: { [key: string]: any } = {};
+
+    for (let i = 0; i < extractShowDatakey.length; i++) {
+      const generateShowDataKey = generatePoleKey(extractShowDatakey[i]);
+      showDataKey[generateShowDataKey] = true;
+    }
+    return showDataKey;
+  }, [showPoles]);
+
   const localSortData = window.localStorage.getItem("localSortData");
 
   const [localState, setLocalState] = useState(localSortData);
 
+  const onMovedPole = (_pole: { id: string; yPos: number }) => {
+    const localSortProxy = localState ? JSON.parse(localState) : {};
+    // const proxyLocalData = JSON.parse(localState!);
+    localSortProxy[_pole.id] = { yPos: _pole.yPos };
+
+    const jsonSortData = JSON.stringify(localSortProxy);
+    window.localStorage.setItem("localSortData", jsonSortData);
+
+    setLocalState(jsonSortData);
+    console.log(jsonSortData);
+    // updateWindowSort(jsonSortData);
+    // setSortData(JSON.parse(jsonSortData));
+    // setLocalState()
+  };
   useEffect(() => {
     if (!localSortData) {
-      // console.log(localSortData, "need update");
       const newSortData = sort(poleData);
-      // console.log(newSortData);
       const jsonSortData = JSON.stringify(newSortData);
       window.localStorage.setItem("localSortData", jsonSortData);
       const localSortDatas = window.localStorage.getItem("localSortData");
 
-      // const jsonData = JSON.stringify("hello");
-
       setLocalState(localSortDatas);
     }
-  }, []);
+
+    if (localSortData) {
+      const jsonLocalSortData = JSON.parse(localSortData);
+
+      const editSortData = compareSortPoles(poles, jsonLocalSortData);
+      if (editSortData.addArray.length || editSortData.deleteArray.length) {
+        const updatedSortData = sortDataUpdater(
+          editSortData,
+          jsonLocalSortData,
+          poles,
+          "year"
+        );
+
+        window.localStorage.setItem("localSortData", updatedSortData);
+
+        const utdLocalSortData = window.localStorage.getItem("localSortData");
+        setLocalState(utdLocalSortData);
+      }
+    }
+  }, [poleData]);
   return (
     <>
       {Object.keys(extractedPoleDatas).map((_poleKey, index) => {
@@ -61,20 +105,17 @@ export function TimePolesTimeline({
           ? JSON.parse(localState)[genPoleKey]
           : null;
 
-        let validSort = null;
-        if (parseLocalState) {
-          validSort = parseLocalState[genPoleKey];
-        }
-        // console.log(genPoleKey);
-        // console.log("re");
+        const isShowing = showPoleData[genPoleKey] ? true : false;
         return (
           <TimePole
-            key={index}
+            key={_poleKey}
             id={genPoleKey}
             poleData={_pole}
             yPos={parseLocalState}
+            isShowing={isShowing}
             setSelectedPole={func.onOpenSelectedPole}
             setSelectedGroupPole={func.onOpenSelectedGroupPole}
+            onMovedPole={onMovedPole}
           />
         );
       })}
@@ -84,14 +125,18 @@ export function TimePolesTimeline({
 
 import { useDrag } from "@use-gesture/react";
 import { useSpring } from "react-spring";
+import { TimelineSpringContext } from "../Context/TimelineContext";
 
 function TimePole({
   id,
   poleData,
   yPos,
+  isShowing,
 
   setSelectedPole,
   setSelectedGroupPole,
+
+  onMovedPole,
 }: {
   id: string;
   poleData: {
@@ -100,10 +145,15 @@ function TimePole({
     xPercent: number;
   };
   yPos: { yPos: number } | null | undefined;
+  isShowing: boolean;
 
   setSelectedPole: (_pole: StandardPoleData) => void;
   setSelectedGroupPole: (_pole: StandardPoleData[]) => void;
+
+  onMovedPole: (_pole: { id: string; yPos: number }) => void;
 }) {
+  const timelineSpring = useContext(TimelineSpringContext);
+
   const textBubbleTarget = useRef<null | HTMLDivElement>(null);
   const yPosRef = useRef(yPos ? yPos.yPos : 0);
 
@@ -114,16 +164,52 @@ function TimePole({
     x: 0,
     y: yPosRef.current,
     scale: yPosRef.current,
+    opacity: 0,
   }));
 
   const bind = useDrag(({ down, movement: [mx, _my] }) => {
     if (textBubbleTarget.current) {
+      // console.log(moving);
       const halfHeight =
         textBubbleTarget.current.getBoundingClientRect().height / 2;
 
       if (!down) {
         yPosRef.current = _my + yPosRef.current;
         timePoleApi.start({ x: 0 });
+
+        //middle point
+        const boundClient = textBubbleTarget.current.getBoundingClientRect();
+        const middlePoint = boundClient.height / 2;
+        const targetPos = boundClient.top + middlePoint;
+
+        // bounds
+        const windowHalf = window.innerHeight / 2;
+        const heavenWindow = windowHalf - 50;
+        const hellWindow = windowHalf + 50;
+
+        //condition
+        if (targetPos > heavenWindow && targetPos < hellWindow) {
+          if (targetPos > heavenWindow && targetPos < windowHalf) {
+            yPosRef.current = -40;
+            timePoleApi.start({
+              y: yPosRef.current,
+              scale: yPosRef.current + halfHeight + 5,
+            });
+          } else {
+            yPosRef.current = 40;
+            timePoleApi.start({
+              y: yPosRef.current,
+              scale: yPosRef.current - halfHeight - 5,
+            });
+          }
+        }
+        onMovedPole({ id: id, yPos: yPosRef.current });
+        // timePoleApi.start({
+        //   y: yPosRef.current,
+        //   // onResolve: () => {
+        //   //   onMovedPole({ id: id, yPos: yPosRef.current });
+        //   // },
+        // });
       }
 
       if (down) {
@@ -139,6 +225,9 @@ function TimePole({
             offsetYPos >= 0
               ? offsetYPos - halfHeight - 5
               : offsetYPos + halfHeight + 5,
+          // onResolve: () => {
+          //   onMovedPole({ id: id, yPos: yPosRef.current });
+          // },
         });
 
         // if()
@@ -146,24 +235,32 @@ function TimePole({
     }
   });
 
-  // only run this if yPos i changed
   useEffect(() => {
-    // reRenderRef.current += 1;
-    // console.log(
-    //   "rerender\n",
-    //   poleData.poles[0].title,
-    //   "\n",
-    //   reRenderRef.current
-    // );
     // if (!yPosRef.current) {
-    timePoleApi.set({ y: yPos ? yPos.yPos : 0, scale: yPos ? yPos.yPos : 0 });
-    // }
+    timePoleApi.start({
+      y: yPos ? yPos.yPos : 0,
+      scale: yPos ? yPos.yPos : 0,
+    });
+
+    yPosRef.current = yPos ? yPos.yPos : 0;
   }, [yPos]);
+
+  useEffect(() => {
+    timePoleApi.start({ opacity: isShowing ? 1 : 0 });
+  }, [isShowing]);
 
   return (
     <animated.div
       className={styles.TimePole}
-      style={{ left: `${poleData.xPercent}%` }}
+      style={{
+        left: `${poleData.xPercent}%`,
+        opacity: timePoleSpring.opacity,
+        transformOrigin: "left center",
+        transform: to(
+          [timelineSpring!.timelineSpring.scale],
+          (scale) => `scaleX(${1 / scale})`
+        ),
+      }}
     >
       <animated.div
         className={styles.TimePolePole}
@@ -192,6 +289,7 @@ function TimePole({
           }
           wasDragging.current = false;
         }}
+        data-length={poleData.poles.length}
         ref={textBubbleTarget}
       >
         {poleData.poles.map((_pole, index) => {

@@ -43,7 +43,9 @@ export default function TimelinePage() {
 
         {/* <DisplayTimeline poles={timepole} /> */}
 
-        {poles[0] !== "loading" && <DisplayTimeline poles={filterPoles} />}
+        {poles[0] !== "loading" && (
+          <DisplayTimeline poles={poles} showPoles={filterPoles} />
+        )}
 
         {mode === "create" ? <CreateTimeline /> : <ViewTimeline />}
 

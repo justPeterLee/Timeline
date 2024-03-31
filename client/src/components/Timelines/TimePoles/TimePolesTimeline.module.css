@@ -4,6 +4,14 @@
 
   display: flex;
   align-items: center;
+  z-index: 100;
+
+  -webkit-user-drag: none; /* Safari */
+  -khtml-user-drag: none; /* Konqueror */
+  -moz-user-drag: none; /* Firefox */
+  -o-user-drag: none; /* Opera */
+  /* user-drag: none; Generic */
+  user-select: none;
 }
 
 .TimePoleText {
@@ -19,7 +27,7 @@
 
   transition: background-color 0.1s linear;
   border-radius: 5px;
-  z-index: 10;
+  z-index: 100;
 }
 
 .TimePoleText:hover {
@@ -36,6 +44,7 @@
   margin: 5px;
   padding: 5px;
   border-radius: 5px;
+  /* z-index: 100; */
 }
 
 .TimePolePole {

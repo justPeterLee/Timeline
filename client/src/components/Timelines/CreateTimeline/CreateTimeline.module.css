@@ -12,6 +12,8 @@
   overflow: hidden;
 
   cursor: pointer;
+
+  z-index: 5000;
 }
 
 .TetherContainer {

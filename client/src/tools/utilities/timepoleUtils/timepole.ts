@@ -236,19 +236,22 @@ export function insertSorData(
   addPoles: { sortId: string; poleId: string }[],
   localSortData: PoleCordsData
 ) {
+  console.log(addPoles);
   // console.time("start");
   // console.log(JSON.parse(window.localStorage.getItem("sortDataEffect")));
   const overlappingData = generateOverLappingData(allPoles, localSortData);
-  console.log(overlappingData);
+  // console.log(overlappingData);
   const newSortData = localSortData;
   // console.log(newSortData);
   const heavenBound = window.innerHeight / 2 - 30;
   const hellBound = window.innerHeight / 2 + 30;
 
   for (let i = 0; i < addPoles.length; i++) {
+    // console.log("test");
     const _newPoleTarget = document.querySelector(
       `#pole-${addPoles[i].sortId}`
     ) as HTMLElement;
+
     if (!_newPoleTarget) continue;
     if (!_newPoleTarget.dataset.length) continue;
 

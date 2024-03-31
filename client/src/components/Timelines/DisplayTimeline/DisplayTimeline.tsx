@@ -12,7 +12,13 @@ import {
   TimePoleModal,
 } from "../../modals/Modals";
 
-export function DisplayTimeline({ poles }: { poles: StandardPoleData[] }) {
+export function DisplayTimeline({
+  poles,
+  showPoles,
+}: {
+  poles: StandardPoleData[];
+  showPoles: StandardPoleData[];
+}) {
   const springContext = useContext(TimelineSpringContext);
   const [selectedPole, setSelectedPole] = useState<null | StandardPoleData>(
     null
@@ -35,7 +41,7 @@ export function DisplayTimeline({ poles }: { poles: StandardPoleData[] }) {
   return (
     <div className={styles.DisplayTimeline}>
       <TimelineCardAnimation
-        timelineSpring={springContext!.setTimelineSpring}
+        timelineSpring={springContext!.timelineSpring}
         id="display-timeline"
       >
         {/* <TimePoleDisplay
@@ -45,6 +51,7 @@ export function DisplayTimeline({ poles }: { poles: StandardPoleData[] }) {
         /> */}
         <TimePolesTimeline
           poles={poles}
+          showPoles={showPoles}
           func={{
             onOpenSelectedPole: onOpenSelectedPole,
             onOpenSelectedGroupPole: onOpenSelectedGroupPole,
