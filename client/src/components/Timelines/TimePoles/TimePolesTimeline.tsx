@@ -237,9 +237,18 @@ function TimePole({
 
   useEffect(() => {
     // if (!yPosRef.current) {
+    let scale = 0;
+    if (yPos && textBubbleTarget.current) {
+      const halfHeight =
+        textBubbleTarget.current.getBoundingClientRect().height / 2;
+      scale =
+        yPos.yPos <= 0
+          ? yPos.yPos + halfHeight + 5
+          : yPos.yPos - halfHeight - 5;
+    }
     timePoleApi.start({
       y: yPos ? yPos.yPos : 0,
-      scale: yPos ? yPos.yPos : 0,
+      scale: scale,
     });
 
     yPosRef.current = yPos ? yPos.yPos : 0;
