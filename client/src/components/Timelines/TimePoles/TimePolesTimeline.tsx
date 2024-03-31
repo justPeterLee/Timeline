@@ -98,7 +98,7 @@ export function TimePolesTimeline({
   }, [poleData]);
   return (
     <>
-      {Object.keys(extractedPoleDatas).map((_poleKey, index) => {
+      {Object.keys(extractedPoleDatas).map((_poleKey) => {
         const _pole = extractedPoleDatas[_poleKey];
         const genPoleKey = generatePoleKey(_poleKey);
         const parseLocalState = localState

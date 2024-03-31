@@ -1,8 +1,13 @@
 import styles from "./Timeline.module.css";
 import { animated, to } from "react-spring";
-import { monthByDate } from "../../../tools/data/monthData";
+import {
+  current,
+  monthByDate,
+  monthByIndex,
+} from "../../../tools/data/monthData";
 import { TimelineSpringValue } from "./Timeline";
 import { Fragment } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
 function MarkerMonth({
   timelineSpring,
@@ -13,6 +18,10 @@ function MarkerMonth({
   left: number;
   month: number;
 }) {
+  const { year } = useParams();
+  const navigate = useNavigate();
+  const monthData = monthByIndex[month];
+
   return (
     <animated.div
       style={{
@@ -26,7 +35,17 @@ function MarkerMonth({
       }}
       className={styles.Markers}
       id={`marker-month-${month}`}
-    ></animated.div>
+    >
+      <span
+        className={styles.MonthAbbr}
+        style={month === 1 ? { transform: "none" } : {}}
+        onClick={() => {
+          navigate(`/month/${year ? year : current.year}/${month}/view`);
+        }}
+      >
+        <p>{monthData.month.slice(0, 3)}</p>
+      </span>
+    </animated.div>
   );
 }
 

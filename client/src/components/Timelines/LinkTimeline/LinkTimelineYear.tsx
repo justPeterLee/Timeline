@@ -37,8 +37,8 @@ export function LinktTimelineYear({
             <LinkSection
               key={index}
               style={{
-                paddingTop: "15px",
-                paddingBottom: "15px",
+                paddingTop: "9px",
+                paddingBottom: "9px",
                 width: `${width}%`,
               }}
               onNavigate={onNavigate}
