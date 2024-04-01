@@ -1,15 +1,18 @@
 import styles from "./CreateTimeline.module.css";
 import { animated, useSpring, to, SpringValues } from "react-spring";
 import { useGesture } from "@use-gesture/react";
-import { useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { Timeline } from "../Timeline/Timeline";
 import { CreateTimelineModal, DatePickerModal } from "./CreateTimelineModal";
 import { useParams } from "react-router-dom";
 import { percentToDate } from "../../../tools/utilities/dateFunction";
 import { format } from "date-fns";
+import { TimelineSpringContext } from "../Context/TimelineContext";
 
 export function CreateTimeline() {
   const { month, year } = useParams();
+
+  const contextSpring = useContext(TimelineSpringContext);
 
   const [createDate, setCreateDate] = useState<null | Date>(null);
 
@@ -46,23 +49,26 @@ export function CreateTimeline() {
 
   const isStopped = useRef(false);
 
-  const timelineStep = (event: PointerEvent) => {
-    const percent = percentToDate(event, year);
-
+  const onChangeDatePicker = (event: PointerEvent) => {
+    const percentDate = percentToDate(event, year);
     const dateModal = document.getElementById("date-picker-modal");
 
     if (
-      percent.getFullYear() === hoverDateRef.current.getFullYear() &&
-      percent.getMonth() === hoverDateRef.current.getMonth() &&
-      percent.getDate() === hoverDateRef.current.getDate()
+      percentDate.getFullYear() === hoverDateRef.current.getFullYear() &&
+      percentDate.getMonth() === hoverDateRef.current.getMonth() &&
+      percentDate.getDate() === hoverDateRef.current.getDate()
     ) {
     } else {
-      hoverDateRef.current = percent;
+      hoverDateRef.current = percentDate;
       if (dateModal) {
         const newDate = format(hoverDateRef.current, "iiii, LLLL d");
         (dateModal as HTMLInputElement).value = newDate;
       }
     }
+  };
+
+  const timelineStep = (event: PointerEvent) => {
+    onChangeDatePicker(event);
 
     // boundaries
     const bound = timelineBoundaries.current;
@@ -139,11 +145,17 @@ export function CreateTimeline() {
         if (
           timelinePercentMovementRef.current !== 0 &&
           !timelineStepperRef.current &&
-          !isStopped.current
+          !isStopped.current &&
+          !month
         ) {
+          console.log("test");
           timelineStepperRef.current = requestAnimationFrame(() => {
             timelineStep(event);
           });
+        }
+
+        if (month) {
+          onChangeDatePicker(event);
         }
 
         // cancel stepper animation
@@ -222,10 +234,11 @@ export function CreateTimeline() {
     },
   });
 
-  //   useEffect(() => {
-  //     console.log(hoverDate);
-  //     // console.log(hoverDateRef.current);
-  //   }, [hoverDate]);
+  useEffect(() => {
+    if (timelineContainer.current) {
+      contextSpring!.calculateOP(timelineContainer.current);
+    }
+  }, []);
 
   return (
     <>
@@ -250,7 +263,11 @@ export function CreateTimeline() {
         }}
         ref={timelineContainer}
       >
-        <Timeline timelineSpring={timelineSpring} />
+        <Timeline
+          timelineSpring={
+            month ? contextSpring!.setTimelineSpring : timelineSpring
+          }
+        />
         <Dot dotSpringValue={dotSpring} />
       </div>
 
