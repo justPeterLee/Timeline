@@ -53,10 +53,12 @@ function MarkerWeek({
   timelineSpring,
   left,
   week,
-}: {
+}: // monthPos,
+{
   timelineSpring: TimelineSpringValue;
   left: number;
   week: number;
+  // monthPos: number;
 }) {
   return (
     <animated.div
@@ -78,24 +80,34 @@ function MarkerDay({
   timelineSpring,
   left,
   day,
+  monthPos,
+  currMonth,
 }: {
   timelineSpring: TimelineSpringValue;
   left: number;
   day: number;
+  monthPos: number;
+  currMonth: number;
 }) {
   return (
-    <animated.div
-      style={{
-        left: `${left}%`,
-        transformOrigin: "center left",
-        transform: to(
-          [timelineSpring.scale, timelineSpring.markerX],
-          (scale, x) => `scaleX(${1 / scale}) translate(${x}px, 0px)`
-        ),
-      }}
-      className={styles.MarkerDay}
-      id={`marker-day-${day}`}
-    ></animated.div>
+    <>
+      {monthPos <= currMonth + 1 && monthPos >= currMonth - 1 ? (
+        <animated.div
+          style={{
+            left: `${left}%`,
+            transformOrigin: "center left",
+            transform: to(
+              [timelineSpring.scale, timelineSpring.markerX],
+              (scale, x) => `scaleX(${1 / scale}) translate(${x}px, 0px)`
+            ),
+          }}
+          className={styles.MarkerDay}
+          id={`marker-day-${day}`}
+        ></animated.div>
+      ) : (
+        <></>
+      )}
+    </>
   );
 }
 
@@ -106,6 +118,7 @@ export function MarkerAllContainer({
   timelineSpring: TimelineSpringValue;
   isMonth: boolean;
 }) {
+  const { month } = useParams();
   let monthTracker = 0;
   let week = 0;
   return (
@@ -145,17 +158,20 @@ export function MarkerAllContainer({
               timelineSpring={timelineSpring}
               left={left}
               week={indexWeek}
+              // monthPos={monthTracker}
             />
           );
         } else {
           return (
             <Fragment key={index}>
-              {isMonth && (
+              {month && (
                 <MarkerDay
                   key={index}
                   timelineSpring={timelineSpring}
                   left={left}
                   day={indexDay}
+                  monthPos={monthTracker}
+                  currMonth={parseInt(month)}
                 />
               )}
             </Fragment>
