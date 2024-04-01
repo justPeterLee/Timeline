@@ -29,7 +29,6 @@ export default function ViewTimeline() {
     >
       <Timeline
         timelineSpring={timelineSpringContext!.timelineSpring}
-        isMonth={month ? true : false}
       ></Timeline>
       <LinktTimelineYear
         timelineSpring={timelineSpringContext!.timelineSpring}

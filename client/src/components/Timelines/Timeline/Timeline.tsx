@@ -57,15 +57,13 @@ export function TimelineCardAnimation({
 
 export function Timeline({
   timelineSpring,
-  isMonth = true,
 }: {
   timelineSpring: TimelineSpringValue;
-  isMonth?: boolean;
 }) {
   return (
     <TimelineCardAnimation timelineSpring={timelineSpring} id={"timeline"}>
       <div className={styles.TimelineCover}></div>
-      <MarkerAllContainer timelineSpring={timelineSpring} isMonth={isMonth} />
+      <MarkerAllContainer timelineSpring={timelineSpring} />
     </TimelineCardAnimation>
   );
 }

@@ -82,16 +82,21 @@ function MarkerDay({
   day,
   monthPos,
   currMonth,
+  mode,
 }: {
   timelineSpring: TimelineSpringValue;
   left: number;
   day: number;
   monthPos: number;
   currMonth: number;
+  mode: string;
 }) {
   return (
     <>
-      {monthPos <= currMonth + 1 && monthPos >= currMonth - 1 ? (
+      {(monthPos <= currMonth + 1 &&
+        monthPos >= currMonth - 1 &&
+        currMonth != -1) ||
+      mode === "create" ? (
         <animated.div
           style={{
             left: `${left}%`,
@@ -113,12 +118,10 @@ function MarkerDay({
 
 export function MarkerAllContainer({
   timelineSpring,
-  isMonth,
 }: {
   timelineSpring: TimelineSpringValue;
-  isMonth: boolean;
 }) {
-  const { month } = useParams();
+  const { month, mode } = useParams();
   let monthTracker = 0;
   let week = 0;
   return (
@@ -164,16 +167,15 @@ export function MarkerAllContainer({
         } else {
           return (
             <Fragment key={index}>
-              {month && (
-                <MarkerDay
-                  key={index}
-                  timelineSpring={timelineSpring}
-                  left={left}
-                  day={indexDay}
-                  monthPos={monthTracker}
-                  currMonth={parseInt(month)}
-                />
-              )}
+              <MarkerDay
+                key={index}
+                timelineSpring={timelineSpring}
+                left={left}
+                day={indexDay}
+                monthPos={monthTracker}
+                currMonth={month ? parseInt(month) : -1}
+                mode={!mode ? "view" : mode}
+              />
             </Fragment>
           );
         }
