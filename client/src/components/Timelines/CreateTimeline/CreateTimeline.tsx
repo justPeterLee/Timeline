@@ -9,7 +9,7 @@ import { percentToDate } from "../../../tools/utilities/dateFunction";
 import { format } from "date-fns";
 
 export function CreateTimeline() {
-  const { year } = useParams();
+  const { month, year } = useParams();
 
   const [createDate, setCreateDate] = useState<null | Date>(null);
 

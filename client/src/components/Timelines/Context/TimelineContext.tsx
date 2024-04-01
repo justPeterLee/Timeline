@@ -1,5 +1,5 @@
 import { ReactNode, createContext, useRef } from "react";
-import { useSpring } from "react-spring";
+import { SpringRef, useSpring } from "react-spring";
 import { useLocation, useParams } from "react-router-dom";
 
 import { TimelineSpringValue } from "../Timeline/Timeline";
@@ -12,6 +12,14 @@ import {
 export const TimelineSpringContext = createContext<null | {
   setTimelineSpring: TimelineSpringValue;
   timelineSpring: TimelineSpringValue;
+  timelineSpringApi: SpringRef<{
+    x: number;
+    scale: number;
+    opacity: number;
+    origin: number;
+    markerX: number;
+    markerDayOpacity: number;
+  }>;
   calculateOP: (params: HTMLDivElement) => void;
 }>(null);
 
@@ -146,6 +154,7 @@ export function TimeSpringContext({ children }: { children: ReactNode }) {
       value={{
         setTimelineSpring: setTimelineSpring,
         timelineSpring: timelineSpring,
+        timelineSpringApi: timelineApi,
         calculateOP: calculateOP,
       }}
     >

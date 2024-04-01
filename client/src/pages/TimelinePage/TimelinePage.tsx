@@ -43,11 +43,16 @@ export default function TimelinePage() {
 
         {/* <DisplayTimeline poles={timepole} /> */}
 
-        {poles[0] !== "loading" && (
-          <DisplayTimeline poles={poles} showPoles={filterPoles} />
+        {mode === "create" ? (
+          <CreateTimeline />
+        ) : (
+          <>
+            {poles[0] !== "loading" && (
+              <DisplayTimeline poles={poles} showPoles={filterPoles} />
+            )}
+            <ViewTimeline />
+          </>
         )}
-
-        {mode === "create" ? <CreateTimeline /> : <ViewTimeline />}
 
         {/* <CreateTimePole /> */}
 

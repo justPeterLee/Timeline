@@ -24,21 +24,15 @@ export function ViewLinks({ page }: { page: string }) {
       >
         mode : {mode || "view"}
       </button>
-      {month !== "0" ? (
-        month !== undefined ? (
-          <button
-            onClick={() => {
-              navigate(`/year/${year || current.year}/${mode}`);
-            }}
-            className="viewAllLink Link"
-          >
-            view all
-          </button>
-        ) : (
-          <></>
-        )
-      ) : (
-        <></>
+      {month && (
+        <button
+          onClick={() => {
+            navigate(`/year/${year || current.year}/view`);
+          }}
+          className="viewAllLink Link"
+        >
+          view all
+        </button>
       )}
     </div>
   );
