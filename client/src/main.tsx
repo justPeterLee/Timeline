@@ -23,6 +23,7 @@ import {
   yearLoader,
   rescrictedURL,
   redirectURL,
+  userLoader,
 } from "./tools/loaders/loader.ts";
 
 const router = createBrowserRouter([
@@ -30,6 +31,7 @@ const router = createBrowserRouter([
     path: "/",
     element: <TimelinePage />,
     loader: async ({ params }) => {
+      await userLoader();
       await yearLoader(params.year);
       return null;
     },

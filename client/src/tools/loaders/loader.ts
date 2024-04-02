@@ -3,6 +3,17 @@ import { redirect, json } from "react-router-dom";
 import axios from "axios";
 import { current } from "../data/monthData";
 
+export async function userLoader() {
+  try {
+    store.dispatch({ type: "FETCH_USER" });
+  } catch (err: any) {
+    throw json(
+      { message: "Error occured while fetching user" },
+      { status: err.status }
+    );
+  }
+}
+
 export async function rescrictedURL(url: string) {
   try {
     let user = await axios.get("/api/v1/userAction");

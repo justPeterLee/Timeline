@@ -2,9 +2,7 @@ import { Outlet, useParams } from "react-router-dom";
 import { ViewLinks } from "../../components/elements/Links";
 import ViewTimeline from "../../components/Timelines/ViewTimeline/ViewTimeline";
 import { CreateTimeline } from "../../components/Timelines/CreateTimeline/CreateTimeline";
-// import { CreateTimeline as CreateTimePole } from "../../components/timeline/timeline_components/TimelineComponents";
-// import { useDispatc } from "react-redux";
-// import { TimePoleDisplay } from "../../components/timepole/Timepole";
+import Navbar from "../../components/Navbar/Navbar";
 import {
   // useAppDispatch,
   useAppSelector,
@@ -56,6 +54,7 @@ export default function TimelinePage() {
 
         {/* <CreateTimePole /> */}
 
+        <Navbar />
         <ViewLinks page={month ? "month" : "year"} />
       </TimeSpringContext>
     </>
