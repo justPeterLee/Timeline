@@ -8,6 +8,7 @@ function* timePoleSaga() {
   yield takeLatest("GET_TIMEPOLE_MONTH_SERVER", getTimePoleMonthSERVER);
   yield takeLatest("GET_TIMEPOLE_YEAR_SERVER", getTimePoleYearSERVER);
 
+  yield takeLatest("GET_USER_TIMEPOLE", getUserTimepole);
   yield takeLatest("UPDATE_TIME_POLE_SERVER", updateTimePoleSERVER);
 
   yield takeLatest(
@@ -33,6 +34,15 @@ type PostTimePole = {
   type: string;
 };
 
+function* getUserTimepole(): Generator {
+  try {
+    // console.log(window.location);
+    const data: any = yield axios.get("/api/v1/timepole");
+    yield put({ type: "SET_USER_TIMEPOLE", payload: data.data });
+  } catch (err) {
+    console.log(err);
+  }
+}
 function* getTimePoleSERVER(): Generator {
   try {
     // console.log(window.location);

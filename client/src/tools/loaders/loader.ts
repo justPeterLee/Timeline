@@ -67,7 +67,7 @@ export async function yearLoader(year: string | undefined) {
 export async function poleLoader() {
   try {
     store.dispatch({
-      type: "GET_TIMEPOLE_SERVER",
+      type: "GET_USER_TIMEPOLE",
     });
   } catch (err: any) {
     throw json({ message: "Error getting time poles" }, { status: err.status });
