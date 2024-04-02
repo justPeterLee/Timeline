@@ -24,12 +24,14 @@ import {
   rescrictedURL,
   redirectURL,
   userLoader,
+  poleLoader,
 } from "./tools/loaders/loader.ts";
+import App from "./App.tsx";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <TimelinePage />,
+    element: <App />,
     loader: async ({ params }) => {
       await userLoader();
       await yearLoader(params.year);
@@ -39,27 +41,29 @@ const router = createBrowserRouter([
       {
         path: "/year/:year/:mode",
         element: <YearPage />,
-        loader: async ({ params }) => {
-          await yearLoader(params.year);
-          return null;
-        },
+        // loader: async ({ params }) => {
+        //   await yearLoader(params.year);
+        //   return null;
+        // },
       },
       {
         path: "/month/:year/:month/:mode",
         element: <MonthPage />,
-        loader: async ({ params }) => {
-          await yearLoader(params.year);
-          return null;
-        },
+        // loader: async ({ params }) => {
+        //   await yearLoader(params.year);
+        //   return null;
+        // },
       },
     ],
   },
-
   {
     path: "/user",
     element: <UserPage />,
     loader: async () => {
+      await userLoader();
       await rescrictedURL("/login");
+      await poleLoader();
+
       return null;
     },
   },

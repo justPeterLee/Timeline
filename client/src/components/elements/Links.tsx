@@ -114,6 +114,17 @@ export function Backdrop({
   );
 }
 
+export function InvisibleBackdrop({ onClose }: { onClose: () => void }) {
+  const portalRoot = document.getElementById("portal-modal");
+  if (!portalRoot) {
+    return <div>Portal root not found!</div>;
+  }
+  return ReactDOM.createPortal(
+    <div onClick={onClose} className={"invisible-backdrop"}></div>,
+    portalRoot
+  );
+}
+
 import { animated, useSpring } from "react-spring";
 import { useRef } from "react";
 export function Modal(props: {

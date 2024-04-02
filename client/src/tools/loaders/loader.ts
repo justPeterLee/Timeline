@@ -25,6 +25,16 @@ export async function rescrictedURL(url: string) {
   }
 }
 
+export async function requireUser() {
+  let user = await axios.get("/api/v1/userAction");
+
+  if (!user) {
+    console.log("no users");
+  }
+
+  return user;
+}
+
 export async function redirectURL() {
   try {
     let user = await axios.get("/api/v1/userAction");
@@ -36,15 +46,30 @@ export async function redirectURL() {
 
 export async function yearLoader(year: string | undefined) {
   try {
+    const user = await redirectURL();
     const normalYear = year ? year : current.year.toString();
-    store.dispatch({
-      type: "GET_TIMEPOLE_YEAR_SERVER",
-      payload: { year: normalYear },
-    });
+    // const user = store.getState().userAccount;
+
+    if (user) {
+      store.dispatch({
+        type: "GET_TIMEPOLE_YEAR_SERVER",
+        payload: { year: normalYear },
+      });
+    }
   } catch (err: any) {
     throw json(
       { message: "Error occured while fetching data" },
       { status: err.status }
     );
+  }
+}
+
+export async function poleLoader() {
+  try {
+    store.dispatch({
+      type: "GET_TIMEPOLE_SERVER",
+    });
+  } catch (err: any) {
+    throw json({ message: "Error getting time poles" }, { status: err.status });
   }
 }

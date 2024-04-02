@@ -10,10 +10,14 @@ import {
   useAppSelector,
 } from "../../redux/redux-hooks/redux.hook";
 import { useNavigate } from "react-router-dom";
+import { InvisibleBackdrop } from "../elements/Links";
 
 export default function Navbar() {
   const [togglePage, setTogglePage] = useState(false);
 
+  const onClose = () => {
+    setTogglePage(false);
+  };
   //   console.log(user);
   return (
     <div className={styles.Navbar}>
@@ -28,7 +32,12 @@ export default function Navbar() {
           <FiMenu size={17} color="rgb(70,70,70)" />
         </button>
 
-        {togglePage && <NavbarMenuPage />}
+        {togglePage && (
+          <>
+            <NavbarMenuPage />
+            <InvisibleBackdrop onClose={onClose} />
+          </>
+        )}
       </div>
       {/* {user.id && <NavbarUser username={user.username} />} */}
     </div>
@@ -56,7 +65,7 @@ function NavbarMenuPage() {
             text="Sign out"
             link={() => {
               dispatch({ type: "LOGOUT" });
-              navigate("/");
+              navigate("/a");
             }}
             style={{ color: "red" }}
           />

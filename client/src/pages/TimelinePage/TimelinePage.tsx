@@ -1,23 +1,16 @@
-import { Outlet, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { ViewLinks } from "../../components/elements/Links";
 import ViewTimeline from "../../components/Timelines/ViewTimeline/ViewTimeline";
 import { CreateTimeline } from "../../components/Timelines/CreateTimeline/CreateTimeline";
-import Navbar from "../../components/Navbar/Navbar";
-import {
-  // useAppDispatch,
-  useAppSelector,
-} from "../../redux/redux-hooks/redux.hook";
-import { useEffect, useMemo } from "react";
+import { useAppSelector } from "../../redux/redux-hooks/redux.hook";
+import { useMemo } from "react";
 import { TimeSpringContext } from "../../components/Timelines/Context/TimelineContext";
-// import { TimePoleDisplay } from "../../components/timepole/Timepole";
-
 import { DisplayTimeline } from "../../components/Timelines/DisplayTimeline/DisplayTimeline";
 import { StandardPoleData } from "../../tools/utilities/timepoleUtils/timepoleUtils";
+
 export default function TimelinePage() {
   const { month, mode } = useParams();
-  // const location
   const poles = useAppSelector((store) => store.timepole.getTimePole);
-  // const dispatch = useAppDispatch();
 
   const filterPoles = useMemo(() => {
     if (!month) {
@@ -28,19 +21,12 @@ export default function TimelinePage() {
       const poleDate = new Date(_pole.full_date);
       return poleDate.getMonth() + 1 == parseInt(month!);
     });
-  }, [poles]);
-
-  useEffect(() => {
-    // console.log(timepole);
-  }, [poles]);
+  }, [poles, month]);
 
   return (
     <>
       <TimeSpringContext>
-        <Outlet />
-
-        {/* <DisplayTimeline poles={timepole} /> */}
-
+        <ViewLinks page={month ? "month" : "year"} />
         {mode === "create" ? (
           <CreateTimeline poles={filterPoles} />
         ) : (
@@ -51,11 +37,6 @@ export default function TimelinePage() {
             <ViewTimeline />
           </>
         )}
-
-        {/* <CreateTimePole /> */}
-
-        <Navbar />
-        <ViewLinks page={month ? "month" : "year"} />
       </TimeSpringContext>
     </>
   );
