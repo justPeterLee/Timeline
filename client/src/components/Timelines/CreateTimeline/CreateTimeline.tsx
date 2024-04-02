@@ -8,8 +8,10 @@ import { useParams } from "react-router-dom";
 import { percentToDate } from "../../../tools/utilities/dateFunction";
 import { format } from "date-fns";
 import { TimelineSpringContext } from "../Context/TimelineContext";
+import { StandardPoleData } from "../../../tools/utilities/timepoleUtils/timepoleUtils";
+import { CreateDisplayTimeline } from "../DisplayTimeline/DisplayTimeline";
 
-export function CreateTimeline() {
+export function CreateTimeline({ poles }: { poles: StandardPoleData[] }) {
   const { month, year } = useParams();
 
   const contextSpring = useContext(TimelineSpringContext);
@@ -269,6 +271,13 @@ export function CreateTimeline() {
           }
         />
         <Dot dotSpringValue={dotSpring} />
+
+        <CreateDisplayTimeline
+          poles={poles}
+          timelineSpring={
+            month ? contextSpring!.setTimelineSpring : timelineSpring
+          }
+        />
       </div>
 
       <div className={styles.DatePickerContainer}>

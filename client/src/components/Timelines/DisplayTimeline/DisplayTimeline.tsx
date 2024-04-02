@@ -1,8 +1,11 @@
 import styles from "./DisplayTimeline.module.css";
-import { useContext, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 import { TimelineSpringContext } from "../Context/TimelineContext";
 // import { Timeline } from "../Timeline/Timeline";
-import { TimelineCardAnimation } from "../Timeline/Timeline";
+import {
+  TimelineCardAnimation,
+  TimelineSpringValue,
+} from "../Timeline/Timeline";
 // import { TimePoleDisplay } from "../../timepole/Timepole";
 import { StandardPoleData } from "../../../tools/utilities/timepoleUtils/timepoleUtils";
 import { TimePolesTimeline } from "../TimePoles/TimePolesTimeline";
@@ -11,6 +14,9 @@ import {
   GroupTimePoleSelectionModal,
   TimePoleModal,
 } from "../../modals/Modals";
+import { animated, to } from "react-spring";
+import { getPoleDataList } from "../../../tools/data";
+import { extractPoleData } from "../../../tools/utilities/timepoleUtils/timepole";
 
 export function DisplayTimeline({
   poles,
@@ -77,5 +83,66 @@ export function DisplayTimeline({
         />
       )}
     </div>
+  );
+}
+
+export function CreateDisplayTimeline({
+  poles,
+  timelineSpring,
+}: {
+  poles: StandardPoleData[];
+  timelineSpring: TimelineSpringValue;
+}) {
+  const poleData = useMemo(() => {
+    const polesData = getPoleDataList(poles, "year");
+    return polesData;
+  }, [poles]);
+
+  const extractedPoleDatas = useMemo(() => {
+    return extractPoleData(poleData);
+  }, [poleData]);
+
+  return (
+    <TimelineCardAnimation
+      timelineSpring={timelineSpring}
+      id="dot-pole-timeline"
+    >
+      {Object.keys(extractedPoleDatas).map((_poleKey) => {
+        const _pole = extractedPoleDatas[_poleKey];
+        // const genPoleKey = generatePoleKey(_poleKey);
+        const key = Math.random();
+
+        return (
+          <DotPole key={key} poleData={_pole} timelineSpring={timelineSpring} />
+        );
+      })}
+    </TimelineCardAnimation>
+  );
+}
+
+function DotPole({
+  poleData,
+  timelineSpring,
+}: {
+  poleData: {
+    id: string;
+    poles: StandardPoleData[];
+    xPercent: number;
+  };
+
+  timelineSpring: TimelineSpringValue;
+}) {
+  return (
+    <animated.div
+      className={styles.DotPole}
+      style={{
+        left: `${poleData.xPercent}%`,
+        transformOrigin: "left center",
+        transform: to(
+          [timelineSpring.scale, timelineSpring.x],
+          (scale) => `scaleX(${1 / scale}) translateX(-2px)`
+        ),
+      }}
+    ></animated.div>
   );
 }
