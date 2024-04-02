@@ -1,7 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 
-import TimelinePage from "./pages/TimelinePage/TimelinePage.tsx";
 import YearPage from "./pages/year/YearPage.tsx";
 import MonthPage from "./pages/month/MonthPage.tsx";
 

@@ -103,14 +103,3 @@ function NavbarMenuButton({
     </button>
   );
 }
-
-function NavbarUser({ username }: { username: string }) {
-  return (
-    <div className={styles.NavbarUser}>
-      <div className={styles.NavbarUserIcon}>
-        <FaRegUser size={25} />
-      </div>
-      <div className={styles.NavbarUserText}>{username}</div>
-    </div>
-  );
-}
