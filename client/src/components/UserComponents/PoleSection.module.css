@@ -1,0 +1,82 @@
+.PoleSectionContainer {
+  height: 90%;
+  width: 80%;
+
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  /* grid-template-rows: repeat(auto-fill); */
+  /* grid-auto-rows: 300px; */
+  grid-gap: 30px;
+  /* background-color: antiquewhite; */
+  /* margin: 100px; */
+}
+.PoleSection {
+  /* height: 300px; */
+  /* width: 10px; */
+  /* padding: 10px; */
+  /* border: solid 1px rgb(230, 230, 230); */
+  border-radius: 5px;
+  box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px,
+    rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+
+  padding: 1rem;
+  border: solid 1px transparent;
+  /* justify-content: center; */
+}
+
+.PoleSection:hover {
+  border: solid 1px lightgray;
+  cursor: pointer;
+}
+.Year {
+  color: rgb(20, 20, 20);
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.Month {
+  /* width: 100%; */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  gap: 0.5rem;
+}
+.MonthTitle p {
+  color: black;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.MonthSection {
+  /* display: flex;
+  flex-direction: column; */
+  /* align-items: flex-start; */
+  /* background-color: rgb(210, 210, 210); */
+  /* padding-left: 10px;
+
+  gap: 0.25rem;
+}
+
+.MonthSectionContainer {
+  /* padding-left: 2rem; */
+}
+
+.Section {
+  font-size: 13px;
+  /* font-weight: 500; */
+  /* color: rgb(100, 100, 100); */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+p {
+  padding: 0;
+  margin: 0;
+}

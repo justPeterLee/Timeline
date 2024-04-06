@@ -4,6 +4,7 @@ import { FiMenu } from "react-icons/fi";
 import { MdLockOutline } from "react-icons/md";
 import { FaRegUser } from "react-icons/fa";
 import { PiSignOutBold } from "react-icons/pi";
+import { CgCalendarToday } from "react-icons/cg";
 
 import {
   useAppDispatch,
@@ -58,6 +59,13 @@ function NavbarMenuPage() {
             text={user.username}
             link={() => {
               navigate("/user");
+            }}
+          />
+          <NavbarMenuButton
+            icon={<CgCalendarToday size={18} />}
+            text={"Today"}
+            link={() => {
+              navigate("/");
             }}
           />
           <NavbarMenuButton
