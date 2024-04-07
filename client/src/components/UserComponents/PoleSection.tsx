@@ -1,4 +1,12 @@
-import { useMemo, useState } from "react";
+import {
+  LegacyRef,
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { AllStandardPoleData } from "../../tools/utilities/timepoleUtils/timepoleUtils";
 import styles from "./PoleSection.module.css";
 import { format } from "date-fns";
@@ -127,8 +135,19 @@ import { IoMdArrowDropdown } from "react-icons/io";
 import { FaCheck } from "react-icons/fa";
 
 function CreateNewYearModal({ onClose }: { onClose: () => void }) {
+  const dataListTargetRef = useRef<null | HTMLDivElement>(null);
+  const listTargetRef = useRef<{ scollIntoView: () => void } | null>(null);
+
   const [selectedYear, setSelectedYear] = useState(current.year);
   const [focus, setFocus] = useState(false);
+
+  useEffect(() => {
+    if (focus && listTargetRef.current) {
+      console.log("scroll to middle");
+      listTargetRef.current.scollIntoView();
+    }
+  }, [focus, listTargetRef]);
+
   return (
     <div className={styles.CreateNewYearModal}>
       <div className={styles.CNYMTitle}>
@@ -152,7 +171,10 @@ function CreateNewYearModal({ onClose }: { onClose: () => void }) {
         </button>
 
         {focus && (
-          <div className={styles.CNYMYearDatalistValues}>
+          <div
+            className={styles.CNYMYearDatalistValues}
+            ref={dataListTargetRef}
+          >
             <NewYearDataList
               value={selectedYear}
               setValue={(newYear) => {
@@ -160,6 +182,7 @@ function CreateNewYearModal({ onClose }: { onClose: () => void }) {
                 setFocus(false);
                 //   onClose();
               }}
+              ref={listTargetRef}
             />
           </div>
         )}
@@ -175,18 +198,33 @@ function CreateNewYearModal({ onClose }: { onClose: () => void }) {
   );
 }
 
-function NewYearDataList({
-  value,
-  setValue,
-}: {
-  value: number;
-  setValue: (newYear: number) => void;
-}) {
+const NewYearDataList = forwardRef(function NewYearDataList(
+  {
+    value,
+    setValue,
+  }: {
+    value: number;
+    setValue: (newYear: number) => void;
+  },
+  ref
+) {
+  const listTargetRef = useRef<null | HTMLDivElement>(null);
+
+  useImperativeHandle(ref, () => {
+    return {
+      scollIntoView() {
+        listTargetRef.current!.scrollIntoView();
+      },
+    };
+  });
+
   return (
     <div className={styles.DataListContainer}>
       {Array.from({ length: 11 }, (_, index) => {
         const position = index;
         const listValue = value - 5 + position;
+        const isSelected = listValue === value ? true : false;
+
         return (
           <div
             key={Math.random()}
@@ -194,14 +232,14 @@ function NewYearDataList({
             onClick={() => {
               setValue(listValue);
             }}
+            style={isSelected ? { backgroundColor: "rgb(210,210,210)" } : {}}
+            ref={isSelected ? listTargetRef : undefined}
           >
             {listValue}
-            {listValue === value && (
-              <FaCheck className={styles.CheckIcon} size={10} />
-            )}
+            {isSelected && <FaCheck className={styles.CheckIcon} size={10} />}
           </div>
         );
       })}
     </div>
   );
-}
+});
