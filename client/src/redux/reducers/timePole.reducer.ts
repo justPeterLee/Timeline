@@ -25,6 +25,7 @@ function getUserTimePole(state = ["loading"], action: action) {
 function getUserTimeline(state = ["loading"], action: action) {
   switch (action.type) {
     case "SET_USER_TIMELINE":
+      console.log("in redux");
       return [...action.payload];
     default:
       return state;

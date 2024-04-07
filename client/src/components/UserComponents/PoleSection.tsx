@@ -132,6 +132,7 @@ function Section({ poleData }: { poleData: AllStandardPoleData }) {
 
 import { IoMdArrowDropdown } from "react-icons/io";
 import { FaCheck } from "react-icons/fa";
+import { useAppDispatch } from "../../redux/redux-hooks/redux.hook";
 
 function CreateNewYearModal({ onClose }: { onClose: () => void }) {
   const dataListTargetRef = useRef<null | HTMLDivElement>(null);
@@ -140,6 +141,11 @@ function CreateNewYearModal({ onClose }: { onClose: () => void }) {
   const [selectedYear, setSelectedYear] = useState(current.year);
   const [focus, setFocus] = useState(false);
 
+  const dispatch = useAppDispatch();
+
+  const createTimeline = () => {
+    dispatch({ type: "GET_TIMELINE_SERVER" });
+  };
   useEffect(() => {
     if (focus && listTargetRef.current) {
       console.log("scroll to middle");
@@ -191,7 +197,9 @@ function CreateNewYearModal({ onClose }: { onClose: () => void }) {
         <button className={styles.CNYMCancel} onClick={onClose}>
           cancel
         </button>
-        <button className={styles.CNYMCreate}>create</button>
+        <button className={styles.CNYMCreate} onClick={createTimeline}>
+          create
+        </button>
       </div>
     </div>
   );

@@ -7,7 +7,10 @@ function* timelineSaga() {
 
 function* getTimelineUser() {
   try {
+    console.log("in saga");
+    yield put({ type: "SET_USER_TIMELINE", payload: [] });
   } catch (err) {
+    console.log(err);
     throw "error with fetching user timeline";
   }
 }
