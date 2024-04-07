@@ -8,6 +8,7 @@ function* timelineSaga() {
 function* getTimelineUser() {
   try {
     console.log("in saga");
+    yield axios.get("/api/v1/timeline/get");
     yield put({ type: "SET_USER_TIMELINE", payload: [] });
   } catch (err) {
     console.log(err);
