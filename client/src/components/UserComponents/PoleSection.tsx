@@ -10,7 +10,7 @@ import { AllStandardPoleData } from "../../tools/utilities/timepoleUtils/timepol
 import styles from "./PoleSection.module.css";
 import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
-import { InvisibleBackdrop, Modal } from "../elements/Links";
+import { Modal } from "../elements/Links";
 import { current } from "../../tools/data/monthData";
 // import {format}
 export function PoleSectionContainer({
@@ -87,7 +87,7 @@ function PoleSection({
             <MonthSection
               key={_poleMonth}
               poleDataArr={poleDataArr}
-              month={_poleMonth}
+              //   month={_poleMonth}
             />
           );
         })}
@@ -98,10 +98,10 @@ function PoleSection({
 
 function MonthSection({
   poleDataArr,
-  month,
-}: {
+}: //   month,
+{
   poleDataArr: AllStandardPoleData[];
-  month: string;
+  //   month: string;
 }) {
   //   console.log(poleDataArr);
   return (

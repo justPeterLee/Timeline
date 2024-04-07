@@ -21,4 +21,18 @@ function getUserTimePole(state = ["loading"], action: action) {
       return state;
   }
 }
-export default combineReducers({ getTimePole, getUserTimePole });
+
+function getUserTimeline(state = ["loading"], action: action) {
+  switch (action.type) {
+    case "SET_USER_TIMELINE":
+      return [...action.payload];
+    default:
+      return state;
+  }
+}
+
+export default combineReducers({
+  getTimePole,
+  getUserTimePole,
+  getUserTimeline,
+});
