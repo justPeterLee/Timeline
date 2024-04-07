@@ -1,5 +1,4 @@
 import {
-  LegacyRef,
   forwardRef,
   useEffect,
   useImperativeHandle,
@@ -11,7 +10,7 @@ import { AllStandardPoleData } from "../../tools/utilities/timepoleUtils/timepol
 import styles from "./PoleSection.module.css";
 import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
-import { Modal } from "../elements/Links";
+import { InvisibleBackdrop, Modal } from "../elements/Links";
 import { current } from "../../tools/data/monthData";
 // import {format}
 export function PoleSectionContainer({
