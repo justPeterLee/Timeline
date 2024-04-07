@@ -19,6 +19,8 @@ app.use("/api/v1/timepole", poleRouter);
 const userActionRouter = require("./routes/user.router");
 app.use("/api/v1/userAction", userActionRouter);
 
+const timelineRouter = require("../server/routes/timeline.router");
+app.use("/api/v1/timeline", timelineRouter);
 const PORT = process.env.PORT || 5001;
 
 app.listen(PORT, () => {

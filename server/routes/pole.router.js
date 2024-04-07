@@ -25,6 +25,46 @@ router.get("/", rejectUnauthenticated, (req, res) => {
     });
 });
 
+router.get("/get/:year", rejectUnauthenticated, (req, res) => {
+  const query = `
+    SELECT pd.year, pd.month, pd.date, pd.full_date, pd.time_pole_id, pd.id AS "date_id", p.*
+    FROM time_pole p
+    JOIN time_pole_date pd ON pd.time_pole_id = p.id
+    JOIN "user" u ON p.user_id = u.id
+    WHERE u.id = $1 AND pd.year = $2;
+  `;
+
+  pool
+    .query(query, [req.user.id, req.params.year])
+    .then((result) => {
+      res.send(result.rows);
+    })
+    .catch((err) => {
+      console.log("ERROR: ", err);
+      res.sendStatus(500);
+    });
+});
+
+router.get("/get/:year/:month", rejectUnauthenticated, (req, res) => {
+  const query = `
+    SELECT pd.year, pd.month, pd.date, pd.full_date, pd.time_pole_id, pd.id AS "date_id", p.*
+    FROM time_pole p
+    JOIN time_pole_date pd ON pd.time_pole_id = p.id
+    JOIN "user" u ON p.user_id = u.id
+    WHERE u.id = $1 AND pd.year = $2 AND pd.month = $3;
+  `;
+
+  pool
+    .query(query, [req.user.id, req.params.year, req.params.month])
+    .then((result) => {
+      res.send(result.rows);
+    })
+    .catch((err) => {
+      console.log("ERROR: ", err);
+      res.sendStatus(500);
+    });
+});
+
 router.post("/create", rejectUnauthenticated, async (req, res) => {
   const { title, description, date_data } = req.body;
   const { date, month, year, day, full_date } = date_data;

@@ -20,6 +20,7 @@ passport.deserializeUser((id, done) => {
 
       if (user) {
         delete user.password;
+        delete user.email;
         done(null, user);
       } else {
         done(null, null);
