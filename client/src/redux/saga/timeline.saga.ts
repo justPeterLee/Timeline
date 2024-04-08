@@ -7,10 +7,11 @@ function* timelineSaga() {
 }
 
 function* getTimelineUser(): Generator {
+  console.log("in saga");
   try {
-    console.log("in saga");
     const data: any = yield axios.get("/api/v1/timeline/get");
-    yield put({ type: "SET_USER_TIMELINE", payload: data });
+
+    yield put({ type: "SET_USER_TIMELINE", payload: data.data });
   } catch (err) {
     console.log(err);
     throw "error with fetching user timeline";

@@ -144,7 +144,8 @@ function CreateNewYearModal({ onClose }: { onClose: () => void }) {
   const dispatch = useAppDispatch();
 
   const createTimeline = () => {
-    dispatch({ type: "GET_TIMELINE_SERVER" });
+    const dataPayload = { title: "", year: selectedYear };
+    dispatch({ type: "POST_TIMELINE_SERVER", payload: dataPayload });
   };
   useEffect(() => {
     if (focus && listTargetRef.current) {
