@@ -30,7 +30,7 @@ type PostTimePole = {
       day: number;
       full_date: string;
     };
-    yearId: number | null;
+    timelineId: number | null;
   };
   type: string;
 };
@@ -86,7 +86,7 @@ function* getTimePoleMonthSERVER({
 function* createTimePoleSERVER({ payload }: PostTimePole): Generator {
   try {
     console.log(payload);
-    if (payload.yearId !== null) {
+    if (payload.timelineId !== null) {
       yield axios.post("/api/v1/timepole/create", payload);
     } else {
       console.log("create year first");
