@@ -66,17 +66,17 @@ router.get("/get/:year/:month", rejectUnauthenticated, (req, res) => {
 });
 
 router.post("/create", rejectUnauthenticated, async (req, res) => {
-  const { title, description, date_data } = req.body;
+  const { title, description, date_data, yearId } = req.body;
   const { date, month, year, day, full_date } = date_data;
   const client = await pool.connect();
 
   try {
     await client.query("BEGIN");
     const timePoleInsertQuery = `
-  INSERT INTO time_pole (title, description, user_id)
-  VALUES ($1, $2, $3)
+  INSERT INTO time_pole (title, description, user_id, year_id)
+  VALUES ($1, $2, $3, $4)
   RETURNING id`;
-    const timePoleValues = [title, description, req.user.id];
+    const timePoleValues = [title, description, req.user.id, yearId];
     const { rows: timePoleRows } = await client.query(
       timePoleInsertQuery,
       timePoleValues

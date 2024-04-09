@@ -11,6 +11,8 @@ import React from "react";
 import { BsCalendar3, BsTextCenter } from "react-icons/bs";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch } from "../../../redux/redux-hooks/redux.hook";
+import axios from "axios";
+import { current } from "../../../tools/data/monthData";
 
 export function CreateTimelineModal({
   date,
@@ -41,7 +43,7 @@ export function CreateTimelineModal({
     return false;
   };
 
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (validateTimePole()) {
       throw `error`;
@@ -51,19 +53,28 @@ export function CreateTimelineModal({
       throw "invalid date";
     }
 
+    const data: { data: { id: number }[] } = await axios.get(
+      `/api/v1/timeline/get/${year ? year : current.year}`
+    );
+
+    const yearId = data.data.length ? data.data[0].id : null;
+
+    const payload = {
+      title: newTimePole.title,
+      description: newTimePole.description,
+      date_data: {
+        date: date.getDate(),
+        month: date.getMonth(),
+        year: date.getFullYear(),
+        day: date.getDay(),
+        full_date: date.toISOString(),
+      },
+      yearId: yearId,
+    };
+
     dispatch({
       type: "CREATE_TIMEPOLE_SERVER",
-      payload: {
-        title: newTimePole.title,
-        description: newTimePole.description,
-        date_data: {
-          date: date.getDate(),
-          month: date.getMonth(),
-          year: date.getFullYear(),
-          day: date.getDay(),
-          full_date: date.toISOString(),
-        },
-      },
+      payload,
     });
 
     onClose();

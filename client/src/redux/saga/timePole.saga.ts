@@ -30,6 +30,7 @@ type PostTimePole = {
       day: number;
       full_date: string;
     };
+    yearId: number | null;
   };
   type: string;
 };
@@ -61,6 +62,7 @@ function* getTimePoleYearSERVER({
 }): Generator {
   try {
     const data: any = yield axios.get(`/api/v1/timepole/get/${payload.year}`);
+    console.log(data.data);
     yield put({ type: "SET_TIME_POLE", payload: data.data });
   } catch (err) {
     throw "Error fetching data";
@@ -84,8 +86,12 @@ function* getTimePoleMonthSERVER({
 function* createTimePoleSERVER({ payload }: PostTimePole): Generator {
   try {
     console.log(payload);
-    yield axios.post("/api/v1/timepole/create", payload);
-    yield put({ type: "GET_TIMEPOLE_SERVER" });
+    if (payload.yearId !== null) {
+      yield axios.post("/api/v1/timepole/create", payload);
+    } else {
+      console.log("create year first");
+    }
+    // yield put({ type: "GET_TIMEPOLE_SERVER" });
   } catch (err) {
     console.log(err);
   }
