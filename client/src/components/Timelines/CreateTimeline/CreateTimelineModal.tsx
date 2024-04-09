@@ -57,7 +57,7 @@ export function CreateTimelineModal({
       `/api/v1/timeline/get/${year ? year : current.year}`
     );
 
-    const yearId = data.data.length ? data.data[0].id : null;
+    const timelineId = data.data.length ? data.data[0].id : null;
 
     const payload = {
       title: newTimePole.title,
@@ -69,7 +69,7 @@ export function CreateTimelineModal({
         day: date.getDay(),
         full_date: date.toISOString(),
       },
-      yearId: yearId,
+      timelineId: timelineId,
     };
 
     dispatch({

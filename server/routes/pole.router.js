@@ -66,17 +66,33 @@ router.get("/get/:year/:month", rejectUnauthenticated, (req, res) => {
 });
 
 router.post("/create", rejectUnauthenticated, async (req, res) => {
-  const { title, description, date_data, yearId } = req.body;
+  const user = req.user.id;
+  const { title, description, date_data } = req.body;
+  let timelineId = req.body.timelineId;
   const { date, month, year, day, full_date } = date_data;
   const client = await pool.connect();
 
   try {
     await client.query("BEGIN");
+    if (timelineId === null) {
+      console.log("create timeline");
+      const timelineInsertQuery = `
+      INSERT INTO timeline (year, user_id)
+      VALUES ($1, $2)
+      RETURNING id
+      `;
+      const { rows: timelineRows } = await client.query(timelineInsertQuery, [
+        year,
+        user,
+      ]);
+      timelineId = timelineRows[0].id;
+    }
+
     const timePoleInsertQuery = `
   INSERT INTO time_pole (title, description, user_id, year_id)
   VALUES ($1, $2, $3, $4)
   RETURNING id`;
-    const timePoleValues = [title, description, req.user.id, yearId];
+    const timePoleValues = [title, description, req.user.id, timelineId];
     const { rows: timePoleRows } = await client.query(
       timePoleInsertQuery,
       timePoleValues

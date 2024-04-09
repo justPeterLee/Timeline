@@ -65,6 +65,7 @@ router.get("/get/:year", rejectUnauthenticated, async (req, res) => {
     client.release();
   }
 });
+
 router.post("/create", rejectUnauthenticated, async (req, res) => {
   const { title, year } = req.body;
   const user = req.user.id;

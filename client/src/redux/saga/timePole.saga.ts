@@ -86,11 +86,8 @@ function* getTimePoleMonthSERVER({
 function* createTimePoleSERVER({ payload }: PostTimePole): Generator {
   try {
     console.log(payload);
-    if (payload.timelineId !== null) {
-      yield axios.post("/api/v1/timepole/create", payload);
-    } else {
-      console.log("create year first");
-    }
+    yield axios.post("/api/v1/timepole/create", payload);
+
     // yield put({ type: "GET_TIMEPOLE_SERVER" });
   } catch (err) {
     console.log(err);
