@@ -1,4 +1,5 @@
 import { combineReducers } from "redux";
+import { AllStandardPoleData } from "../../tools/utilities/timepoleUtils/timepoleUtils";
 interface action {
   type: string;
   payload: any;
@@ -26,6 +27,7 @@ interface TimelineState {
   status: "loading" | "completed" | "not loaded";
   [key: string]: string;
 }
+
 function getUserTimeline(
   state: TimelineState = { status: "not loaded" },
   action: { payload: { id: string; year: string }[]; type: string }
@@ -46,8 +48,33 @@ function getUserTimeline(
   }
 }
 
+interface CurrentTimePole {
+  status: "not loaded" | "completed";
+  poles: AllStandardPoleData[];
+  sortData: string;
+}
+function currentUserTimePole(
+  state: CurrentTimePole = { status: "not loaded", poles: [], sortData: "{}" },
+  action: action
+) {
+  switch (action.type) {
+    case "SET_CURRENT_USER_TIMEPOLE":
+      // return {
+      //   ...state,
+      //   status: "completed",
+      //   poles: action.payload.poles,
+      //   sortData: action.payload.sortData,
+      // };
+      console.log(action.payload);
+      return state;
+    default:
+      return state;
+  }
+}
 export default combineReducers({
   getTimePole,
   getUserTimePole,
   getUserTimeline,
+
+  currentUserTimePole,
 });
