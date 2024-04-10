@@ -92,7 +92,7 @@ router.post("/create", rejectUnauthenticated, async (req, res) => {
       .query(query, [title, year, user])
       .then((response) => {
         console.log(response.rows);
-        res.sendStatus(201);
+        res.send(response.rows);
       })
       .catch((err) => {
         console.log("error:", err);

@@ -10,7 +10,7 @@ function* getTimelineUser(): Generator {
   console.log("in saga");
   try {
     const data: any = yield axios.get("/api/v1/timeline/get");
-
+    console.log(data.data);
     yield put({ type: "SET_USER_TIMELINE", payload: data.data });
   } catch (err) {
     console.log(err);
@@ -23,10 +23,11 @@ function* postTimelineUser({
 }: {
   payload: { title: string; year: string };
   type: string;
-}) {
+}): Generator {
   try {
-    yield axios.post("/api/v1/timeline/create", payload);
-    yield put({ type: "GET_TIMELINE_SERVER" });
+    const data: any = yield axios.post("/api/v1/timeline/create", payload);
+    console.log(data.data);
+    yield put({ type: "SET_USER_TIMELINE", payload: data.data });
   } catch (err) {
     console.log(err);
     throw "error with create timeline";

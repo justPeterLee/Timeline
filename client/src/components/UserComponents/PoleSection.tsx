@@ -135,6 +135,8 @@ import { FaCheck } from "react-icons/fa";
 import { useAppDispatch } from "../../redux/redux-hooks/redux.hook";
 
 function CreateNewYearModal({ onClose }: { onClose: () => void }) {
+  const navigate = useNavigate();
+
   const dataListTargetRef = useRef<null | HTMLDivElement>(null);
   const listTargetRef = useRef<{ scollIntoView: () => void } | null>(null);
 
@@ -146,6 +148,7 @@ function CreateNewYearModal({ onClose }: { onClose: () => void }) {
   const createTimeline = () => {
     const dataPayload = { title: "", year: selectedYear };
     dispatch({ type: "POST_TIMELINE_SERVER", payload: dataPayload });
+    navigate(`/year/${selectedYear}/view`);
   };
   useEffect(() => {
     if (focus && listTargetRef.current) {

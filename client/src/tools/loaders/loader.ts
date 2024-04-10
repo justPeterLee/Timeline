@@ -51,6 +51,7 @@ export async function yearLoader(year: string | undefined) {
     // const user = store.getState().userAccount;
 
     if (user) {
+      store.dispatch({ type: "GET_TIMELINE_SERVER" });
       store.dispatch({
         type: "GET_TIMEPOLE_YEAR_SERVER",
         payload: { year: normalYear },
