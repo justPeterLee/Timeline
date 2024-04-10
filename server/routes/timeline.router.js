@@ -9,10 +9,16 @@ router.get("/get", rejectUnauthenticated, async (req, res) => {
   const client = await pool.connect();
 
   try {
-    client.query(query, [user]).then((response) => {
-      console.log(response.rows);
-      res.send(response.rows);
-    });
+    client
+      .query(query, [user])
+      .then((response) => {
+        console.log(response.rows);
+        res.send(response.rows);
+      })
+      .catch((err) => {
+        console.log(err);
+        res.sendStatus(500);
+      });
   } catch (err) {
     console.log(err);
     res.sendStatus(500);
@@ -54,10 +60,16 @@ router.get("/get/:year", rejectUnauthenticated, async (req, res) => {
   const client = await pool.connect();
 
   try {
-    client.query(query, [user, year]).then((response) => {
-      console.log(response.rows);
-      res.send(response.rows);
-    });
+    client
+      .query(query, [user, year])
+      .then((response) => {
+        console.log(response.rows);
+        res.send(response.rows);
+      })
+      .catch((err) => {
+        console.log(err);
+        res.sendStatus(500);
+      });
   } catch (err) {
     console.log(err);
     res.sendStatus(500);
@@ -71,15 +83,15 @@ router.post("/create", rejectUnauthenticated, async (req, res) => {
   const user = req.user.id;
   const query = `
     INSERT INTO "timeline" (title, year, user_id)
-    VALUES ($1, $2, $3);
+    VALUES ($1, $2, $3)
+    RETURNING id, year;
   `;
 
-  console.log("test");
-  //   res.sendStatus(500);
   try {
     pool
       .query(query, [title, year, user])
-      .then(() => {
+      .then((response) => {
+        console.log(response.rows);
         res.sendStatus(201);
       })
       .catch((err) => {
