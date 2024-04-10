@@ -27,30 +27,30 @@ router.get("/get", rejectUnauthenticated, async (req, res) => {
   }
 });
 
-router.get("/get/all", rejectUnauthenticated, async (req, res) => {
-  const user = req.user.id;
-  const query = `
-  SELECT 
-  pd.year, pd.month, pd.date, pd.full_date, pd.time_pole_id, pd.id AS "date_id",
-  p.id as "pole_id", p.title as "pole_title", p.description as "pole_description", 
-  y.* 
-  
-  FROM "timeline" y
-  JOIN t
-  `;
-  const client = await pool.connect();
+// router.get("/get/all", rejectUnauthenticated, async (req, res) => {
+//   const user = req.user.id;
+//   const query = `
+//   SELECT
+//   pd.year, pd.month, pd.date, pd.full_date, pd.time_pole_id, pd.id AS "date_id",
+//   p.id as "pole_id", p.title as "pole_title", p.description as "pole_description",
+//   y.*
 
-  try {
-    client;
-  } catch (err) {
-    console.log(err);
-    res.sendStatus(500);
-  } finally {
-    client.release();
-  }
-});
+//   FROM "timeline" y
+//   JOIN t
+//   `;
+//   const client = await pool.connect();
 
-router.get("/get/:year", rejectUnauthenticated, async (req, res) => {
+//   try {
+//     client;
+//   } catch (err) {
+//     console.log(err);
+//     res.sendStatus(500);
+//   } finally {
+//     client.release();
+//   }
+// });
+
+router.get("/get/id/:year", rejectUnauthenticated, async (req, res) => {
   const user = req.user.id;
   const year = req.params.year;
   const query = `
@@ -78,6 +78,82 @@ router.get("/get/:year", rejectUnauthenticated, async (req, res) => {
   }
 });
 
+router.get(
+  "/get/current/:timelineId",
+  rejectUnauthenticated,
+  async (req, res) => {
+    const user = req.user.id;
+    const timelineId = req.params.timelineId;
+
+    const PolesQuery = `
+    SELECT pd.year, pd.month, pd.date, pd.full_date, pd.time_pole_id, pd.id AS "date_id", p.*
+    FROM time_pole p
+    JOIN time_pole_date pd ON pd.time_pole_id = p.id
+    JOIN "user" u ON p.user_id = u.id
+    WHERE u.id = $1 AND p.year_id = $2;
+    `;
+    const SortQuery = `
+    SELECT sort FROM "sort_data"
+    WHERE year_id = $1;
+    `;
+
+    let resData = { poles: [], sortData: "" };
+
+    try {
+      pool
+        .query(PolesQuery, [user, timelineId])
+        .then((response) => {
+          //   console.log(response.rows);
+          resData = { ...resData, poles: response.rows };
+
+          pool
+            .query(SortQuery, [timelineId])
+            .then((response) => {
+              resData = { ...resData, sortData: response.rows };
+              console.log(resData);
+              res.send(resData);
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } catch (err) {
+      console.log(err);
+      res.sendStatus(500);
+    }
+  }
+);
+
+router.get(
+  "/get/sort-data/:timelineId",
+  rejectUnauthenticated,
+  async (req, res) => {
+    // const user = req.user.id;
+    const timelineId = req.params.timelineId;
+    const query = `
+    SELECT sort FROM "sort_data" 
+    WHERE year_id = $1;
+    `;
+
+    try {
+      pool
+        .query(query, [timelineId])
+        .then((response) => {
+          res.send(response.rows);
+        })
+        .catch((err) => {
+          console.log(err);
+          res.sendStatus(500);
+        });
+    } catch (err) {
+      console.log(err);
+      res.sendStatus(500);
+    }
+  }
+);
 router.post("/create", rejectUnauthenticated, async (req, res) => {
   const { title, year } = req.body;
   const user = req.user.id;

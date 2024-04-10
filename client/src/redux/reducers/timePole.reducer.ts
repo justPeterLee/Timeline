@@ -58,15 +58,25 @@ function currentUserTimePole(
   action: action
 ) {
   switch (action.type) {
-    case "SET_CURRENT_USER_TIMEPOLE":
+    case "SET_CURRENT_USER_TIMEPOLE_ALL":
       // return {
       //   ...state,
       //   status: "completed",
       //   poles: action.payload.poles,
       //   sortData: action.payload.sortData,
       // };
+
       console.log(action.payload);
       return state;
+
+    case "SET_CURRENT_USER_TIMELINE_POLE":
+      console.log(action.payload);
+      return state;
+
+    case "SET_CURRENT_USER_TIMELINE_SORTDATA":
+      console.log(action.payload);
+      return state;
+
     default:
       return state;
   }

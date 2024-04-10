@@ -3,6 +3,8 @@ import axios from "axios";
 
 function* timelineSaga() {
   yield takeLatest("GET_TIMELINE_SERVER", getTimelineUser);
+  yield takeLatest("GET_CURRENT_TIMEPOLE_SERVER", getCurrentTimePoleUser);
+
   yield takeLatest("POST_TIMELINE_SERVER", postTimelineUser);
 }
 
@@ -31,6 +33,23 @@ function* postTimelineUser({
   } catch (err) {
     console.log(err);
     throw "error with create timeline";
+  }
+}
+
+function* getCurrentTimePoleUser({
+  payload,
+}: {
+  payload: { timelineId: string };
+  type: string;
+}): Generator {
+  try {
+    const data: any = yield axios.get(
+      `/api/v1/timeline/get/current/${payload.timelineId}`
+    );
+    console.log(data.data);
+  } catch (err) {
+    console.log(err);
+    throw "error fetching current pole data";
   }
 }
 export default timelineSaga;

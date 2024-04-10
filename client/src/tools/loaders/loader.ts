@@ -48,14 +48,25 @@ export async function yearLoader(year: string | undefined) {
   try {
     const user = await redirectURL();
     const normalYear = year ? year : current.year.toString();
-    // const user = store.getState().userAccount;
 
     if (user) {
-      store.dispatch({ type: "GET_TIMELINE_SERVER" });
+      const timelineIdReq = await axios.get(
+        `/api/v1/timeline/get/id/${normalYear}`
+      );
+      const timelineId = timelineIdReq.data.length
+        ? timelineIdReq.data[0].id
+        : -1;
+      console.log(timelineId);
+
       store.dispatch({
-        type: "GET_TIMEPOLE_YEAR_SERVER",
-        payload: { year: normalYear },
+        type: "GET_CURRENT_TIMEPOLE_SERVER",
+        payload: { timelineId },
       });
+      // store.dispatch({ type: "GET_TIMELINE_SERVER" });
+      // store.dispatch({
+      //   type: "GET_TIMEPOLE_YEAR_SERVER",
+      //   payload: { year: normalYear },
+      // });
     }
   } catch (err: any) {
     throw json(
