@@ -149,7 +149,6 @@ function CreateNewYearModal({ onClose }: { onClose: () => void }) {
   };
   useEffect(() => {
     if (focus && listTargetRef.current) {
-      console.log("scroll to middle");
       listTargetRef.current.scollIntoView();
     }
   }, [focus, listTargetRef]);

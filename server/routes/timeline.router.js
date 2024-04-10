@@ -73,17 +73,22 @@ router.post("/create", rejectUnauthenticated, async (req, res) => {
     INSERT INTO "timeline" (title, year, user_id)
     VALUES ($1, $2, $3);
   `;
-  const client = await pool.connect();
 
+  console.log("test");
+  //   res.sendStatus(500);
   try {
-    client.query(query, [title, year, user]).then(() => {
-      res.sendStatus(201);
-    });
+    pool
+      .query(query, [title, year, user])
+      .then(() => {
+        res.sendStatus(201);
+      })
+      .catch((err) => {
+        console.log("error:", err);
+        res.sendStatus(500);
+      });
   } catch (err) {
     console.log(err);
     res.sendStatus(500);
-  } finally {
-    client.release();
   }
 });
 
