@@ -29,7 +29,7 @@ function* postTimelineUser({
   try {
     const data: any = yield axios.post("/api/v1/timeline/create", payload);
     console.log(data.data);
-    yield put({ type: "SET_USER_TIMELINE", payload: data.data });
+    // yield put({ type: "SET_USER_TIMELINE", payload: data.data });
   } catch (err) {
     console.log(err);
     throw "error with create timeline";

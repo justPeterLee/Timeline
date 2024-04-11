@@ -97,7 +97,7 @@ router.post("/create", rejectUnauthenticated, async (req, res) => {
         VALUES ($1)
       `;
 
-      await client.query(sortDataInserQuery, [timePoleId]);
+      await client.query(sortDataInserQuery, [timelineId]);
     }
 
     // time pole insert

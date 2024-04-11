@@ -39,6 +39,7 @@ export default function UserPage() {
       <Navbar />
 
       {poles[0] !== "loading" && <PoleSectionContainer poles={filterByYear} />}
+      <PoleSectionContainer poles={[]} />
     </>
   );
 }

@@ -130,26 +130,41 @@ router.get(
 router.post("/create", rejectUnauthenticated, async (req, res) => {
   const { title, year } = req.body;
   const user = req.user.id;
-  const query = `
-    INSERT INTO "timeline" (title, year, user_id)
-    VALUES ($1, $2, $3)
-    RETURNING id, year;
-  `;
+
+  const client = await pool.connect();
 
   try {
-    pool
-      .query(query, [title, year, user])
-      .then((response) => {
-        console.log(response.rows);
-        res.send(response.rows);
-      })
-      .catch((err) => {
-        console.log("error:", err);
-        res.sendStatus(500);
-      });
+    await client.query("BEGIN");
+
+    // create timeline
+    const timelineInsertQuery = `
+        INSERT INTO "timeline" (title, year, user_id)
+        VALUES ($1, $2, $3)
+        RETURNING id;
+    `;
+
+    const { rows: timelineRows } = await client.query(timelineInsertQuery, [
+      title,
+      year,
+      user,
+    ]);
+    const timelineId = timelineRows[0].id;
+
+    // create sort data
+    const sortDataInsertQuery = `
+        INSERT INTO "sort_data" (year_id)
+        VALUES ($1);
+    `;
+    await client.query(sortDataInsertQuery, [timelineId]);
+
+    await client.query("COMMIT");
+    res.sendStatus(201);
   } catch (err) {
     console.log(err);
+    await client.query("ROLLBACK");
     res.sendStatus(500);
+  } finally {
+    client.release();
   }
 });
 

@@ -54,7 +54,7 @@ export function CreateTimelineModal({
     }
 
     const data: { data: { id: number }[] } = await axios.get(
-      `/api/v1/timeline/get/${year ? year : current.year}`
+      `/api/v1/timeline/get/id/${year ? year : current.year}`
     );
 
     const timelineId = data.data.length ? data.data[0].id : null;
