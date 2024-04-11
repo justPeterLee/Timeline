@@ -79,34 +79,54 @@ router.post("/create", rejectUnauthenticated, async (req, res) => {
     await client.query("BEGIN");
     if (timelineId === null) {
       console.log("create timeline");
+      // timeline
       const timelineInsertQuery = `
-      INSERT INTO timeline (year, user_id)
-      VALUES ($1, $2)
-      RETURNING id
+        INSERT INTO timeline (year, user_id)
+        VALUES ($1, $2)
+        RETURNING id;
       `;
       const { rows: timelineRows } = await client.query(timelineInsertQuery, [
         year,
         user,
       ]);
       timelineId = timelineRows[0].id;
+
+      // sort data
+      const sortDataInserQuery = `
+        INSERT INTO sort_data (year_id)
+        VALUES ($1)
+      `;
+
+      await client.query(sortDataInserQuery, [timePoleId]);
     }
 
+    // time pole insert
     const timePoleInsertQuery = `
-  INSERT INTO time_pole (title, description, user_id, year_id)
-  VALUES ($1, $2, $3, $4)
-  RETURNING id`;
-    const timePoleValues = [title, description, req.user.id, timelineId];
-    const { rows: timePoleRows } = await client.query(
-      timePoleInsertQuery,
-      timePoleValues
-    );
+      INSERT INTO time_pole (title, description, user_id, year_id)
+      VALUES ($1, $2, $3, $4)
+      RETURNING id;`;
+
+    const { rows: timePoleRows } = await client.query(timePoleInsertQuery, [
+      title,
+      description,
+      req.user.id,
+      timelineId,
+    ]);
     const timePoleId = timePoleRows[0].id;
 
+    // time pole date data
     const timePoleDateInsertQuery = `
-  INSERT INTO time_pole_date (date, month, year, day, full_date, time_pole_id)
-  VALUES ($1, $2, $3, $4, $5, $6)`;
-    const timePoleDateValues = [date, month, year, day, full_date, timePoleId];
-    await client.query(timePoleDateInsertQuery, timePoleDateValues);
+      INSERT INTO time_pole_date (date, month, year, day, full_date, time_pole_id)
+      VALUES ($1, $2, $3, $4, $5, $6);`;
+
+    await client.query(timePoleDateInsertQuery, [
+      date,
+      month,
+      year,
+      day,
+      full_date,
+      timePoleId,
+    ]);
 
     await client.query("COMMIT");
     res.sendStatus(201);
