@@ -8,7 +8,7 @@ function* sortDataSaga() {
 }
 
 interface SortDataPayload {
-  payload: { timelineId: string };
+  payload: { timelineId: string; sort?: JSON };
   type: string;
 }
 
