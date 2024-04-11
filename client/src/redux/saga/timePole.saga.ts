@@ -5,8 +5,8 @@ function* timePoleSaga() {
   yield takeLatest("CREATE_TIMEPOLE_SERVER", createTimePoleSERVER);
 
   yield takeLatest("GET_TIMEPOLE_SERVER", getTimePoleSERVER);
-  yield takeLatest("GET_TIMEPOLE_MONTH_SERVER", getTimePoleMonthSERVER);
-  yield takeLatest("GET_TIMEPOLE_YEAR_SERVER", getTimePoleYearSERVER);
+  // yield takeLatest("GET_TIMEPOLE_MONTH_SERVER", getTimePoleMonthSERVER);
+  // yield takeLatest("GET_TIMEPOLE_YEAR_SERVER", getTimePoleYearSERVER);
 
   yield takeLatest("GET_USER_TIMEPOLE", getUserTimepole);
   yield takeLatest("UPDATE_TIME_POLE_SERVER", updateTimePoleSERVER);
@@ -44,44 +44,51 @@ function* getUserTimepole(): Generator {
     console.log(err);
   }
 }
-function* getTimePoleSERVER(): Generator {
+function* getTimePoleSERVER({
+  payload,
+}: {
+  payload: { timelineId: string };
+  type: string;
+}): Generator {
   try {
     // console.log(window.location);
-    const data: any = yield axios.get("/api/v1/timepole");
+    const data: any = yield axios.get(
+      `/api/v1/timepole/get/${payload.timelineId}`
+    );
     yield put({ type: "SET_TIME_POLE", payload: data.data });
   } catch (err) {
     console.log(err);
   }
 }
 
-function* getTimePoleYearSERVER({
-  payload,
-}: {
-  payload: { year: string };
-  type: string;
-}): Generator {
-  try {
-    const data: any = yield axios.get(`/api/v1/timepole/get/${payload.year}`);
-    console.log(data.data);
-    yield put({ type: "SET_TIME_POLE", payload: data.data });
-  } catch (err) {
-    throw "Error fetching data";
-  }
-}
+// function* getTimePoleYearSERVER({
+//   payload,
+// }: {
+//   payload: { year: string };
+//   type: string;
+// }): Generator {
+//   try {
+//     const data: any = yield axios.get(`/api/v1/timepole/get/${payload.year}`);
+//     console.log(data.data);
+//     yield put({ type: "SET_TIME_POLE", payload: data.data });
+//   } catch (err) {
+//     throw "Error fetching data";
+//   }
+// }
 
-function* getTimePoleMonthSERVER({
-  payload,
-}: {
-  payload: { month: string };
-  type: string;
-}): Generator {
-  try {
-    const data: any = yield axios.get(`/api/v1/timepole/get/${payload.month}`);
-    yield put({ type: "SET_TIME_POLE", payload: data.data });
-  } catch (err) {
-    console.log(err);
-  }
-}
+// function* getTimePoleMonthSERVER({
+//   payload,
+// }: {
+//   payload: { month: string };
+//   type: string;
+// }): Generator {
+//   try {
+//     const data: any = yield axios.get(`/api/v1/timepole/get/${payload.month}`);
+//     yield put({ type: "SET_TIME_POLE", payload: data.data });
+//   } catch (err) {
+//     console.log(err);
+//   }
+// }
 
 function* createTimePoleSERVER({ payload }: PostTimePole): Generator {
   try {
@@ -98,7 +105,7 @@ function* updateTimePoleSERVER({ payload }: PostTimePole): Generator {
   try {
     console.log("in saga", payload);
     yield axios.put("/api/v1/timepole/update", payload);
-    yield put({ type: "GET_TIMEPOLE_SERVER" });
+    // yield put({ type: "GET_TIMEPOLE_SERVER" });
   } catch (err) {
     console.log(err);
   }
@@ -114,7 +121,7 @@ function* updateCompletedTimePoleServer({
     yield axios.put(`/api/v1/timepole/update/completed/${payload.id}`, {
       state: payload.state,
     });
-    yield put({ type: "GET_TIMEPOLE_SERVER" });
+    // yield put({ type: "GET_TIMEPOLE_SERVER" });
   } catch (err) {
     console.log(err);
   }
@@ -123,7 +130,7 @@ function* updateCompletedTimePoleServer({
 function* deleteTimePoleSERVER({ payload }: { payload: string; type: string }) {
   try {
     yield axios.delete(`/api/v1/timepole/delete/${payload}`);
-    yield put({ type: "GET_TIMEPOLE_SERVER" });
+    // yield put({ type: "GET_TIMEPOLE_SERVER" });
   } catch (err) {
     console.log(err);
   }
