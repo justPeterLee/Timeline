@@ -127,33 +127,6 @@ router.get(
   }
 );
 
-router.get(
-  "/get/sort-data/:timelineId",
-  rejectUnauthenticated,
-  async (req, res) => {
-    // const user = req.user.id;
-    const timelineId = req.params.timelineId;
-    const query = `
-    SELECT sort FROM "sort_data" 
-    WHERE year_id = $1;
-    `;
-
-    try {
-      pool
-        .query(query, [timelineId])
-        .then((response) => {
-          res.send(response.rows);
-        })
-        .catch((err) => {
-          console.log(err);
-          res.sendStatus(500);
-        });
-    } catch (err) {
-      console.log(err);
-      res.sendStatus(500);
-    }
-  }
-);
 router.post("/create", rejectUnauthenticated, async (req, res) => {
   const { title, year } = req.body;
   const user = req.user.id;
