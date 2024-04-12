@@ -23,26 +23,32 @@ function getUserTimePole(state = ["loading"], action: action) {
   }
 }
 
-interface TimelineState {
-  status: "loading" | "completed" | "not loaded";
-  [key: string]: string;
+interface TimelinePole {
+  year: number;
+  month: number;
+  date: number;
+  full_date: string;
+  pole_id: string;
+  pole_title: string;
+  timeline_id: number;
 }
+type Timeline = TimelinePole[];
 
-function getUserTimeline(
-  state: TimelineState = { status: "not loaded" },
+function userTimeline(
+  state: Timeline = [],
   action: { payload: { id: string; year: string }[]; type: string }
 ) {
   switch (action.type) {
     case "SET_USER_TIMELINE":
-      state = { ...state, status: "loading" };
+      // state = { ...state, status: "loading" };
 
-      for (let i = 0; i < action.payload.length; i++) {
-        state = { ...state, [action.payload[i].year]: action.payload[i].id };
-      }
+      // for (let i = 0; i < action.payload.length; i++) {
+      //   state = { ...state, [action.payload[i].year]: action.payload[i].id };
+      // }
 
-      state = { ...state, status: "completed" };
+      // state = { ...state, status: "completed" };
 
-      return state;
+      return [...action.payload];
     default:
       return state;
   }
@@ -92,7 +98,7 @@ function currentUserTimePole(
 export default combineReducers({
   getTimePole,
   getUserTimePole,
-  getUserTimeline,
+  userTimeline,
 
   currentUserTimePole,
 });

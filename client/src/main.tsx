@@ -61,7 +61,7 @@ const router = createBrowserRouter([
     loader: async () => {
       await userLoader();
       await rescrictedURL("/login");
-      // await poleLoader();
+      await poleLoader();
 
       return null;
     },

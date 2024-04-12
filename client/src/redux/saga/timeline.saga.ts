@@ -3,6 +3,9 @@ import axios from "axios";
 
 function* timelineSaga() {
   yield takeLatest("GET_TIMELINE_SERVER", getTimelineUser);
+
+  yield takeLatest("GET_TIMELINE_ALL_SERVER", getTimelineAllUser);
+
   yield takeLatest("GET_CURRENT_TIMEPOLE_SERVER", getCurrentTimePoleUser);
 
   yield takeLatest("POST_TIMELINE_SERVER", postTimelineUser);
@@ -20,6 +23,16 @@ function* getTimelineUser(): Generator {
   }
 }
 
+function* getTimelineAllUser(): Generator {
+  try {
+    const data: any = yield axios.get("/api/v1/timeline/get/all");
+    console.log(data.data);
+    yield put({ type: "SET_USER_TIMELINE", payload: data.data });
+  } catch (err) {
+    console.log(err);
+    throw "error with fetching user timeline";
+  }
+}
 function* postTimelineUser({
   payload,
 }: {
