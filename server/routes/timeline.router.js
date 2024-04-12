@@ -27,6 +27,44 @@ router.get("/get", rejectUnauthenticated, async (req, res) => {
   }
 });
 
+router.get("/get/all", rejectUnauthenticated, async (req, res) => {
+  const user = req.user.id;
+  const query = `
+    SELECT 
+    
+    pd.year, pd.month, pd.date, pd.full_date, 
+    p.id AS "pole_id", p.title AS "pole_title", 
+    tl.id AS "timeline_id"
+
+    FROM "timeline" tl
+    
+    JOIN "time_pole" p ON p.year_id = tl.id
+    JOIN "time_pole_date" pd ON pd.time_pole_id = p.id
+    JOIN "user" u ON u.id = tl.user_id
+
+    WHERE u.id = $1;  
+  `;
+
+  const client = await pool.connect();
+
+  try {
+    client
+      .query(query, [user])
+      .then((response) => {
+        res.send(response.rows);
+      })
+      .catch((err) => {
+        console.log(err);
+        res.sendStatus(500);
+      });
+  } catch (err) {
+    console.log(err);
+    res.sendStatus(500);
+  } finally {
+    client.release();
+  }
+});
+
 // router.get("/get/all", rejectUnauthenticated, async (req, res) => {
 //   const user = req.user.id;
 //   const query = `

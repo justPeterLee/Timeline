@@ -28,6 +28,33 @@ router.get("/get/:timelineId", rejectUnauthenticated, (req, res) => {
     });
 });
 
+// router.get("/get/all", rejectUnauthenticated, (req, res) => {
+//   const user = req.user.id;
+
+//   const query = `
+//     SELECT
+
+//     pd.year, pd.month, pd.date, pd.full_date,
+//     p.*
+
+//     FROM "time_pole" p
+
+//     JOIN "time_pole_date" pd ON pd.time_pole_id = p.id
+
+//     JOIN "user" u ON u.id = p.user_id
+//     WHERE u.id = $1;
+//   `;
+
+//   pool
+//     .query(query, [user, timelineId])
+//     .then((result) => {
+//       res.send(result.rows);
+//     })
+//     .catch((err) => {
+//       console.log("ERROR: ", err);
+//       res.sendStatus(500);
+//     });
+// });
 // router.get("/get/:year", rejectUnauthenticated, (req, res) => {
 //   const query = `
 //     SELECT pd.year, pd.month, pd.date, pd.full_date, pd.time_pole_id, pd.id AS "date_id", p.*
