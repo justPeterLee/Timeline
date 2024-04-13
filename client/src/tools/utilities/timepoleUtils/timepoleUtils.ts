@@ -22,6 +22,16 @@ export interface StandardPoleData {
   full_date: string;
 }
 
+export interface TimelinePole {
+  year: number;
+  month: number;
+  date: number;
+  full_date: string;
+  pole_id: string;
+  pole_title: string;
+  timeline_id: number;
+}
+
 export type PoleDatas = Record<
   string,
   {

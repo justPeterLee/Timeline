@@ -1,5 +1,8 @@
 import { combineReducers } from "redux";
-import { AllStandardPoleData } from "../../tools/utilities/timepoleUtils/timepoleUtils";
+import {
+  AllStandardPoleData,
+  TimelinePole,
+} from "../../tools/utilities/timepoleUtils/timepoleUtils";
 interface action {
   type: string;
   payload: any;
@@ -23,15 +26,6 @@ function getUserTimePole(state = ["loading"], action: action) {
   }
 }
 
-interface TimelinePole {
-  year: number;
-  month: number;
-  date: number;
-  full_date: string;
-  pole_id: string;
-  pole_title: string;
-  timeline_id: number;
-}
 type Timeline = { status: "not loaded"; poles: TimelinePole[] };
 
 function userTimeline(

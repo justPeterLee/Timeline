@@ -1,3 +1,7 @@
+import { IoMdArrowDropdown } from "react-icons/io";
+import { FaCheck } from "react-icons/fa";
+import { useAppDispatch } from "../../redux/redux-hooks/redux.hook";
+import { TimelinePole } from "../../tools/utilities/timepoleUtils/timepoleUtils";
 import {
   forwardRef,
   useEffect,
@@ -6,22 +10,12 @@ import {
   useRef,
   useState,
 } from "react";
-import { AllStandardPoleData } from "../../tools/utilities/timepoleUtils/timepoleUtils";
 import styles from "./PoleSection.module.css";
 import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
 import { Modal } from "../elements/Links";
 import { current } from "../../tools/data/monthData";
 // import {format}
-interface TimelinePole {
-  year: number;
-  month: number;
-  date: number;
-  full_date: string;
-  pole_id: string;
-  pole_title: string;
-  timeline_id: number;
-}
 
 export function PoleSectionContainer({
   poles,
@@ -146,10 +140,6 @@ function Section({ poleData }: { poleData: TimelinePole }) {
     </div>
   );
 }
-
-import { IoMdArrowDropdown } from "react-icons/io";
-import { FaCheck } from "react-icons/fa";
-import { useAppDispatch } from "../../redux/redux-hooks/redux.hook";
 
 function CreateNewYearModal({ onClose }: { onClose: () => void }) {
   const navigate = useNavigate();
