@@ -156,7 +156,7 @@ router.post("/create", rejectUnauthenticated, async (req, res) => {
     ]);
 
     await client.query("COMMIT");
-    res.sendStatus(201);
+    res.send(timelineId.toString());
   } catch (err) {
     console.log(err);
     await client.query("ROLLBACK");

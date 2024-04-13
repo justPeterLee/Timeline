@@ -93,9 +93,12 @@ function* getTimePoleSERVER({
 function* createTimePoleSERVER({ payload }: PostTimePole): Generator {
   try {
     console.log(payload);
-    yield axios.post("/api/v1/timepole/create", payload);
-
-    // yield put({ type: "GET_TIMEPOLE_SERVER" });
+    const data: any = yield axios.post("/api/v1/timepole/create", payload);
+    console.log(data.data);
+    yield put({
+      type: "GET_CURRENT_TIMEPOLE_SERVER",
+      payload: { timelineId: data.data },
+    });
   } catch (err) {
     console.log(err);
   }
