@@ -12,6 +12,7 @@ export interface AllStandardPoleData {
   title: string;
   user_id: number;
   year: number;
+  year_id: number;
 }
 export interface StandardPoleData {
   id: string;

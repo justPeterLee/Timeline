@@ -1,5 +1,6 @@
 import { put, takeLatest } from "redux-saga/effects";
 import axios from "axios";
+import { AllStandardPoleData } from "../../tools/utilities/timepoleUtils/timepoleUtils";
 
 function* timePoleSaga() {
   yield takeLatest("CREATE_TIMEPOLE_SERVER", createTimePoleSERVER);
@@ -92,9 +93,7 @@ function* getTimePoleSERVER({
 
 function* createTimePoleSERVER({ payload }: PostTimePole): Generator {
   try {
-    console.log(payload);
     const data: any = yield axios.post("/api/v1/timepole/create", payload);
-    console.log(data.data);
     yield put({
       type: "GET_CURRENT_TIMEPOLE_SERVER",
       payload: { timelineId: data.data },
@@ -108,7 +107,10 @@ function* updateTimePoleSERVER({ payload }: PostTimePole): Generator {
   try {
     console.log("in saga", payload);
     yield axios.put("/api/v1/timepole/update", payload);
-    // yield put({ type: "GET_TIMEPOLE_SERVER" });
+    yield put({
+      type: "GET_CURRENT_TIMEPOLE_SERVER",
+      payload: { timelineId: payload.timelineId },
+    });
   } catch (err) {
     console.log(err);
   }
@@ -117,23 +119,35 @@ function* updateTimePoleSERVER({ payload }: PostTimePole): Generator {
 function* updateCompletedTimePoleServer({
   payload,
 }: {
-  payload: { id: string; state: boolean };
+  payload: { pole: AllStandardPoleData; state: boolean };
   type: string;
 }) {
   try {
-    yield axios.put(`/api/v1/timepole/update/completed/${payload.id}`, {
+    yield axios.put(`/api/v1/timepole/update/completed/${payload.pole.id}`, {
       state: payload.state,
     });
-    // yield put({ type: "GET_TIMEPOLE_SERVER" });
+    yield put({
+      type: "GET_CURRENT_TIMEPOLE_SERVER",
+      payload: { timelineId: payload.pole.year_id },
+    });
   } catch (err) {
     console.log(err);
   }
 }
 
-function* deleteTimePoleSERVER({ payload }: { payload: string; type: string }) {
+function* deleteTimePoleSERVER({
+  payload,
+}: {
+  payload: AllStandardPoleData;
+  type: string;
+}) {
   try {
-    yield axios.delete(`/api/v1/timepole/delete/${payload}`);
-    // yield put({ type: "GET_TIMEPOLE_SERVER" });
+    console.log(payload);
+    yield axios.delete(`/api/v1/timepole/delete/${payload.id}`);
+    yield put({
+      type: "GET_CURRENT_TIMEPOLE_SERVER",
+      payload: { timelineId: payload.year_id },
+    });
   } catch (err) {
     console.log(err);
   }

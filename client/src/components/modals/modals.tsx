@@ -106,7 +106,7 @@ export function TimePoleModal({
     if (user) {
       dispatch({
         type: "UPDATE_COMPLETED_TIME_POLE_SERVER",
-        payload: { id: timePoleData.id, state: !timePoleData.completed },
+        payload: { pole: timePoleData, state: !timePoleData.completed },
       });
     } else {
       console.log("not logged in");
@@ -118,7 +118,7 @@ export function TimePoleModal({
     if (user) {
       dispatch({
         type: "DELETE_TIME_POLE_SERVER",
-        payload: timePoleData.id,
+        payload: timePoleData,
       });
     } else {
       console.log("not logged in");
