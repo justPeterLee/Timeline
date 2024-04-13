@@ -3,8 +3,8 @@ import { useEffect, useRef, useState, useMemo } from "react";
 import { getPoleDataList } from "../../tools/data";
 import {
   sort,
-  compareSortPoles,
-  sortDataUpdater,
+  // compareSortPoles,
+  // sortDataUpdater,
   extractPoleData,
 } from "../../tools/utilities/timepoleUtils/timepole";
 
@@ -75,26 +75,25 @@ export function TimePoleDisplay({
     setSortData(JSON.parse(jsonSortData));
   };
 
-  const deleteSortData = (_pole: { id: string }) => {
-    console.log(_pole);
-    const proxyLocalData = sortData;
+  // const deleteSortData = (_pole: { id: string }) => {
+  //   console.log(_pole);
+  //   const proxyLocalData = sortData;
 
-    if (proxyLocalData[_pole.id]) {
-      delete proxyLocalData[_pole.id];
-    }
+  //   if (proxyLocalData[_pole.id]) {
+  //     delete proxyLocalData[_pole.id];
+  //   }
 
-    const jsonSortData = JSON.stringify(proxyLocalData);
-    updateWindowSort(jsonSortData);
-  };
+  //   const jsonSortData = JSON.stringify(proxyLocalData);
+  //   updateWindowSort(jsonSortData);
+  // };
 
   useEffect(() => {
     //check if sort data already exist
     // console.log(poleDatas);
     const localStorageData = window.localStorage.getItem("sortDataEffect");
     if (localStorageData && localStorageData !== undefined) {
-      const jsonLocalStorageData: PoleCordsData = JSON.parse(localStorageData);
-      const addPoles = compareSortPoles(poles, jsonLocalStorageData);
-
+      // const jsonLocalStorageData: PoleCordsData = JSON.parse(localStorageData);
+      // const addPoles = compareSortPoles(poles, jsonLocalStorageData);
       // console.log(addPoles);
       // if (addPoles.addArray.length || addPoles.deleteArray.length) {
       //   const updatedSortData = sortDataUpdater(
@@ -148,11 +147,7 @@ export function TimePoleDisplay({
       </div>
       {selectedPole && (
         <Modal onClose={onClose} styles={{ minWidth: "20rem" }}>
-          <TimePoleModal
-            onClose={onClose}
-            timePoleData={selectedPole}
-            deleteSortData={deleteSortData}
-          />
+          <TimePoleModal onClose={onClose} timePoleData={selectedPole} />
         </Modal>
       )}
       {selectedGroupPole && (

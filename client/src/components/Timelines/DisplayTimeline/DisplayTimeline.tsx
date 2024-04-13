@@ -67,11 +67,7 @@ export function DisplayTimeline({
 
       {selectedPole && (
         <Modal onClose={onClose} styles={{ minWidth: "20rem" }}>
-          <TimePoleModal
-            onClose={onClose}
-            timePoleData={selectedPole}
-            deleteSortData={() => {}}
-          />
+          <TimePoleModal onClose={onClose} timePoleData={selectedPole} />
         </Modal>
       )}
 

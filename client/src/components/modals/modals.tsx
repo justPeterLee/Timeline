@@ -14,11 +14,9 @@ import {
 export function TimePoleModal({
   timePoleData,
   onClose,
-  deleteSortData,
 }: {
   timePoleData: StandardPoleData;
   onClose: () => void;
-  deleteSortData: (_pole: { id: string }) => void;
 }) {
   // ------------ redux -----------------------
   const dispatch = useAppDispatch();
