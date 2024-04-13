@@ -59,10 +59,14 @@ function currentUserTimePole(
     poles: [],
     sortData: JSON.stringify({}),
   },
-  action: action
+  action: {
+    payload: { poles: AllStandardPoleData[]; sortData: { sort: string }[] };
+    type: string;
+  }
 ) {
   switch (action.type) {
     case "SET_CURRENT_USER_TIMEPOLE_ALL":
+      console.log(action.payload);
       return {
         ...state,
         status: "completed",

@@ -10,29 +10,43 @@ import { StandardPoleData } from "../../tools/utilities/timepoleUtils/timepoleUt
 
 export default function TimelinePage() {
   const { month, mode } = useParams();
-  const poles = useAppSelector((store) => store.timepole.getTimePole);
+  const currentPoles = useAppSelector(
+    (store) => store.timepole.currentUserTimePole
+  );
 
-  const filterPoles = useMemo(() => {
+  const showCurrentPoles = useMemo(() => {
     if (!month) {
-      return poles;
+      return currentPoles.poles;
     }
 
-    return poles.filter((_pole: StandardPoleData) => {
-      const poleDate = new Date(_pole.full_date);
-      return poleDate.getMonth() + 1 == parseInt(month!);
-    });
-  }, [poles, month]);
+    const filteredPoles: StandardPoleData[] = [];
+
+    if (currentPoles.status !== "not loaded") {
+      for (let i = 0; i < currentPoles.poles.length; i++) {
+        const poleMonth = currentPoles.poles[i].month;
+
+        if (poleMonth + 1 === parseInt(month)) {
+          filteredPoles.push(currentPoles.poles[i]);
+        }
+      }
+    }
+
+    return filteredPoles;
+  }, [currentPoles, month]);
 
   return (
     <>
       <TimeSpringContext>
         <ViewLinks page={month ? "month" : "year"} />
         {mode === "create" ? (
-          <CreateTimeline poles={filterPoles} />
+          <CreateTimeline poles={showCurrentPoles} />
         ) : (
           <>
-            {poles[0] !== "loading" && (
-              <DisplayTimeline poles={poles} showPoles={filterPoles} />
+            {currentPoles.status === "completed" && (
+              <DisplayTimeline
+                poles={currentPoles.poles}
+                showPoles={showCurrentPoles}
+              />
             )}
             <ViewTimeline />
           </>
