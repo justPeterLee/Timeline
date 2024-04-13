@@ -21,9 +21,11 @@ import { extractPoleData } from "../../../tools/utilities/timepoleUtils/timepole
 export function DisplayTimeline({
   poles,
   showPoles,
+  sortData,
 }: {
   poles: StandardPoleData[];
   showPoles: StandardPoleData[];
+  sortData: string;
 }) {
   const springContext = useContext(TimelineSpringContext);
   const [selectedPole, setSelectedPole] = useState<null | StandardPoleData>(
@@ -56,6 +58,7 @@ export function DisplayTimeline({
           timelineSpring={springContext!.setTimelineSpring}
         /> */}
         <TimePolesTimeline
+          sortData={sortData}
           poles={poles}
           showPoles={showPoles}
           func={{

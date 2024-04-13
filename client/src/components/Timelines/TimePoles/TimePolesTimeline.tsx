@@ -14,11 +14,13 @@ import {
 import { animated, to } from "react-spring";
 
 export function TimePolesTimeline({
+  sortData,
   poles,
   showPoles,
   func,
 }: //   showPoles,
 {
+  sortData: string;
   poles: StandardPoleData[];
   showPoles: StandardPoleData[];
   func: {
@@ -62,12 +64,13 @@ export function TimePolesTimeline({
     window.localStorage.setItem("localSortData", jsonSortData);
 
     setLocalState(jsonSortData);
-    console.log(jsonSortData);
     // updateWindowSort(jsonSortData);
     // setSortData(JSON.parse(jsonSortData));
     // setLocalState()
   };
+
   useEffect(() => {
+    // generate local storage if sort data not initiated
     if (!localSortData) {
       const newSortData = sort(poleData);
       const jsonSortData = JSON.stringify(newSortData);
@@ -77,6 +80,7 @@ export function TimePolesTimeline({
       setLocalState(localSortDatas);
     }
 
+    // update sort data
     if (localSortData) {
       const jsonLocalSortData = JSON.parse(localSortData);
 
@@ -95,6 +99,8 @@ export function TimePolesTimeline({
         setLocalState(utdLocalSortData);
       }
     }
+
+    console.log(Object.keys(sortData));
   }, [poleData]);
   return (
     <>

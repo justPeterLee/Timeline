@@ -44,6 +44,7 @@ export default function TimelinePage() {
           <>
             {currentPoles.status === "completed" && (
               <DisplayTimeline
+                sortData={currentPoles.sortData}
                 poles={currentPoles.poles}
                 showPoles={showCurrentPoles}
               />

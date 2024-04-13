@@ -239,7 +239,7 @@ export function insertSorData(
   console.log(addPoles);
   // console.time("start");
   // console.log(JSON.parse(window.localStorage.getItem("sortDataEffect")));
-  const overlappingData = generateOverLappingData(allPoles, localSortData);
+  let overlappingData = generateOverLappingData(allPoles, localSortData);
   // console.log(overlappingData);
   const newSortData = localSortData;
   // console.log(newSortData);
@@ -248,6 +248,7 @@ export function insertSorData(
 
   for (let i = 0; i < addPoles.length; i++) {
     // console.log("test");
+    overlappingData = generateOverLappingData(allPoles, newSortData);
     const _newPoleTarget = document.querySelector(
       `#pole-${addPoles[i].sortId}`
     ) as HTMLElement;
