@@ -5,41 +5,59 @@ import { useAppSelector } from "../../redux/redux-hooks/redux.hook";
 import { AllStandardPoleData } from "../../tools/utilities/timepoleUtils/timepoleUtils";
 import { PoleSectionContainer } from "../../components/UserComponents/PoleSection";
 import { monthByIndex } from "../../tools/data/monthData";
+
+interface TimelinePole {
+  year: number;
+  month: number;
+  date: number;
+  full_date: string;
+  pole_id: string;
+  pole_title: string;
+  timeline_id: number;
+}
 export default function UserPage() {
-  const poles = useAppSelector((store) => store.timepole.getUserTimePole);
+  const timelinePole = useAppSelector((store) => store.timepole.userTimeline);
 
-  const filterByYear = useMemo(() => {
+  const filterTimeline = useMemo(() => {
     const filterObj: {
-      [key: string]: { [key: string]: AllStandardPoleData[] };
+      [timeline_Id: string]: {
+        year: number;
+        poles: { [month: string]: TimelinePole[] };
+      };
     } = {};
-    if (poles[0] !== "loading") {
-      poles.map((_pole: AllStandardPoleData) => {
-        // console.log(monthByIndex, _pole);
+
+    if (timelinePole.status !== "not loaded") {
+      for (let i = 0; i < timelinePole.poles.length; i++) {
+        const _pole = timelinePole.poles[i];
+        const timeline_id = _pole.timeline_id;
         const year = _pole.year;
-        const month = monthByIndex[_pole.month + 1].month;
+        const month = _pole.month;
 
-        if (!filterObj[year]) {
-          filterObj[year] = {};
+        if (!filterObj[timeline_id]) {
+          filterObj[timeline_id] = {
+            year: year,
+            poles: {},
+          };
         }
 
-        if (!filterObj[year][month]) {
-          filterObj[year][month] = [];
+        if (!filterObj[timeline_id].poles[month]) {
+          filterObj[timeline_id].poles[month] = [];
         }
 
-        filterObj[year][month].push(_pole);
-      });
+        filterObj[timeline_id].poles[month].push(_pole);
+      }
     }
-    // console.log(filterObj);
 
     return filterObj;
-  }, [poles]);
+  }, [timelinePole]);
 
   return (
     <>
       <Navbar />
 
-      {poles[0] !== "loading" && <PoleSectionContainer poles={filterByYear} />}
-      <PoleSectionContainer poles={[]} />
+      {timelinePole.status !== "not loaded" && (
+        <PoleSectionContainer poles={filterTimeline} />
+      )}
     </>
   );
 }

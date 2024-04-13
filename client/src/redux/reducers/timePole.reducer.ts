@@ -32,11 +32,11 @@ interface TimelinePole {
   pole_title: string;
   timeline_id: number;
 }
-type Timeline = TimelinePole[];
+type Timeline = { status: "not loaded"; poles: TimelinePole[] };
 
 function userTimeline(
-  state: Timeline = [],
-  action: { payload: { id: string; year: string }[]; type: string }
+  state: Timeline = { status: "not loaded", poles: [] },
+  action: { payload: TimelinePole[]; type: string }
 ) {
   switch (action.type) {
     case "SET_USER_TIMELINE":
@@ -48,7 +48,7 @@ function userTimeline(
 
       // state = { ...state, status: "completed" };
 
-      return [...action.payload];
+      return { ...state, status: "completed", poles: [...action.payload] };
     default:
       return state;
   }

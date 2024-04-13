@@ -26,7 +26,6 @@ function* getTimelineUser(): Generator {
 function* getTimelineAllUser(): Generator {
   try {
     const data: any = yield axios.get("/api/v1/timeline/get/all");
-    console.log(data.data);
     yield put({ type: "SET_USER_TIMELINE", payload: data.data });
   } catch (err) {
     console.log(err);

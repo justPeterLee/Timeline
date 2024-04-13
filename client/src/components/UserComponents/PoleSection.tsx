@@ -13,11 +13,24 @@ import { useNavigate } from "react-router-dom";
 import { Modal } from "../elements/Links";
 import { current } from "../../tools/data/monthData";
 // import {format}
+interface TimelinePole {
+  year: number;
+  month: number;
+  date: number;
+  full_date: string;
+  pole_id: string;
+  pole_title: string;
+  timeline_id: number;
+}
+
 export function PoleSectionContainer({
   poles,
 }: {
   poles: {
-    [key: string]: { [key: string]: AllStandardPoleData[] };
+    [timeline_Id: string]: {
+      year: number;
+      poles: { [month: string]: TimelinePole[] };
+    };
   };
 }) {
   const [createModal, setCreateModal] = useState(false);
@@ -29,10 +42,14 @@ export function PoleSectionContainer({
     <>
       <div className={styles.PoleSectionContainer}>
         {/* <p>{}</p> */}
-        {polesKeys.map((_pole) => {
-          const poleData = poles[_pole];
+        {polesKeys.map((_timelineId) => {
+          const poleData = poles[_timelineId];
           return (
-            <PoleSection key={_pole} poleDataObj={poleData} year={_pole} />
+            <PoleSection
+              key={_timelineId}
+              poleDataObj={poleData.poles}
+              year={poleData.year}
+            />
           );
         })}
         <div
@@ -64,8 +81,8 @@ function PoleSection({
   poleDataObj,
   year,
 }: {
-  poleDataObj: { [key: string]: AllStandardPoleData[] };
-  year: string;
+  poleDataObj: { [key: string]: TimelinePole[] };
+  year: string | number;
 }) {
   const navigate = useNavigate();
   const monthArr = Object.keys(poleDataObj);
@@ -100,7 +117,7 @@ function MonthSection({
   poleDataArr,
 }: //   month,
 {
-  poleDataArr: AllStandardPoleData[];
+  poleDataArr: TimelinePole[];
   //   month: string;
 }) {
   //   console.log(poleDataArr);
@@ -111,21 +128,21 @@ function MonthSection({
       </div> */}
       <div className={styles.MonthSectionContainer}>
         {poleDataArr.map((_pole) => (
-          <Section key={_pole.id} poleData={_pole} />
+          <Section key={_pole.pole_id} poleData={_pole} />
         ))}
       </div>
     </div>
   );
 }
 
-function Section({ poleData }: { poleData: AllStandardPoleData }) {
+function Section({ poleData }: { poleData: TimelinePole }) {
   return (
     <div className={styles.Section}>
       {/* {" "} */}
       <p style={{ fontSize: "12px" }}>
         {format(new Date(poleData.full_date), "MMM io")}
       </p>
-      <p>{poleData.title}</p>
+      <p>{poleData.pole_title}</p>
     </div>
   );
 }
