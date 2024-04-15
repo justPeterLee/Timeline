@@ -130,9 +130,7 @@ function* updateSortDataSERVER({
   type: string;
 }): Generator {
   try {
-    console.log(payload);
     const data: any = yield axios.put(`/api/v1/sort/put`, payload);
-    console.log(data.data);
     // yield put({
     //   type: "SET_CURRENT_USER_TIMELINE_SORTDATA",
     //   payload: data.data,
