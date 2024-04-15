@@ -63,14 +63,29 @@ export function TimePolesTimeline({
 
   const [localState, setLocalState] = useState(localSortData);
 
+  const debounceFunctionCall = useMemo(() => {
+    return debounceFunction((args: any) => {
+      console.log(args);
+    }, 2000);
+  }, []);
+
   const onMovedPole = (_pole: { id: string; yPos: number }) => {
+    // create copy of local sort data
     const localSortProxy = localState ? JSON.parse(localState) : {};
 
+    // update moved pole position
     localSortProxy[_pole.id] = { yPos: _pole.yPos };
-
     const jsonSortData = JSON.stringify(localSortProxy);
+
+    // update local sort data
     window.localStorage.setItem("localSortData", jsonSortData);
 
+    if (user.id) {
+      // console.log()
+      debounceFunctionCall("test");
+    }
+
+    // rerender page
     setLocalState(jsonSortData);
   };
 
@@ -167,6 +182,7 @@ export function TimePolesTimeline({
 import { useDrag } from "@use-gesture/react";
 import { useSpring } from "react-spring";
 import { TimelineSpringContext } from "../Context/TimelineContext";
+import { debounceFunction } from "../../../tools/utilities/utilities";
 
 function TimePole({
   id,
