@@ -89,6 +89,7 @@ export function TimePoleModal({
       title: newTimePoleData.title,
       description: newTimePoleData.description,
       date_data,
+      timelineId: timePoleData.year_id,
     };
 
     if (user) {
@@ -179,6 +180,13 @@ export function TimePoleModal({
             <textarea
               className={styles.modalTextarea}
               placeholder="add description"
+              value={newTimePoleData.description}
+              onChange={(e) => {
+                setNewTimePoleData({
+                  ...newTimePoleData,
+                  description: e.currentTarget.value,
+                });
+              }}
             />
           </div>
 

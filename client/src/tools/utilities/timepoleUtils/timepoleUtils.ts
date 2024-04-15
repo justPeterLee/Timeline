@@ -1,6 +1,6 @@
 import { randomFifthyFifthy as random } from "../utilities";
 
-export interface AllStandardPoleData {
+export interface StandardPoleData {
   id: string;
   year_id: string;
 
@@ -11,14 +11,6 @@ export interface AllStandardPoleData {
   date: number;
   month: number;
   year: number;
-  full_date: string;
-}
-export interface StandardPoleData {
-  id: string;
-  title: string;
-  description: string;
-  completed: boolean;
-  user_id: number;
   full_date: string;
 }
 

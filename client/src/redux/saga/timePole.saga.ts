@@ -77,6 +77,8 @@ function* updateTimePoleSERVER({ payload }: PostTimePole): Generator {
   try {
     console.log("in saga", payload);
     yield axios.put("/api/v1/timepole/update", payload);
+
+    console.log(payload.timelineId);
     yield put({
       type: "GET_CURRENT_TIMEPOLE_SERVER",
       payload: { timelineId: payload.timelineId },

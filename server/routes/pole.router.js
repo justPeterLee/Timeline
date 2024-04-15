@@ -175,6 +175,7 @@ router.put("/update", rejectUnauthenticated, async (req, res) => {
   const user = req.user.id;
   const { id, title, description, date_data } = req.body;
   const { date, month, year, day, full_date } = date_data;
+
   const timePoleQuery = `
   UPDATE time_pole
   SET title = $1,
