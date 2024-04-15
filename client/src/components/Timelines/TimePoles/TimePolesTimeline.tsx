@@ -65,10 +65,17 @@ export function TimePolesTimeline({
 
   const debounceFunctionCall = useMemo(() => {
     return debounceFunction((sortData: string[]) => {
-      dispatch({
-        type: "UPDATE_SORTDATA_SERVER",
-        payload: { timelineId: timelineId, sortData: sortData[0] },
-      });
+      if (user.id) {
+        dispatch({
+          type: "UPDATE_SORTDATA_SERVER",
+          payload: { timelineId: timelineId, sortData: sortData[0] },
+        });
+      } else {
+        dispatch({
+          type: "UPDATE_SORT_DATA_GUEST",
+          payload: { timelineId: timelineId, sortData: sortData[0] },
+        });
+      }
     }, 1000);
   }, []);
 
@@ -83,85 +90,78 @@ export function TimePolesTimeline({
     // update local sort data
     window.localStorage.setItem("localSortData", jsonSortData);
 
-    if (user.id) {
-      // console.log()
-      debounceFunctionCall(jsonSortData);
-    }
+    debounceFunctionCall(jsonSortData);
 
     // rerender page
     setLocalState(jsonSortData);
   };
 
   useEffect(() => {
-    console.log(typeof sortData);
-    if (user) {
-      // copy of sort data (cannot mutate sort data)
-      const sortDataCopy = { ...sortData };
+    // if (user) {
+    // copy of sort data (cannot mutate sort data)
+    const sortDataCopy = { ...sortData };
 
-      // check if sort data is up to date (auto generate s-data for poles without s-data)
-      const editSortData = compareSortPoles(poles, sortDataCopy);
+    // check if sort data is up to date (auto generate s-data for poles without s-data)
+    const editSortData = compareSortPoles(poles, sortDataCopy);
 
-      if (editSortData.addArray.length || editSortData.deleteArray.length) {
-        const updatedSortData = sortDataUpdater(
-          editSortData,
-          sortDataCopy,
-          poles,
-          "year"
-        );
-
-        // req to update sort data
-        if (user.id) {
-          dispatch({
-            type: "UPDATE_SORTDATA_SERVER",
-            payload: { timelineId: timelineId, sortData: updatedSortData },
-          });
-        } else {
-          dispatch({
-            type: "UPDATE_SORT_DATA_GUEST",
-            payload: { timelineId: timelineId, sortData: updatedSortData },
-          });
-        }
-      }
-
-      window.localStorage.setItem(
-        "localSortData",
-        JSON.stringify(sortDataCopy)
+    if (editSortData.addArray.length || editSortData.deleteArray.length) {
+      const updatedSortData = sortDataUpdater(
+        editSortData,
+        sortDataCopy,
+        poles,
+        "year"
       );
 
-      setLocalState(JSON.stringify(sortDataCopy));
-    } else {
-      if (!localSortData) {
-        // generate local storage if sort data not initiated
-
-        const newSortData = sort(poleData);
-        const jsonSortData = JSON.stringify(newSortData);
-
-        window.localStorage.setItem("localSortData", jsonSortData);
-        const localSortDatas = window.localStorage.getItem("localSortData");
-
-        setLocalState(localSortDatas);
-      }
-
-      // update sort data
-      if (localSortData) {
-        const jsonLocalSortData = JSON.parse(localSortData);
-
-        const editSortData = compareSortPoles(poles, jsonLocalSortData);
-        if (editSortData.addArray.length || editSortData.deleteArray.length) {
-          const updatedSortData = sortDataUpdater(
-            editSortData,
-            jsonLocalSortData,
-            poles,
-            "year"
-          );
-
-          window.localStorage.setItem("localSortData", updatedSortData);
-
-          const utdLocalSortData = window.localStorage.getItem("localSortData");
-          setLocalState(utdLocalSortData);
-        }
+      // req to update sort data
+      if (user.id) {
+        dispatch({
+          type: "UPDATE_SORTDATA_SERVER",
+          payload: { timelineId: timelineId, sortData: updatedSortData },
+        });
+      } else {
+        dispatch({
+          type: "UPDATE_SORT_DATA_GUEST",
+          payload: { timelineId: timelineId, sortData: updatedSortData },
+        });
       }
     }
+
+    window.localStorage.setItem("localSortData", JSON.stringify(sortDataCopy));
+
+    setLocalState(JSON.stringify(sortDataCopy));
+    // } else {
+    //   if (!localSortData) {
+    //     // generate local storage if sort data not initiated
+
+    //     const newSortData = sort(poleData);
+    //     const jsonSortData = JSON.stringify(newSortData);
+
+    //     window.localStorage.setItem("localSortData", jsonSortData);
+    //     const localSortDatas = window.localStorage.getItem("localSortData");
+
+    //     setLocalState(localSortDatas);
+    //   }
+
+    //   // update sort data
+    //   if (localSortData) {
+    //     const jsonLocalSortData = JSON.parse(localSortData);
+
+    //     const editSortData = compareSortPoles(poles, jsonLocalSortData);
+    //     if (editSortData.addArray.length || editSortData.deleteArray.length) {
+    //       const updatedSortData = sortDataUpdater(
+    //         editSortData,
+    //         jsonLocalSortData,
+    //         poles,
+    //         "year"
+    //       );
+
+    //       window.localStorage.setItem("localSortData", updatedSortData);
+
+    //       const utdLocalSortData = window.localStorage.getItem("localSortData");
+    //       setLocalState(utdLocalSortData);
+    //     }
+    //   }
+    // }
   }, [poleData]);
   return (
     <>

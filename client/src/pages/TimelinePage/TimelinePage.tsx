@@ -1,4 +1,4 @@
-import { json, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { ViewLinks } from "../../components/elements/Links";
 import ViewTimeline from "../../components/Timelines/ViewTimeline/ViewTimeline";
 import { CreateTimeline } from "../../components/Timelines/CreateTimeline/CreateTimeline";

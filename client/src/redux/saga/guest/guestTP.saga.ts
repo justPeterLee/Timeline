@@ -221,10 +221,10 @@ function* updateSortDataGUEST({
 
   window.localStorage.setItem("guestData", JSON.stringify(parseGD));
 
-  //   yield put({
-  //     type: "SET_CURRENT_USER_TIMELINE_POLE",
-  //     payload: { poles: parseGD[payload.timelineId].poles },
-  //   });
+  yield put({
+    type: "SET_CURRENT_USER_TIMELINE_SORTDATA",
+    payload: [{ sort: parseGD[payload.timelineId].sortData }],
+  });
 }
 // function accessTimePole(){}
 export default guestTimePoleSaga;
