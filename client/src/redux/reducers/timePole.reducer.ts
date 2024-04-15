@@ -1,6 +1,6 @@
 import { combineReducers } from "redux";
 import {
-  AllStandardPoleData,
+  StandardPoleData,
   TimelinePole,
 } from "../../tools/utilities/timepoleUtils/timepoleUtils";
 interface action {
@@ -50,7 +50,7 @@ function userTimeline(
 
 interface CurrentTimePole {
   status: "not loaded" | "completed";
-  poles: AllStandardPoleData[];
+  poles: StandardPoleData[];
   sortData: { [sortKey: string]: { yPos: number } };
   timelineId: string;
 }
@@ -64,7 +64,7 @@ function currentUserTimePole(
   action: {
     payload:
       | {
-          poles: AllStandardPoleData[];
+          poles: StandardPoleData[];
           sortData: { sort: string }[];
           timelineId: string;
         }

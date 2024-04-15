@@ -1,6 +1,6 @@
 import { put, takeLatest } from "redux-saga/effects";
 import axios from "axios";
-import { AllStandardPoleData } from "../../tools/utilities/timepoleUtils/timepoleUtils";
+import { StandardPoleData } from "../../tools/utilities/timepoleUtils/timepoleUtils";
 
 function* timePoleSaga() {
   yield takeLatest("CREATE_TIMEPOLE_SERVER", createTimePoleSERVER);
@@ -89,7 +89,7 @@ function* updateTimePoleSERVER({ payload }: PostTimePole): Generator {
 function* updateCompletedTimePoleServer({
   payload,
 }: {
-  payload: { pole: AllStandardPoleData; state: boolean };
+  payload: { pole: StandardPoleData; state: boolean };
   type: string;
 }) {
   try {
@@ -108,7 +108,7 @@ function* updateCompletedTimePoleServer({
 function* deleteTimePoleSERVER({
   payload,
 }: {
-  payload: AllStandardPoleData;
+  payload: StandardPoleData;
   type: string;
 }) {
   try {

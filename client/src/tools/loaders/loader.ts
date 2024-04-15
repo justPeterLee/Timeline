@@ -60,6 +60,11 @@ export async function yearLoader(year: string | undefined) {
         type: "GET_CURRENT_TIMEPOLE_SERVER",
         payload: { timelineId },
       });
+    } else {
+      store.dispatch({
+        type: "GET_CURRENT_GUEST",
+        payload: { year: normalYear },
+      });
     }
     console.log("not logged in");
   } catch (err: any) {
