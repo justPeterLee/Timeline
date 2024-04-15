@@ -64,9 +64,12 @@ export function TimePolesTimeline({
   const [localState, setLocalState] = useState(localSortData);
 
   const debounceFunctionCall = useMemo(() => {
-    return debounceFunction((args: any) => {
-      console.log(args);
-    }, 2000);
+    return debounceFunction((sortData: string[]) => {
+      dispatch({
+        type: "UPDATE_SORTDATA_SERVER",
+        payload: { timelineId: timelineId, sortData: sortData[0] },
+      });
+    }, 1000);
   }, []);
 
   const onMovedPole = (_pole: { id: string; yPos: number }) => {
@@ -82,7 +85,7 @@ export function TimePolesTimeline({
 
     if (user.id) {
       // console.log()
-      debounceFunctionCall("test");
+      debounceFunctionCall(jsonSortData);
     }
 
     // rerender page

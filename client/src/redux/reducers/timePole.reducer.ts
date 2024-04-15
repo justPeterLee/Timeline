@@ -62,11 +62,13 @@ function currentUserTimePole(
     timelineId: "",
   },
   action: {
-    payload: {
-      poles: AllStandardPoleData[];
-      sortData: { sort: string }[];
-      timelineId: string;
-    };
+    payload:
+      | {
+          poles: AllStandardPoleData[];
+          sortData: { sort: string }[];
+          timelineId: string;
+        }
+      | any;
     type: string;
   }
 ) {
@@ -87,7 +89,7 @@ function currentUserTimePole(
       return {
         ...state,
         status: "completed",
-        sortData: action.payload.sortData[0].sort,
+        sortData: action.payload[0].sort,
       };
 
     default:
