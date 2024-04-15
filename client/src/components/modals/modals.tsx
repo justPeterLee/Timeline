@@ -114,13 +114,16 @@ export function TimePoleModal({
   };
 
   const onDelete = () => {
-    if (user) {
+    if (user.id) {
       dispatch({
         type: "DELETE_TIME_POLE_SERVER",
         payload: timePoleData,
       });
     } else {
-      console.log("not logged in");
+      dispatch({
+        type: "DELETE_TIMEPOLE_GUEST",
+        payload: { id: timePoleData.id, timelineId: timePoleData.year_id },
+      });
     }
 
     // deleteSortData({ id: timePoleData.id });

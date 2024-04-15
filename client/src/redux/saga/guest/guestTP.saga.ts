@@ -1,4 +1,5 @@
 import { put, takeLatest } from "redux-saga/effects";
+import { StandardPoleData } from "../../../tools/utilities/timepoleUtils/timepoleUtils";
 
 function* guestTimePoleSaga() {
   yield takeLatest("GET_CURRENT_GUEST", getCurrentGuest);
@@ -7,6 +8,8 @@ function* guestTimePoleSaga() {
   yield takeLatest("CREATE_TIMEPOLE_GUEST", createTimePoleGUEST);
 
   //delete
+  yield takeLatest("DELETE_TIMEPOLE_GUEST", deleteTimePoleGUEST);
+
   //update
   //markComplete
 }
@@ -114,5 +117,33 @@ function* createTimePoleGUEST({ payload }: PostTimePole) {
   console.log(payload);
 }
 
+function* deleteTimePoleGUEST({
+  payload,
+}: {
+  payload: { timelineId: string; id: string };
+  type: string;
+}) {
+  const GD = window.localStorage.getItem("guestData");
+  const parseGD = JSON.parse(GD!);
+
+  const newPoles: StandardPoleData[] = [];
+
+  for (let i = 0; i < parseGD[payload.timelineId].poles.length; i++) {
+    if (parseGD[payload.timelineId].poles[i].id !== payload.id) {
+      newPoles.push(parseGD[payload.timelineId].poles[i]);
+    }
+  }
+
+  parseGD[payload.timelineId].poles = newPoles;
+
+  //   window.localStorage.setItem("guestData", JSON.stringify(newPoles));
+  window.localStorage.setItem("guestData", JSON.stringify(parseGD));
+
+  yield put({
+    type: "SET_CURRENT_USER_TIMELINE_POLE",
+    payload: { poles: parseGD[payload.timelineId].poles },
+  });
+  //   console.log(JSON.stringify(newPoles));
+}
 // function accessTimePole(){}
 export default guestTimePoleSaga;
