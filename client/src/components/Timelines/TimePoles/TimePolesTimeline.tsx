@@ -93,8 +93,8 @@ export function TimePolesTimeline({
   };
 
   useEffect(() => {
-    console.log(sortData);
-    if (user.id) {
+    console.log(typeof sortData);
+    if (user) {
       // copy of sort data (cannot mutate sort data)
       const sortDataCopy = { ...sortData };
 
@@ -110,10 +110,17 @@ export function TimePolesTimeline({
         );
 
         // req to update sort data
-        dispatch({
-          type: "UPDATE_SORTDATA_SERVER",
-          payload: { timelineId: timelineId, sortData: updatedSortData },
-        });
+        if (user.id) {
+          dispatch({
+            type: "UPDATE_SORTDATA_SERVER",
+            payload: { timelineId: timelineId, sortData: updatedSortData },
+          });
+        } else {
+          dispatch({
+            type: "UPDATE_SORT_DATA_GUEST",
+            payload: { timelineId: timelineId, sortData: updatedSortData },
+          });
+        }
       }
 
       window.localStorage.setItem(

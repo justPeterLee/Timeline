@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { json, useParams } from "react-router-dom";
 import { ViewLinks } from "../../components/elements/Links";
 import ViewTimeline from "../../components/Timelines/ViewTimeline/ViewTimeline";
 import { CreateTimeline } from "../../components/Timelines/CreateTimeline/CreateTimeline";
@@ -45,7 +45,11 @@ export default function TimelinePage() {
             {currentPoles.status !== "not loaded" && (
               <DisplayTimeline
                 timelineId={currentPoles.timelineId}
-                sortData={currentPoles.sortData}
+                sortData={
+                  typeof currentPoles.sortData === "object"
+                    ? currentPoles.sortData
+                    : JSON.parse(currentPoles.sortData)
+                }
                 poles={currentPoles.poles}
                 showPoles={showCurrentPoles}
               />

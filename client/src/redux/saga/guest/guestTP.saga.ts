@@ -16,6 +16,9 @@ function* guestTimePoleSaga() {
     "UPDATE_COMPLETE_TIMEPOLE_GUEST",
     updateCompleteTimePoleGuest
   );
+
+  // update sort data
+  yield takeLatest("UPDATE_SORT_DATA_GUEST", updateSortDataGUEST);
 }
 
 function* getCurrentGuest({
@@ -203,6 +206,25 @@ function* updateCompleteTimePoleGuest({
     type: "SET_CURRENT_USER_TIMELINE_POLE",
     payload: { poles: parseGD[payload.timelineId].poles },
   });
+}
+
+function* updateSortDataGUEST({
+  payload,
+}: {
+  payload: { timelineId: string; sortData: string };
+  type: string;
+}) {
+  const GD = window.localStorage.getItem("guestData");
+  const parseGD = JSON.parse(GD!);
+
+  parseGD[payload.timelineId].sortData = payload.sortData;
+
+  window.localStorage.setItem("guestData", JSON.stringify(parseGD));
+
+  //   yield put({
+  //     type: "SET_CURRENT_USER_TIMELINE_POLE",
+  //     payload: { poles: parseGD[payload.timelineId].poles },
+  //   });
 }
 // function accessTimePole(){}
 export default guestTimePoleSaga;
