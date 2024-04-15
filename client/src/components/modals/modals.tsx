@@ -115,12 +115,20 @@ export function TimePoleModal({
 
   // ----- event listener actions -------
   const onMarkComplete = () => {
-    if (user) {
+    if (user.id) {
       dispatch({
         type: "UPDATE_COMPLETED_TIME_POLE_SERVER",
         payload: { pole: timePoleData, state: !timePoleData.completed },
       });
     } else {
+      dispatch({
+        type: "UPDATE_COMPLETE_TIMEPOLE_GUEST",
+        payload: {
+          timelineId: timePoleData.year_id,
+          id: timePoleData.id,
+          state: !timePoleData.completed,
+        },
+      });
       console.log("not logged in");
     }
     onClose();

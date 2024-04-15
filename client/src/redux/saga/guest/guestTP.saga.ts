@@ -12,6 +12,10 @@ function* guestTimePoleSaga() {
 
   //update
   yield takeLatest("UPDATE_TIMEPOLE_GUEST", updateTimePoleGUEST);
+  yield takeLatest(
+    "UPDATE_COMPLETE_TIMEPOLE_GUEST",
+    updateCompleteTimePoleGuest
+  );
 
   //markComplete
 }
@@ -153,7 +157,6 @@ function* updateTimePoleGUEST({ payload }: PostTimePole) {
   const parseGD = JSON.parse(GD!);
   //   console.log(parseGD[payload.year_id].poles);
   for (let i = 0; i < parseGD[payload.year_id].poles.length; i++) {
-    console.log(payload.full_date);
     if (parseGD[payload.year_id].poles[i].id === payload.id) {
       console.log("test");
       parseGD[payload.year_id].poles[i] = {
@@ -169,12 +172,38 @@ function* updateTimePoleGUEST({ payload }: PostTimePole) {
     }
   }
 
-  console.log(parseGD);
   window.localStorage.setItem("guestData", JSON.stringify(parseGD));
 
   yield put({
     type: "SET_CURRENT_USER_TIMELINE_POLE",
     payload: { poles: parseGD[payload.year_id].poles },
+  });
+}
+
+function* updateCompleteTimePoleGuest({
+  payload,
+}: {
+  payload: { timelineId: string; id: string; state: boolean };
+  type: string;
+}) {
+  const GD = window.localStorage.getItem("guestData");
+  const parseGD = JSON.parse(GD!);
+  //   console.log(parseGD[payload.year_id].poles);
+  for (let i = 0; i < parseGD[payload.timelineId].poles.length; i++) {
+    if (parseGD[payload.timelineId].poles[i].id === payload.id) {
+      console.log("test");
+      parseGD[payload.timelineId].poles[i] = {
+        ...parseGD[payload.timelineId].poles[i],
+        completed: payload.state,
+      };
+    }
+  }
+
+  window.localStorage.setItem("guestData", JSON.stringify(parseGD));
+
+  yield put({
+    type: "SET_CURRENT_USER_TIMELINE_POLE",
+    payload: { poles: parseGD[payload.timelineId].poles },
   });
 }
 // function accessTimePole(){}
