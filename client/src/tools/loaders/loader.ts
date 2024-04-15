@@ -37,8 +37,6 @@ export async function redirectURL() {
   try {
     let user = await axios.get("/api/v1/userAction");
     store.dispatch({ type: "SET_USER", payload: user.data });
-
-    console.log(user);
     return user;
   } catch (err) {
     return null;
@@ -57,18 +55,13 @@ export async function yearLoader(year: string | undefined) {
       const timelineId = timelineIdReq.data.length
         ? timelineIdReq.data[0].id
         : -1;
-      console.log(timelineId);
 
       store.dispatch({
         type: "GET_CURRENT_TIMEPOLE_SERVER",
         payload: { timelineId },
       });
-      // store.dispatch({ type: "GET_TIMELINE_SERVER" });
-      // store.dispatch({
-      //   type: "GET_TIMEPOLE_YEAR_SERVER",
-      //   payload: { year: normalYear },
-      // });
     }
+    console.log("not logged in");
   } catch (err: any) {
     throw json(
       { message: "Error occured while fetching data" },
