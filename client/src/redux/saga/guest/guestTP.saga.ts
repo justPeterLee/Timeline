@@ -11,6 +11,8 @@ function* guestTimePoleSaga() {
   yield takeLatest("DELETE_TIMEPOLE_GUEST", deleteTimePoleGUEST);
 
   //update
+  yield takeLatest("UPDATE_TIMEPOLE_GUEST", updateTimePoleGUEST);
+
   //markComplete
 }
 
@@ -75,7 +77,7 @@ type PostTimePole = {
     year: number;
     month: number;
     date: number;
-    full_data: string;
+    full_date: string;
   };
   type: string;
 };
@@ -144,6 +146,36 @@ function* deleteTimePoleGUEST({
     payload: { poles: parseGD[payload.timelineId].poles },
   });
   //   console.log(JSON.stringify(newPoles));
+}
+
+function* updateTimePoleGUEST({ payload }: PostTimePole) {
+  const GD = window.localStorage.getItem("guestData");
+  const parseGD = JSON.parse(GD!);
+  //   console.log(parseGD[payload.year_id].poles);
+  for (let i = 0; i < parseGD[payload.year_id].poles.length; i++) {
+    console.log(payload.full_date);
+    if (parseGD[payload.year_id].poles[i].id === payload.id) {
+      console.log("test");
+      parseGD[payload.year_id].poles[i] = {
+        ...parseGD[payload.year_id].poles[i],
+        title: payload.title,
+        description: payload.description,
+
+        date: payload.date,
+        month: payload.month,
+        year: payload.year,
+        full_date: payload.full_date,
+      };
+    }
+  }
+
+  console.log(parseGD);
+  window.localStorage.setItem("guestData", JSON.stringify(parseGD));
+
+  yield put({
+    type: "SET_CURRENT_USER_TIMELINE_POLE",
+    payload: { poles: parseGD[payload.year_id].poles },
+  });
 }
 // function accessTimePole(){}
 export default guestTimePoleSaga;

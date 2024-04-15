@@ -92,10 +92,23 @@ export function TimePoleModal({
       timelineId: timePoleData.year_id,
     };
 
-    if (user) {
+    if (user.id) {
       dispatch({ type: "UPDATE_TIME_POLE_SERVER", payload: newTimePole });
     } else {
       console.log("not logged in");
+      const guestPayload = {
+        id: timePoleData.id,
+        year_id: timePoleData.year_id,
+
+        title: newTimePoleData.title,
+        description: newTimePoleData.description,
+
+        date: newDate.getDate(),
+        month: newDate.getMonth(),
+        year: newDate.getFullYear(),
+        full_date: newDate.toISOString(),
+      };
+      dispatch({ type: "UPDATE_TIMEPOLE_GUEST", payload: guestPayload });
     }
     onClose();
   };
