@@ -215,6 +215,7 @@ export function getPoleDataList(poles: StandardPoleData[], state: string) {
     const xPercent = poleData.xPercent;
 
     if (weekPoleTwo) {
+      console.log(weekPoleTwo.polesList[poleDate].id, poleId);
       // check if date instance exists
       if (weekPoleTwo.polesList[poleDate]) {
         weekPoleTwo.polesList[poleDate].poles.push(pole);

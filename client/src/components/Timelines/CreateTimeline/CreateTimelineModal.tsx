@@ -10,7 +10,10 @@ import "react-datepicker/dist/react-datepicker.css";
 import React from "react";
 import { BsCalendar3, BsTextCenter } from "react-icons/bs";
 import { useNavigate, useParams } from "react-router-dom";
-import { useAppDispatch } from "../../../redux/redux-hooks/redux.hook";
+import {
+  useAppDispatch,
+  useAppSelector,
+} from "../../../redux/redux-hooks/redux.hook";
 import axios from "axios";
 import { current } from "../../../tools/data/monthData";
 
@@ -23,6 +26,8 @@ export function CreateTimelineModal({
 }) {
   const navigate = useNavigate();
   const { month, year } = useParams();
+  const user = useAppSelector((store) => store.userAccount);
+
   const dispatch = useAppDispatch();
 
   const [newTimePole, setNewTimepole] = useState({
@@ -53,29 +58,55 @@ export function CreateTimelineModal({
       throw "invalid date";
     }
 
-    const data: { data: { id: number }[] } = await axios.get(
-      `/api/v1/timeline/get/id/${year ? year : current.year}`
-    );
+    if (user.id) {
+      const data: { data: { id: number }[] } = await axios.get(
+        `/api/v1/timeline/get/id/${year ? year : current.year}`
+      );
 
-    const timelineId = data.data.length ? data.data[0].id : null;
+      const timelineId = data.data.length ? data.data[0].id : null;
 
-    const payload = {
-      title: newTimePole.title,
-      description: newTimePole.description,
-      date_data: {
+      const payload = {
+        title: newTimePole.title,
+        description: newTimePole.description,
+        date_data: {
+          date: date.getDate(),
+          month: date.getMonth(),
+          year: date.getFullYear(),
+          day: date.getDay(),
+          full_date: date.toISOString(),
+        },
+        timelineId: timelineId,
+      };
+
+      dispatch({
+        type: "CREATE_TIMEPOLE_SERVER",
+        payload,
+      });
+    } else {
+      const payload = {
+        id: (
+          Math.floor(Math.random() * 1000000) +
+          1 +
+          date.getDate()
+        ).toString(),
+        year_id: date.getFullYear().toString(),
+
+        title: newTimePole.title,
+        description: newTimePole.description,
+        completed: false,
+
         date: date.getDate(),
         month: date.getMonth(),
         year: date.getFullYear(),
-        day: date.getDay(),
         full_date: date.toISOString(),
-      },
-      timelineId: timelineId,
-    };
+      };
 
-    dispatch({
-      type: "CREATE_TIMEPOLE_SERVER",
-      payload,
-    });
+      dispatch({
+        type: "CREATE_TIMEPOLE_GUEST",
+        payload: payload,
+      });
+      console.log("not logged");
+    }
 
     onClose();
 

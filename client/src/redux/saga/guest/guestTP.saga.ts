@@ -4,7 +4,7 @@ function* guestTimePoleSaga() {
   yield takeLatest("GET_CURRENT_GUEST", getCurrentGuest);
 
   //create
-  //   yield takeLatest("CREATE_TIMEPOLE_GUEST", createTimePoleGuest);
+  yield takeLatest("CREATE_TIMEPOLE_GUEST", createTimePoleGUEST);
 
   //delete
   //update
@@ -60,7 +60,24 @@ function* getCurrentGuest({
   });
 }
 
-function* createTimePoleGUEST({}) {
+type PostTimePole = {
+  payload: {
+    id: number;
+    year_id: string;
+
+    title: string;
+    description: string;
+    completed: boolean;
+
+    year: number;
+    month: number;
+    date: number;
+    full_data: string;
+  };
+  type: string;
+};
+
+function* createTimePoleGUEST({ payload }: PostTimePole) {
   /*
     
     {
@@ -80,6 +97,22 @@ function* createTimePoleGUEST({}) {
     
     */
   // create timepole
+  const newPole = payload;
+
   // update current data
+  const GD = window.localStorage.getItem("guestData");
+  const parseGD = JSON.parse(GD!);
+
+  parseGD[newPole.year_id].poles.push(newPole);
+
+  window.localStorage.setItem("guestData", JSON.stringify(parseGD));
+
+  yield put({
+    type: "SET_CURRENT_USER_TIMELINE_POLE",
+    payload: { poles: parseGD[newPole.year_id].poles },
+  });
+  console.log(payload);
 }
+
+// function accessTimePole(){}
 export default guestTimePoleSaga;
