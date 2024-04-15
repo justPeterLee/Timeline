@@ -84,11 +84,7 @@ export function CreateTimelineModal({
       });
     } else {
       const payload = {
-        id: (
-          Math.floor(Math.random() * 1000000) +
-          1 +
-          date.getDate()
-        ).toString(),
+        id: Math.random().toString(),
         year_id: date.getFullYear().toString(),
 
         title: newTimePole.title,
