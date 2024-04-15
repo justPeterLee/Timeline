@@ -5,7 +5,10 @@ interface action {
   payload: any;
 }
 
-const userReducer = (state = {}, action: action) => {
+const userReducer = (
+  state = { id: null, username: "guest" },
+  action: action
+) => {
   switch (action.type) {
     case "SET_USER":
       console.log("in redux", action.payload);

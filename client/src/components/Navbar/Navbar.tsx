@@ -73,7 +73,7 @@ function NavbarMenuPage() {
             text="Sign out"
             link={() => {
               dispatch({ type: "LOGOUT" });
-              navigate("/a");
+              navigate("/login");
             }}
             style={{ color: "red" }}
           />

@@ -59,4 +59,5 @@ function* fetchUser(): Generator {
     console.log(err);
   }
 }
+
 export default userActionSaga;

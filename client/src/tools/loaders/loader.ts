@@ -17,9 +17,7 @@ export async function userLoader() {
 export async function rescrictedURL(url: string) {
   try {
     let user = await axios.get("/api/v1/userAction");
-    if (!user) {
-      throw redirect(url);
-    }
+    store.dispatch({ type: "SET_USER", payload: user.data });
   } catch (err) {
     throw redirect(url);
   }
@@ -38,6 +36,9 @@ export async function requireUser() {
 export async function redirectURL() {
   try {
     let user = await axios.get("/api/v1/userAction");
+    store.dispatch({ type: "SET_USER", payload: user.data });
+
+    console.log(user);
     return user;
   } catch (err) {
     return null;
