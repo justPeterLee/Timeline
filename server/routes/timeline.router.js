@@ -124,10 +124,15 @@ router.get(
     const timelineId = req.params.timelineId;
 
     const PolesQuery = `
-    SELECT pd.year, pd.month, pd.date, pd.full_date, pd.time_pole_id, pd.id AS "date_id", p.*
+    SELECT 
+      pd.year, pd.month, pd.date, pd.full_date, 
+      p.title, p.description, p.completed, p.id
+
     FROM time_pole p
+
     JOIN time_pole_date pd ON pd.time_pole_id = p.id
     JOIN "user" u ON p.user_id = u.id
+    
     WHERE u.id = $1 AND p.year_id = $2;
     `;
     const SortQuery = `
