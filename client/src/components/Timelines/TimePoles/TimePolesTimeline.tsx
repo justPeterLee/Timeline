@@ -93,6 +93,7 @@ export function TimePolesTimeline({
   };
 
   useEffect(() => {
+    console.log(sortData);
     if (user.id) {
       // copy of sort data (cannot mutate sort data)
       const sortDataCopy = { ...sortData };

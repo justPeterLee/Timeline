@@ -16,8 +16,6 @@ function* guestTimePoleSaga() {
     "UPDATE_COMPLETE_TIMEPOLE_GUEST",
     updateCompleteTimePoleGuest
   );
-
-  //markComplete
 }
 
 function* getCurrentGuest({
@@ -64,7 +62,7 @@ function* getCurrentGuest({
     payload: {
       timelineId: parseGD[year].timelineId,
       poles: parseGD[year].poles,
-      sortData: [{ sort: parseGD.sort }],
+      sortData: [{ sort: parseGD[year].sortData }],
     },
   });
 }
