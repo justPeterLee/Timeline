@@ -42,8 +42,9 @@ export default function TimelinePage() {
           <CreateTimeline poles={showCurrentPoles} />
         ) : (
           <>
-            {currentPoles.status === "completed" && (
+            {currentPoles.status !== "not loaded" && (
               <DisplayTimeline
+                timelineId={currentPoles.timelineId}
                 sortData={currentPoles.sortData}
                 poles={currentPoles.poles}
                 showPoles={showCurrentPoles}

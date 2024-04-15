@@ -12,15 +12,21 @@ import {
   sortDataUpdater,
 } from "../../../tools/utilities/timepoleUtils/timepole";
 import { animated, to } from "react-spring";
+import {
+  useAppDispatch,
+  useAppSelector,
+} from "../../../redux/redux-hooks/redux.hook";
 
 export function TimePolesTimeline({
+  timelineId,
   sortData,
   poles,
   showPoles,
   func,
 }: //   showPoles,
 {
-  sortData: string;
+  timelineId: string;
+  sortData: {};
   poles: StandardPoleData[];
   showPoles: StandardPoleData[];
   func: {
@@ -29,6 +35,8 @@ export function TimePolesTimeline({
   };
   //   showPoles: StandardPoleData[];
 }) {
+  const user = useAppSelector((store) => store.userAccount);
+  const dispatch = useAppDispatch();
   const poleData = useMemo(() => {
     const polesData = getPoleDataList(poles, "year");
     return polesData;
@@ -57,50 +65,77 @@ export function TimePolesTimeline({
 
   const onMovedPole = (_pole: { id: string; yPos: number }) => {
     const localSortProxy = localState ? JSON.parse(localState) : {};
-    // const proxyLocalData = JSON.parse(localState!);
+
     localSortProxy[_pole.id] = { yPos: _pole.yPos };
 
     const jsonSortData = JSON.stringify(localSortProxy);
     window.localStorage.setItem("localSortData", jsonSortData);
 
     setLocalState(jsonSortData);
-    // updateWindowSort(jsonSortData);
-    // setSortData(JSON.parse(jsonSortData));
-    // setLocalState()
   };
 
   useEffect(() => {
-    // generate local storage if sort data not initiated
-    if (!localSortData) {
-      const newSortData = sort(poleData);
-      const jsonSortData = JSON.stringify(newSortData);
-      window.localStorage.setItem("localSortData", jsonSortData);
-      const localSortDatas = window.localStorage.getItem("localSortData");
+    if (user.id) {
+      // copy of sort data (cannot mutate sort data)
+      const sortDataCopy = { ...sortData };
 
-      setLocalState(localSortDatas);
-    }
+      // check if sort data is up to date (auto generate s-data for poles without s-data)
+      const editSortData = compareSortPoles(poles, sortDataCopy);
 
-    // update sort data
-    if (localSortData) {
-      const jsonLocalSortData = JSON.parse(localSortData);
-
-      const editSortData = compareSortPoles(poles, jsonLocalSortData);
       if (editSortData.addArray.length || editSortData.deleteArray.length) {
         const updatedSortData = sortDataUpdater(
           editSortData,
-          jsonLocalSortData,
+          sortDataCopy,
           poles,
           "year"
         );
 
-        window.localStorage.setItem("localSortData", updatedSortData);
+        // req to update sort data
+        dispatch({
+          type: "UPDATE_SORTDATA_SERVER",
+          payload: { timelineId: timelineId, sortData: updatedSortData },
+        });
+      }
 
-        const utdLocalSortData = window.localStorage.getItem("localSortData");
-        setLocalState(utdLocalSortData);
+      window.localStorage.setItem(
+        "localSortData",
+        JSON.stringify(sortDataCopy)
+      );
+
+      setLocalState(JSON.stringify(sortDataCopy));
+    } else {
+      if (!localSortData) {
+        // generate local storage if sort data not initiated
+
+        const newSortData = sort(poleData);
+        const jsonSortData = JSON.stringify(newSortData);
+
+        window.localStorage.setItem("localSortData", jsonSortData);
+        const localSortDatas = window.localStorage.getItem("localSortData");
+
+        setLocalState(localSortDatas);
+      }
+
+      // update sort data
+      if (localSortData) {
+        const jsonLocalSortData = JSON.parse(localSortData);
+
+        const editSortData = compareSortPoles(poles, jsonLocalSortData);
+        if (editSortData.addArray.length || editSortData.deleteArray.length) {
+          const updatedSortData = sortDataUpdater(
+            editSortData,
+            jsonLocalSortData,
+            poles,
+            "year"
+          );
+
+          window.localStorage.setItem("localSortData", updatedSortData);
+
+          const utdLocalSortData = window.localStorage.getItem("localSortData");
+          setLocalState(utdLocalSortData);
+        }
       }
     }
-
-    console.log(Object.keys(sortData));
   }, [poleData]);
   return (
     <>

@@ -135,7 +135,7 @@ router.get(
     WHERE year_id = $1;
     `;
 
-    let resData = { poles: [], sortData: "" };
+    let resData = { poles: [], sortData: "", timelineId: timelineId };
 
     try {
       pool
@@ -148,7 +148,7 @@ router.get(
             .query(SortQuery, [timelineId])
             .then((response) => {
               resData = { ...resData, sortData: response.rows };
-              console.log(resData);
+              // console.log(resData);
               res.send(resData);
             })
             .catch((err) => {

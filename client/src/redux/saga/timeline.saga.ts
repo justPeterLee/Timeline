@@ -59,7 +59,7 @@ function* getCurrentTimePoleUser({
       `/api/v1/timeline/get/current/${payload.timelineId}`
     );
     yield put({ type: "SET_CURRENT_USER_TIMEPOLE_ALL", payload: data.data });
-    console.log(data.data);
+    console.log("asdfasdfasdfds");
   } catch (err) {
     console.log(err);
     throw "error fetching current pole data";

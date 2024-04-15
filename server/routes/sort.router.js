@@ -54,15 +54,18 @@ router.put("/put", rejectUnauthenticated, async (req, res) => {
   const { timelineId, sortData } = req.body;
   const query = `
     UPDATE "sort_data"
-    SET sort = $1,
-    WHERE  year_id = $2
-    RETURING sort;
+    SET sort = $1
+    WHERE year_id = $2
+    RETURNING sort;
     `;
+
+  console.log(timelineId);
 
   try {
     pool
       .query(query, [sortData, timelineId])
       .then((response) => {
+        console.log(response.rows);
         res.send(response.rows);
       })
       .catch((err) => {

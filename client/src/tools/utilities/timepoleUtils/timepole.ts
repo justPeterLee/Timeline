@@ -18,7 +18,7 @@ import {
 
 export function compareSortPoles(
   poles: StandardPoleData[],
-  localData: PoleCordsData
+  localData: PoleCordsData | any
 ) {
   // const poleData = groupedPoles(poles);
   const localDataKeys = Object.keys(localData);
@@ -236,7 +236,6 @@ export function insertSorData(
   addPoles: { sortId: string; poleId: string }[],
   localSortData: PoleCordsData
 ) {
-  console.log(addPoles);
   // console.time("start");
   // console.log(JSON.parse(window.localStorage.getItem("sortDataEffect")));
   let overlappingData = generateOverLappingData(allPoles, localSortData);
@@ -327,7 +326,7 @@ export function insertSorData(
 
 export function sortDataUpdater(
   sortDataChanges: SortDataChanges,
-  localSortData: PoleCordsData,
+  localSortData: PoleCordsData | any,
   poles: StandardPoleData[],
   url: "year" | "month"
 ) {

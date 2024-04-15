@@ -19,13 +19,15 @@ import { getPoleDataList } from "../../../tools/data";
 import { extractPoleData } from "../../../tools/utilities/timepoleUtils/timepole";
 
 export function DisplayTimeline({
+  timelineId,
   poles,
   showPoles,
   sortData,
 }: {
+  timelineId: string;
   poles: StandardPoleData[];
   showPoles: StandardPoleData[];
-  sortData: string;
+  sortData: {};
 }) {
   const springContext = useContext(TimelineSpringContext);
   const [selectedPole, setSelectedPole] = useState<null | StandardPoleData>(
@@ -58,6 +60,7 @@ export function DisplayTimeline({
           timelineSpring={springContext!.setTimelineSpring}
         /> */}
         <TimePolesTimeline
+          timelineId={timelineId}
           sortData={sortData}
           poles={poles}
           showPoles={showPoles}

@@ -21,6 +21,10 @@ app.use("/api/v1/userAction", userActionRouter);
 
 const timelineRouter = require("../server/routes/timeline.router");
 app.use("/api/v1/timeline", timelineRouter);
+
+const sortRouter = require("./routes/sort.router");
+app.use("/api/v1/sort/", sortRouter);
+
 const PORT = process.env.PORT || 5001;
 
 app.listen(PORT, () => {

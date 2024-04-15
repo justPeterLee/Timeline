@@ -51,42 +51,43 @@ function userTimeline(
 interface CurrentTimePole {
   status: "not loaded" | "completed";
   poles: AllStandardPoleData[];
-  sortData: string;
+  sortData: { [sortKey: string]: { yPos: number } };
+  timelineId: string;
 }
 function currentUserTimePole(
   state: CurrentTimePole = {
     status: "not loaded",
     poles: [],
-    sortData: JSON.stringify({}),
+    sortData: {},
+    timelineId: "",
   },
   action: {
-    payload: { poles: AllStandardPoleData[]; sortData: { sort: string }[] };
+    payload: {
+      poles: AllStandardPoleData[];
+      sortData: { sort: string }[];
+      timelineId: string;
+    };
     type: string;
   }
 ) {
   switch (action.type) {
     case "SET_CURRENT_USER_TIMEPOLE_ALL":
-      console.log(action.payload);
       return {
         ...state,
         status: "completed",
         poles: action.payload.poles,
-        sortData: action.payload.sortData.length
-          ? action.payload.sortData[0].sort
-          : JSON.stringify({}),
+        sortData: action.payload.sortData[0].sort,
+        timelineId: action.payload.timelineId,
       };
 
     case "SET_CURRENT_USER_TIMELINE_POLE":
-      console.log(action.payload);
-      return { ...state, poles: action.payload.poles };
+      return { ...state, status: "completed", poles: action.payload.poles };
 
     case "SET_CURRENT_USER_TIMELINE_SORTDATA":
-      console.log(action.payload);
       return {
         ...state,
-        sortData: action.payload.sortData.length
-          ? action.payload.sortData[0].sort
-          : JSON.stringify({}),
+        status: "completed",
+        sortData: action.payload.sortData[0].sort,
       };
 
     default:

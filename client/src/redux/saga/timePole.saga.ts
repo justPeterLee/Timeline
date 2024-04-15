@@ -6,8 +6,6 @@ function* timePoleSaga() {
   yield takeLatest("CREATE_TIMEPOLE_SERVER", createTimePoleSERVER);
 
   yield takeLatest("GET_TIMEPOLE_SERVER", getTimePoleSERVER);
-  // yield takeLatest("GET_TIMEPOLE_MONTH_SERVER", getTimePoleMonthSERVER);
-  // yield takeLatest("GET_TIMEPOLE_YEAR_SERVER", getTimePoleYearSERVER);
 
   yield takeLatest("GET_USER_TIMEPOLE", getUserTimepole);
   yield takeLatest("UPDATE_TIME_POLE_SERVER", updateTimePoleSERVER);
@@ -18,6 +16,8 @@ function* timePoleSaga() {
   );
 
   yield takeLatest("DELETE_TIME_POLE_SERVER", deleteTimePoleSERVER);
+
+  yield takeLatest("UPDATE_SORTDATA_SERVER", updateSortDataSERVER);
 }
 
 type PostTimePole = {
@@ -38,13 +38,13 @@ type PostTimePole = {
 
 function* getUserTimepole(): Generator {
   try {
-    // console.log(window.location);
     const data: any = yield axios.get("/api/v1/timepole");
     yield put({ type: "SET_USER_TIMEPOLE", payload: data.data });
   } catch (err) {
     console.log(err);
   }
 }
+
 function* getTimePoleSERVER({
   payload,
 }: {
@@ -52,7 +52,6 @@ function* getTimePoleSERVER({
   type: string;
 }): Generator {
   try {
-    // console.log(window.location);
     const data: any = yield axios.get(
       `/api/v1/timepole/get/${payload.timelineId}`
     );
@@ -61,35 +60,6 @@ function* getTimePoleSERVER({
     console.log(err);
   }
 }
-
-// function* getTimePoleYearSERVER({
-//   payload,
-// }: {
-//   payload: { year: string };
-//   type: string;
-// }): Generator {
-//   try {
-//     const data: any = yield axios.get(`/api/v1/timepole/get/${payload.year}`);
-//     console.log(data.data);
-//     yield put({ type: "SET_TIME_POLE", payload: data.data });
-//   } catch (err) {
-//     throw "Error fetching data";
-//   }
-// }
-
-// function* getTimePoleMonthSERVER({
-//   payload,
-// }: {
-//   payload: { month: string };
-//   type: string;
-// }): Generator {
-//   try {
-//     const data: any = yield axios.get(`/api/v1/timepole/get/${payload.month}`);
-//     yield put({ type: "SET_TIME_POLE", payload: data.data });
-//   } catch (err) {
-//     console.log(err);
-//   }
-// }
 
 function* createTimePoleSERVER({ payload }: PostTimePole): Generator {
   try {
@@ -150,6 +120,26 @@ function* deleteTimePoleSERVER({
     });
   } catch (err) {
     console.log(err);
+  }
+}
+
+function* updateSortDataSERVER({
+  payload,
+}: {
+  payload: { timeline_id: string; sortData: string };
+  type: string;
+}): Generator {
+  try {
+    console.log(payload);
+    const data: any = yield axios.put(`/api/v1/sort/put`, payload);
+    console.log(data.data);
+    // yield put({
+    //   type: "SET_CURRENT_USER_TIMELINE_SORTDATA",
+    //   payload: data.data,
+    // });
+  } catch (err) {
+    console.log(err);
+    throw "error updating sort data";
   }
 }
 export default timePoleSaga;
