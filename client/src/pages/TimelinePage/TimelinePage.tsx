@@ -7,7 +7,10 @@ import { useEffect, useMemo } from "react";
 import { TimeSpringContext } from "../../components/Timelines/Context/TimelineContext";
 import { DisplayTimeline } from "../../components/Timelines/DisplayTimeline/DisplayTimeline";
 import { StandardPoleData } from "../../tools/utilities/timepoleUtils/timepoleUtils";
-import { YearNavigation } from "../../components/Timelines/TLComponents/TLComponents";
+import {
+  PoleMenu,
+  YearNavigation,
+} from "../../components/Timelines/TLComponents/TLComponents";
 import { current } from "../../tools/data/monthData";
 import { yearLoader } from "../../tools/loaders/loader";
 
@@ -42,6 +45,7 @@ export default function TimelinePage() {
   }, [year]);
   return (
     <>
+      <PoleMenu poles={currentPoles.poles} />
       <YearNavigation year={year ? parseInt(year) : current.year} />
       <TimeSpringContext>
         <ViewLinks page={month ? "month" : "year"} />
