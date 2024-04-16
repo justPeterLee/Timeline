@@ -3,13 +3,16 @@ import { ViewLinks } from "../../components/elements/Links";
 import ViewTimeline from "../../components/Timelines/ViewTimeline/ViewTimeline";
 import { CreateTimeline } from "../../components/Timelines/CreateTimeline/CreateTimeline";
 import { useAppSelector } from "../../redux/redux-hooks/redux.hook";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { TimeSpringContext } from "../../components/Timelines/Context/TimelineContext";
 import { DisplayTimeline } from "../../components/Timelines/DisplayTimeline/DisplayTimeline";
 import { StandardPoleData } from "../../tools/utilities/timepoleUtils/timepoleUtils";
+import { YearNavigation } from "../../components/Timelines/TLComponents/TLComponents";
+import { current } from "../../tools/data/monthData";
+import { yearLoader } from "../../tools/loaders/loader";
 
 export default function TimelinePage() {
-  const { month, mode } = useParams();
+  const { year, month, mode } = useParams();
   const currentPoles = useAppSelector(
     (store) => store.timepole.currentUserTimePole
   );
@@ -34,8 +37,12 @@ export default function TimelinePage() {
     return filteredPoles;
   }, [currentPoles, month]);
 
+  useEffect(() => {
+    yearLoader(year);
+  }, [year]);
   return (
     <>
+      <YearNavigation year={year ? parseInt(year) : current.year} />
       <TimeSpringContext>
         <ViewLinks page={month ? "month" : "year"} />
         {mode === "create" ? (

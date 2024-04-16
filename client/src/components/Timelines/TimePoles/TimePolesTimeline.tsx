@@ -8,7 +8,6 @@ import { getPoleDataList } from "../../../tools/data";
 import {
   compareSortPoles,
   extractPoleData,
-  sort,
   sortDataUpdater,
 } from "../../../tools/utilities/timepoleUtils/timepole";
 import { animated, to } from "react-spring";

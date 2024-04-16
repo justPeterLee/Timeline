@@ -30,11 +30,11 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
-    loader: async ({ params }) => {
-      // await userLoader();
-      await yearLoader(params.year);
-      return null;
-    },
+    // loader: async ({ params }) => {
+    //   // await userLoader();
+    //   await yearLoader(params.year);
+    //   return null;
+    // },
     children: [
       {
         path: "/year/:year/:mode",
