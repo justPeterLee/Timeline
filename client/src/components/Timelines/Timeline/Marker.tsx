@@ -18,7 +18,7 @@ function MarkerMonth({
   left: number;
   month: number;
 }) {
-  const { year } = useParams();
+  const { year, mode } = useParams();
   const navigate = useNavigate();
   const monthData = monthByIndex[month];
 
@@ -40,10 +40,12 @@ function MarkerMonth({
         className={styles.MonthAbbr}
         style={month === 1 ? { transform: "none" } : {}}
         onClick={() => {
-          navigate(`/month/${year ? year : current.year}/${month}/view`);
+          if (mode === "view" || !mode) {
+            navigate(`/month/${year ? year : current.year}/${month}/view`);
+          }
         }}
       >
-        <p>{monthData.month.slice(0, 3)}</p>
+        <p>{monthData.abb}</p>
       </span>
     </animated.div>
   );
