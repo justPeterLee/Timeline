@@ -79,6 +79,7 @@ export function TimePolesTimeline({
   }, []);
 
   const onMovedPole = (_pole: { id: string; yPos: number }) => {
+    console.log("moved");
     // create copy of local sort data
     const localSortProxy = localState ? JSON.parse(localState) : {};
 
@@ -270,7 +271,10 @@ function TimePole({
             });
           }
         }
-        onMovedPole({ id: id, yPos: yPosRef.current });
+
+        if (wasDragging.current) {
+          onMovedPole({ id: id, yPos: yPosRef.current });
+        }
         // timePoleApi.start({
         //   y: yPosRef.current,
         //   // onResolve: () => {
