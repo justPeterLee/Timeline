@@ -66,7 +66,6 @@ export async function yearLoader(year: string | undefined) {
         payload: { year: normalYear },
       });
     }
-    console.log("not logged in");
   } catch (err: any) {
     throw json(
       { message: "Error occured while fetching data" },

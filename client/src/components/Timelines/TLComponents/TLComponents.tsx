@@ -88,13 +88,10 @@ export function PoleMenu({ poles }: { poles: StandardPoleData[] }) {
   });
 
   return (
-    <animated.div
-      className={styles.PoleMenu}
-      {...bind()}
-      style={{ ...menuSpring }}
-    >
+    <animated.div className={styles.PoleMenu} style={{ ...menuSpring }}>
       <div className={styles.PMBar}>
         <div
+          {...bind()}
           ref={dragTarget}
           className={styles.PMBdrag}
           onMouseDown={() => {

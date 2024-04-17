@@ -47,7 +47,7 @@
 
 .PMBar {
   height: 35px;
-  background-color: rgb(230, 230, 230);
+  /* background-color: rgb(230, 230, 230); */
   border-top-right-radius: 5px;
   border-top-left-radius: 5px;
 
@@ -97,6 +97,7 @@
   gap: 4px;
 
   padding: 16px;
+  padding-top: 5px;
 }
 
 .PMSection {

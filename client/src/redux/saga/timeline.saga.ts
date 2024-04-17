@@ -58,6 +58,7 @@ function* getCurrentTimePoleUser({
     const data: any = yield axios.get(
       `/api/v1/timeline/get/current/${payload.timelineId}`
     );
+    console.log(data.data);
     yield put({ type: "SET_CURRENT_USER_TIMEPOLE_ALL", payload: data.data });
   } catch (err) {
     console.log(err);

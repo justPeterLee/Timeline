@@ -78,7 +78,9 @@ function currentUserTimePole(
         ...state,
         status: "completed",
         poles: action.payload.poles,
-        sortData: action.payload.sortData[0].sort,
+        sortData: action.payload.sortData.length
+          ? action.payload.sortData[0].sort
+          : {},
         timelineId: action.payload.timelineId,
       };
 
