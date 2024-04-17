@@ -64,7 +64,30 @@ export function PoleMenu({ poles }: { poles: StandardPoleData[] }) {
       poleObj[poleObjKey[i]] = sortedPoleObj;
     }
 
-    return poleObj;
+    const soretedPoleObjArr: [string, StandardPoleData[]][] =
+      Object.entries(poleObj);
+
+    const monthOrder: Record<string, number> = {
+      January: 1,
+      February: 2,
+      March: 3,
+      April: 4,
+      May: 5,
+      June: 6,
+      July: 7,
+      August: 8,
+      September: 9,
+      October: 10,
+      November: 11,
+      December: 12,
+    };
+
+    soretedPoleObjArr.sort(
+      ([monthA], [monthB]) => monthOrder[monthA] - monthOrder[monthB]
+    );
+
+    const sortedPoleObj = Object.fromEntries(soretedPoleObjArr);
+    return sortedPoleObj;
   }, [poles]);
 
   const [toggleBody, setToggleBody] = useState(true);
@@ -136,6 +159,9 @@ export function PoleMenu({ poles }: { poles: StandardPoleData[] }) {
               ></PoleMenuSection>
             );
           })}
+          {!Object.keys(sortedPoles).length && (
+            <p style={{ color: "rgb(175,175,175)" }}>(no poles)</p>
+          )}
         </div>
       )}
     </animated.div>
