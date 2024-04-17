@@ -5,7 +5,7 @@ import {
   MdOutlineArrowForwardIos,
 } from "react-icons/md";
 import { StandardPoleData } from "../../../tools/utilities/timepoleUtils/timepoleUtils";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { monthByIndex } from "../../../tools/data/monthData";
 
 export function YearNavigation({ year }: { year: number }) {
@@ -35,7 +35,8 @@ export function YearNavigation({ year }: { year: number }) {
 }
 
 import { RiDraggable } from "react-icons/ri";
-
+import { useDrag } from "@use-gesture/react";
+import { useSpring, animated } from "react-spring";
 export function PoleMenu({ poles }: { poles: StandardPoleData[] }) {
   const sortedPoles = useMemo(() => {
     const poleObj: { [month: string]: StandardPoleData[] } = {};
@@ -67,13 +68,46 @@ export function PoleMenu({ poles }: { poles: StandardPoleData[] }) {
   }, [poles]);
 
   const [toggleBody, setToggleBody] = useState(true);
-  const [isGrabbing, setIsGrabbing] = useState(false);
+  const dragTarget = useRef<HTMLDivElement | null>(null);
+
+  const [menuSpring, menuApi] = useSpring(() => {
+    return {
+      x: 0,
+      y: 0,
+    };
+  });
+  const bind = useDrag(({ down, offset: [mx, my] }) => {
+    if (down) {
+      console.log("is down");
+      menuApi.set({ x: mx, y: my });
+    }
+
+    if (!down) {
+      console.log("is up");
+    }
+  });
+
   return (
-    <div className={styles.PoleMenu}>
+    <animated.div
+      className={styles.PoleMenu}
+      {...bind()}
+      style={{ ...menuSpring }}
+    >
       <div className={styles.PMBar}>
         <div
+          ref={dragTarget}
           className={styles.PMBdrag}
-          style={{ cursor: `${isGrabbing ? "grabbing" : "grab"}` }}
+          onMouseDown={() => {
+            if (dragTarget.current) {
+              dragTarget.current.style.cursor = "grabbing";
+            }
+          }}
+          onMouseUp={() => {
+            if (dragTarget.current) {
+              dragTarget.current.style.cursor = "grab";
+            }
+          }}
+          //   style={{ cursor: `${isGrabbing ? "grabbing" : "grab"}` }}
         >
           <RiDraggable />
         </div>
@@ -107,7 +141,7 @@ export function PoleMenu({ poles }: { poles: StandardPoleData[] }) {
           })}
         </div>
       )}
-    </div>
+    </animated.div>
   );
 }
 
