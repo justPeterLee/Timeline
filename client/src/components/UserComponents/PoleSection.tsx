@@ -13,7 +13,11 @@ import {
 import styles from "./PoleSection.module.css";
 import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
-import { Modal } from "../elements/Links";
+import {
+  InvisibleBackdrop,
+  LocalInvisibleBackdrop,
+  Modal,
+} from "../elements/Links";
 import { current } from "../../tools/data/monthData";
 // import {format}
 
@@ -83,6 +87,10 @@ export function PoleSectionContainer({
   );
 }
 
+import { RxDotsVertical } from "react-icons/rx";
+import { BsTrash3 } from "react-icons/bs";
+import { ConfirmationModal } from "../modals/Modals";
+
 function PoleSection({
   poleDataObj,
   year,
@@ -91,29 +99,87 @@ function PoleSection({
   year: string | number;
 }) {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const monthArr = Object.keys(poleDataObj);
-  return (
-    <div
-      className={styles.PoleSection}
-      onClick={() => {
-        navigate(`/year/${year}/view`);
-      }}
-    >
-      <div className={styles.Year}>
-        <p>{year}</p>
-      </div>
 
-      <div className={styles.Month}>
-        {monthArr.map((_poleMonth) => {
-          const poleDataArr = poleDataObj[_poleMonth];
-          return (
-            <MonthSection
-              key={_poleMonth}
-              poleDataArr={poleDataArr}
-              //   month={_poleMonth}
+  const [toggleMenu, setToggleMenu] = useState(false);
+  const [toggleConfirmation, setToggleConfirmation] = useState(false);
+
+  const deleteTimeline = () => {
+    dispatch({ type: "DELETE_TIMELINE_SERVER", payload: { year } });
+    setToggleMenu(false);
+    setToggleConfirmation(false);
+  };
+  return (
+    <div className={styles.PSBody}>
+      <div className={styles.PSDeleteButtonContainer}>
+        <button
+          className={styles.PSMenu}
+          onClick={() => {
+            setToggleMenu(true);
+          }}
+        >
+          <RxDotsVertical size={16} />
+        </button>
+
+        {toggleMenu && (
+          <>
+            <button
+              className={styles.PSDeleteButton}
+              onClick={() => {
+                setToggleConfirmation(true);
+              }}
+            >
+              <BsTrash3 size={15} className={styles.deleteModalIcon} />
+              delete
+            </button>
+            <InvisibleBackdrop
+              onClose={() => {
+                setToggleMenu(false);
+              }}
             />
-          );
-        })}
+          </>
+        )}
+
+        {toggleConfirmation && (
+          <Modal
+            onClose={() => {
+              setToggleMenu(false);
+              setToggleConfirmation(false);
+            }}
+          >
+            <ConfirmationModal
+              onClose={() => {
+                setToggleMenu(false);
+                setToggleConfirmation(false);
+              }}
+              onAction={deleteTimeline}
+            />
+          </Modal>
+        )}
+      </div>
+      <div
+        className={styles.PoleSection}
+        onClick={() => {
+          navigate(`/year/${year}/view`);
+        }}
+      >
+        <div className={styles.Year}>
+          <p>{year}</p>
+        </div>
+
+        <div className={styles.Month}>
+          {monthArr.map((_poleMonth) => {
+            const poleDataArr = poleDataObj[_poleMonth];
+            return (
+              <MonthSection
+                key={_poleMonth}
+                poleDataArr={poleDataArr}
+                //   month={_poleMonth}
+              />
+            );
+          })}
+        </div>
       </div>
     </div>
   );

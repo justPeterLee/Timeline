@@ -211,4 +211,27 @@ router.post("/create", rejectUnauthenticated, async (req, res) => {
   }
 });
 
+router.delete("/delete/:year", rejectUnauthenticated, async (req, res) => {
+  const { year } = req.params;
+  const user = req.user.id;
+  const query = `
+  DELETE FROM "timeline"
+  WHERE user_id = $1 AND year = $2;
+  `;
+
+  try {
+    pool
+      .query(query, [user, year])
+      .then(() => {
+        res.sendStatus(200);
+      })
+      .catch((err) => {
+        console.log("error deleting timeline", err);
+        res.sendStatus(500);
+      });
+  } catch (err) {
+    console.log("error deleting timeline", err);
+    res.sendStatus(500);
+  }
+});
 module.exports = router;

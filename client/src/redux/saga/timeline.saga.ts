@@ -9,6 +9,8 @@ function* timelineSaga() {
   yield takeLatest("GET_CURRENT_TIMEPOLE_SERVER", getCurrentTimePoleUser);
 
   yield takeLatest("POST_TIMELINE_SERVER", postTimelineUser);
+
+  yield takeLatest("DELETE_TIMELINE_SERVER", deleteTimelineSERVER);
 }
 
 function* getTimelineUser(): Generator {
@@ -62,6 +64,21 @@ function* getCurrentTimePoleUser({
   } catch (err) {
     console.log(err);
     throw "error fetching current pole data";
+  }
+}
+
+function* deleteTimelineSERVER({
+  payload,
+}: {
+  payload: { year: string };
+  type: string;
+}): Generator {
+  try {
+    yield axios.delete(`/api/v1/timeline/delete/${payload.year}`);
+    yield put({ type: "GET_TIMELINE_ALL_SERVER" });
+  } catch (err) {
+    console.log(err);
+    throw "error deleting timeline";
   }
 }
 export default timelineSaga;

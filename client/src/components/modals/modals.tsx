@@ -361,7 +361,7 @@ function GroupPole({
 }
 
 // timepole confirmation
-function ConfirmationModal(props: {
+export function ConfirmationModal(props: {
   onClose: () => void;
   onAction: () => void;
 }) {
