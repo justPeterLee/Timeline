@@ -40,7 +40,6 @@
   min-width: 250px;
   border-radius: 5px;
 
-  touch-action: none;
   background-color: white;
   z-index: 8000;
 }
@@ -67,6 +66,7 @@
   height: 100%;
   justify-content: center;
   cursor: grab;
+  touch-action: none;
   /* background-color: blue; */
 }
 /* .PMBdrag:hover {

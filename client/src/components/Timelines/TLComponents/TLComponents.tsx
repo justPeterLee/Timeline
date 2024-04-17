@@ -101,12 +101,7 @@ export function PoleMenu({ poles }: { poles: StandardPoleData[] }) {
   });
   const bind = useDrag(({ down, offset: [mx, my] }) => {
     if (down) {
-      console.log("is down");
       menuApi.set({ x: mx, y: my });
-    }
-
-    if (!down) {
-      console.log("is up");
     }
   });
 
