@@ -13,8 +13,10 @@ import {
 } from "../../components/Timelines/TLComponents/TLComponents";
 import { current } from "../../tools/data/monthData";
 import { yearLoader } from "../../tools/loaders/loader";
+import { useLoaderData } from "react-router-dom";
 
 export default function TimelinePage() {
+  const user: any = useLoaderData();
   const { year, month, mode } = useParams();
   const currentPoles = useAppSelector(
     (store) => store.timepole.currentUserTimePole
@@ -41,7 +43,8 @@ export default function TimelinePage() {
   }, [currentPoles, month]);
 
   useEffect(() => {
-    yearLoader(year);
+    // console.log(user);
+    yearLoader(year, user);
   }, [year]);
   return (
     <>

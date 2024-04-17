@@ -43,9 +43,12 @@ export async function redirectURL() {
   }
 }
 
-export async function yearLoader(year: string | undefined) {
+export async function yearLoader(
+  year: string | undefined,
+  user: { id: number; username: string } | null
+) {
   try {
-    const user = await redirectURL();
+    // const user = await redirectURL();
     const normalYear = year ? year : current.year.toString();
 
     if (user) {
