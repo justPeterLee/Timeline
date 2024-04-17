@@ -29,8 +29,7 @@ function MarkerMonth({
         transformOrigin: "center left",
         transform: to(
           [timelineSpring.scale, timelineSpring.markerX],
-          (scale, x) =>
-            `scaleX(${1 / scale}) translate(${x}px,${month % 2 != 0 ? 0 : 0}px)`
+          (scale, x) => `scaleX(${1 / scale}) translate(${x}px,${0}px)`
         ),
       }}
       className={styles.Markers}
