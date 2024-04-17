@@ -32,6 +32,17 @@ export function PoleSectionContainer({
   const polesKeys = useMemo(() => {
     return Object.keys(poles);
   }, [poles]);
+
+  const yearsOwned = useMemo(() => {
+    const yearObj: { [year: number]: number } = {};
+
+    for (let i = 0; i < polesKeys.length; i++) {
+      yearObj[poles[polesKeys[i]].year] = poles[polesKeys[i]].year;
+    }
+
+    // console.log(yearObj);
+    return yearObj;
+  }, [poles]);
   return (
     <>
       <div className={styles.PoleSectionContainer}>
@@ -61,6 +72,7 @@ export function PoleSectionContainer({
           }}
         >
           <CreateNewYearModal
+            yearsOwned={yearsOwned}
             onClose={() => {
               setCreateModal(false);
             }}
@@ -141,7 +153,13 @@ function Section({ poleData }: { poleData: TimelinePole }) {
   );
 }
 
-function CreateNewYearModal({ onClose }: { onClose: () => void }) {
+function CreateNewYearModal({
+  yearsOwned,
+  onClose,
+}: {
+  yearsOwned: { [year: number]: number };
+  onClose: () => void;
+}) {
   const navigate = useNavigate();
 
   const dataListTargetRef = useRef<null | HTMLDivElement>(null);
@@ -154,7 +172,11 @@ function CreateNewYearModal({ onClose }: { onClose: () => void }) {
 
   const createTimeline = () => {
     const dataPayload = { title: "", year: selectedYear };
-    dispatch({ type: "POST_TIMELINE_SERVER", payload: dataPayload });
+
+    // only create new timeline if not already created
+    if (!yearsOwned[selectedYear]) {
+      dispatch({ type: "POST_TIMELINE_SERVER", payload: dataPayload });
+    }
     navigate(`/year/${selectedYear}/view`);
   };
   useEffect(() => {

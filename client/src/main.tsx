@@ -19,7 +19,6 @@ import LoginPage from "./pages/user/LoginPage.tsx";
 import UserPage from "./pages/user/UserPage.tsx";
 
 import {
-  yearLoader,
   rescrictedURL,
   redirectURL,
   poleLoader,
