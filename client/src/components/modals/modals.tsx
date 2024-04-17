@@ -193,8 +193,8 @@ export function TimePoleModal({
                 <CustomInput value={undefined} onClick={undefined} />
               }
               dateFormat="EEEE, LLLL d"
-              minDate={new Date("2024-01-01")}
-              maxDate={new Date("2024-12-31")}
+              minDate={new Date(`${timePoleData.year}-01-01`)}
+              maxDate={new Date(`${timePoleData.year}-12-31`)}
             />
           </div>
 
