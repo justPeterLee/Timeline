@@ -21,11 +21,13 @@ import {
   poleLoader,
 } from "./tools/loaders/loader.ts";
 import App from "./App.tsx";
+import NotFoundPage from "./pages/404.tsx";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
+    errorElement: <NotFoundPage />,
     loader: async () => {
       // await userLoader();
       const user: any = await redirectURL();
