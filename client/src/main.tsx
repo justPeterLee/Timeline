@@ -60,6 +60,7 @@ const router = createBrowserRouter([
     path: "/register",
     element: <RegistarPage />,
     loader: async () => {
+      store.dispatch({ type: "CLEAR_ERROR" });
       const user = await redirectURL();
 
       if (user) {
@@ -73,6 +74,7 @@ const router = createBrowserRouter([
     path: "/login",
     element: <LoginPage />,
     loader: async () => {
+      store.dispatch({ type: "CLEAR_ERROR" });
       const user = await redirectURL();
       if (user) {
         throw redirect("/user");

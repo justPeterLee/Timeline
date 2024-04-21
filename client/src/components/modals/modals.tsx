@@ -21,8 +21,7 @@ export function TimePoleModal({
 }) {
   // ------------ redux -----------------------
   const dispatch = useAppDispatch();
-  const user = useAppSelector((store) => store.userAccount);
-
+  const user = useAppSelector((store) => store.userAccount.userReducer);
   // ----------- inital data ------------------
 
   const [editMode, setEditMode] = useState(false);

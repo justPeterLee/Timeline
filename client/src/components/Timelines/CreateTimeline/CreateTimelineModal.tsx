@@ -28,7 +28,7 @@ export function CreateTimelineModal({
 }) {
   const navigate = useNavigate();
   const { month, year } = useParams();
-  const user = useAppSelector((store) => store.userAccount);
+  const user = useAppSelector((store) => store.userAccount.userReducer);
 
   const dispatch = useAppDispatch();
 

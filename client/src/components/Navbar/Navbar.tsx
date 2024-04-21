@@ -47,7 +47,7 @@ export default function Navbar() {
 }
 
 function NavbarMenuPage() {
-  const user = useAppSelector((store) => store.userAccount);
+  const user = useAppSelector((store) => store.userAccount.userReducer);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 

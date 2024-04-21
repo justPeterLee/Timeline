@@ -32,7 +32,7 @@ export function TimePolesTimeline({
     onOpenSelectedGroupPole: (_pole: StandardPoleData[]) => void;
   };
 }) {
-  const user = useAppSelector((store) => store.userAccount);
+  const user = useAppSelector((store) => store.userAccount.userReducer);
   const dispatch = useAppDispatch();
   const poleData = useMemo(() => {
     const polesData = getPoleDataList(poles, "year");

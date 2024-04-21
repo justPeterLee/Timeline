@@ -7,8 +7,10 @@ import { ValidInput } from "../../components/elements/Elements";
 import { useDispatch } from "react-redux";
 
 import { useEffect } from "react";
+import { useAppSelector } from "../../redux/redux-hooks/redux.hook";
 export default function LoginPage() {
   const dispatch = useDispatch();
+  const loginError = useAppSelector((store) => store.userAccount.userError);
   // console.log(current);
   const [user, setUser] = useState<{ username: string; password: string }>({
     username: "",

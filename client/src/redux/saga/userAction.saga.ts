@@ -20,7 +20,13 @@ function* registerUser({ payload }: RegisterParams): Generator {
       type: "LOGIN",
       payload: { username: payload.user, password: payload.pass },
     });
-  } catch (err) {
+  } catch (err: any) {
+    yield put({
+      type: "REGISTER_ERROR",
+      payload: err.response.data
+        ? err.response.data.error
+        : "could not make account",
+    });
     console.log(err);
   }
 }
@@ -38,8 +44,8 @@ function* loginUser({ payload }: LoginParams): Generator {
   try {
     yield axios.post("/api/v1/userAction/login", payload, config);
     location.reload();
-    // yield put({ type: "FETCH_USER" });
   } catch (err) {
+    yield put({ type: "LOGIN_ERROR", payload: "no user found" });
     console.log(err);
   }
 }
