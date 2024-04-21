@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import { Link } from "react-router-dom";
 import { ValidInput } from "../../components/elements/Elements";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 import { useEffect } from "react";
 export default function LoginPage() {
@@ -15,13 +15,23 @@ export default function LoginPage() {
     password: "",
   });
 
-  const [error, setError] = useState<{ user: boolean; pass: boolean }>({
-    user: false,
-    pass: false,
-  });
+  const [isError, setIsError] = useState(false);
+
+  const validateInput = () => {
+    if (!user.username.replace(/\s/g, "")) {
+      setIsError(true);
+      return true;
+    } else {
+      setIsError(false);
+    }
+    return false;
+  };
 
   const loginReq = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (validateInput()) {
+      throw "invalid user";
+    }
 
     dispatch({
       type: "LOGIN",
@@ -42,15 +52,13 @@ export default function LoginPage() {
       >
         <div className={styles.loginInput}>
           <ValidInput
+            label="username / email"
             value={user.username}
             setValue={(par) => {
               setUser({ ...user, username: par });
             }}
-            label="username / email"
             inputStyle={{ width: "250px" }}
-            errorLabel="invalid user"
-            error={{ custom: error.user }}
-            // placeholder="email or"
+            error={{ label: "invalid username", state: isError }}
           />
 
           <ValidInput
@@ -71,8 +79,8 @@ export default function LoginPage() {
             <Link to={"/register"} className="Link">
               create account
             </Link>
-            <Link to={"/sign-up"} className="Link">
-              forgot password
+            <Link to={"/"} className="Link">
+              continue without account
             </Link>
           </div>
         </div>

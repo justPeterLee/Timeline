@@ -16,7 +16,10 @@ type RegisterParams = {
 function* registerUser({ payload }: RegisterParams): Generator {
   try {
     yield axios.post("/api/v1/userAction/register", payload);
-    yield put({ type: "SET_USER", payload: payload });
+    yield put({
+      type: "LOGIN",
+      payload: { username: payload.user, password: payload.pass },
+    });
   } catch (err) {
     console.log(err);
   }
@@ -34,7 +37,8 @@ const config = {
 function* loginUser({ payload }: LoginParams): Generator {
   try {
     yield axios.post("/api/v1/userAction/login", payload, config);
-    yield put({ type: "FETCH_USER" });
+    location.reload();
+    // yield put({ type: "FETCH_USER" });
   } catch (err) {
     console.log(err);
   }

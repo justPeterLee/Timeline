@@ -27,10 +27,42 @@ export default function Registar() {
     email: false,
   });
 
+  const validateInput = () => {
+    let state = false;
+
+    const proxyError = { ...error };
+
+    if (!user.user.replace(/\s/g, "")) {
+      state = true;
+      proxyError.user = true;
+    } else {
+      proxyError.user = false;
+    }
+
+    if (!user.pass.replace(/\s/g, "")) {
+      state = true;
+      proxyError.pass = true;
+    } else {
+      proxyError.pass = false;
+    }
+
+    if (!user.email.replace(/\s/g, "")) {
+      state = true;
+      proxyError.email = true;
+    } else {
+      proxyError.email = false;
+    }
+
+    setError({ ...proxyError });
+    return state;
+  };
   const registerReq = (e: React.FormEvent<HTMLFormElement>) => {
-    // e.preventDefault();
+    e.preventDefault();
+    if (validateInput()) {
+      throw "invalid input";
+    }
+
     dispatch({ type: "REGISTER", payload: user });
-    // console.log(user);
   };
 
   return (
@@ -47,8 +79,7 @@ export default function Registar() {
             }}
             label="username"
             inputStyle={{ width: "250px" }}
-            errorLabel="invalid user"
-            error={{ custom: error.user }}
+            error={{ label: "invalid username", state: error.user }}
           />
 
           <ValidInput
@@ -58,8 +89,7 @@ export default function Registar() {
             }}
             label="password"
             inputStyle={{ width: "250px" }}
-            error={{ custom: error.pass }}
-            errorLabel="invaild password"
+            error={{ label: "invalid password", state: error.pass }}
           />
 
           <ValidInput
@@ -69,8 +99,7 @@ export default function Registar() {
             }}
             label="email"
             inputStyle={{ width: "250px" }}
-            error={{ custom: error.email }}
-            errorLabel="invalid email"
+            error={{ label: "invalid email", state: error.email }}
           />
         </div>
         <div className={styles.loginButton}>
@@ -82,8 +111,8 @@ export default function Registar() {
             <Link to={"/login"} className="Link">
               login
             </Link>
-            <Link to={"/sign-up"} className="Link">
-              forgot password
+            <Link to={"/"} className="Link">
+              continue without account
             </Link>
           </div>
         </div>

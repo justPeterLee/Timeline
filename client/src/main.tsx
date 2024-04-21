@@ -44,6 +44,7 @@ const router = createBrowserRouter([
       },
     ],
   },
+
   {
     path: "/user",
     element: <UserPage />,
@@ -54,6 +55,7 @@ const router = createBrowserRouter([
       return null;
     },
   },
+
   {
     path: "/register",
     element: <RegistarPage />,
@@ -66,6 +68,7 @@ const router = createBrowserRouter([
       return null;
     },
   },
+
   {
     path: "/login",
     element: <LoginPage />,
