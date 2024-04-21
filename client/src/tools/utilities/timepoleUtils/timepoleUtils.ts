@@ -1,3 +1,5 @@
+import { month_data } from "../../data/monthData";
+import { getWeek, getDayOfYear } from "../dateFunction";
 import { randomFifthyFifthy as random } from "../utilities";
 
 export interface StandardPoleData {
@@ -290,4 +292,62 @@ export function generatePoleKey(_pole: string) {
   const date = new Date(_pole);
 
   return `${date.getFullYear()}${date.getMonth()}${date.getDate()}`;
+}
+
+export function getPoleData(pole: StandardPoleData, state: string) {
+  // x-percent
+  const date = new Date(pole.full_date);
+  // console.log(pole);
+  const dateNumber = state === "year" ? getDayOfYear(date) : date.getDate();
+
+  const limit =
+    state && state === "month"
+      ? 100 / month_data[date.getMonth()].day
+      : 100 / 365;
+
+  // weekNumber
+  const xPercent = limit * dateNumber;
+  // console.log(dateNumber);
+
+  const weekNumber = getWeek(date);
+  return { xPercent, weekInfo: weekNumber };
+}
+
+export function getPoleDataList(poles: StandardPoleData[], state: string) {
+  const poleWeekList: PoleData = {};
+  // console.log(poles);
+
+  for (let i = 0; i < poles.length; i++) {
+    const poleData = getPoleData(poles[i], state);
+
+    const weekPoleTwo = poleWeekList[poleData.weekInfo.weekNumber];
+    const pole = poles[i];
+    const poleDate = pole.full_date;
+    const poleId = pole.id;
+    const xPercent = poleData.xPercent;
+
+    if (weekPoleTwo) {
+      // check if date instance exists
+      if (weekPoleTwo.polesList[poleDate]) {
+        weekPoleTwo.polesList[poleDate].poles.push(pole);
+        weekPoleTwo.polesList[poleDate].id = weekPoleTwo.polesList[
+          poleDate
+        ].id.concat("_", poleId);
+      } else {
+        weekPoleTwo.polesList[poleDate] = {
+          id: poleId,
+          poles: [pole],
+          xPercent: xPercent,
+        };
+      }
+    } else {
+      poleWeekList[poleData.weekInfo.weekNumber] = {
+        polesList: {
+          [poleDate]: { id: poleId, poles: [pole], xPercent: xPercent },
+        },
+      };
+    }
+  }
+
+  return poleWeekList;
 }

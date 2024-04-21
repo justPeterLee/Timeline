@@ -34,14 +34,6 @@ function userTimeline(
 ) {
   switch (action.type) {
     case "SET_USER_TIMELINE":
-      // state = { ...state, status: "loading" };
-
-      // for (let i = 0; i < action.payload.length; i++) {
-      //   state = { ...state, [action.payload[i].year]: action.payload[i].id };
-      // }
-
-      // state = { ...state, status: "completed" };
-
       return { ...state, status: "completed", poles: [...action.payload] };
     default:
       return state;

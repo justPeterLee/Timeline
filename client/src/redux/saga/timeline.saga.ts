@@ -17,7 +17,6 @@ function* getTimelineUser(): Generator {
   console.log("in saga");
   try {
     const data: any = yield axios.get("/api/v1/timeline/get");
-    console.log(data.data);
     yield put({ type: "SET_USER_TIMELINE", payload: data.data });
   } catch (err) {
     console.log(err);
@@ -41,8 +40,7 @@ function* postTimelineUser({
   type: string;
 }): Generator {
   try {
-    const data: any = yield axios.post("/api/v1/timeline/create", payload);
-    console.log(data.data);
+    yield axios.post("/api/v1/timeline/create", payload);
     // yield put({ type: "SET_USER_TIMELINE", payload: data.data });
   } catch (err) {
     console.log(err);

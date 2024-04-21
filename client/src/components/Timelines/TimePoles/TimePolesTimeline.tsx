@@ -4,7 +4,7 @@ import {
   StandardPoleData,
   generatePoleKey,
 } from "../../../tools/utilities/timepoleUtils/timepoleUtils";
-import { getPoleDataList } from "../../../tools/data";
+import { getPoleDataList } from "../../../tools/utilities/timepoleUtils/timepoleUtils";
 import {
   compareSortPoles,
   extractPoleData,
@@ -22,8 +22,7 @@ export function TimePolesTimeline({
   poles,
   showPoles,
   func,
-}: //   showPoles,
-{
+}: {
   timelineId: string;
   sortData: {};
   poles: StandardPoleData[];
@@ -32,7 +31,6 @@ export function TimePolesTimeline({
     onOpenSelectedPole: (_pole: StandardPoleData) => void;
     onOpenSelectedGroupPole: (_pole: StandardPoleData[]) => void;
   };
-  //   showPoles: StandardPoleData[];
 }) {
   const user = useAppSelector((store) => store.userAccount);
   const dispatch = useAppDispatch();
@@ -63,23 +61,26 @@ export function TimePolesTimeline({
   const [localState, setLocalState] = useState(localSortData);
 
   const debounceFunctionCall = useMemo(() => {
-    return debounceFunction((sortData: string[]) => {
+    return debounceFunction((sortData: [string, StandardPoleData]) => {
       if (user.id) {
         dispatch({
           type: "UPDATE_SORTDATA_SERVER",
-          payload: { timelineId: timelineId, sortData: sortData[0] },
+          payload: { timelineId: sortData[1].year_id, sortData: sortData[0] },
         });
       } else {
         dispatch({
           type: "UPDATE_SORT_DATA_GUEST",
-          payload: { timelineId: timelineId, sortData: sortData[0] },
+          payload: { timelineId: sortData[1].year, sortData: sortData[0] },
         });
       }
     }, 1000);
   }, []);
 
-  const onMovedPole = (_pole: { id: string; yPos: number }) => {
-    console.log("moved");
+  const onMovedPole = (_pole: {
+    id: string;
+    yPos: number;
+    timelineId: StandardPoleData;
+  }) => {
     // create copy of local sort data
     const localSortProxy = localState ? JSON.parse(localState) : {};
 
@@ -90,14 +91,13 @@ export function TimePolesTimeline({
     // update local sort data
     window.localStorage.setItem("localSortData", jsonSortData);
 
-    debounceFunctionCall(jsonSortData);
+    debounceFunctionCall(jsonSortData, _pole.timelineId);
 
     // rerender page
     setLocalState(jsonSortData);
   };
 
   useEffect(() => {
-    // if (user) {
     // copy of sort data (cannot mutate sort data)
     const sortDataCopy = { ...sortData };
 
@@ -129,39 +129,6 @@ export function TimePolesTimeline({
     window.localStorage.setItem("localSortData", JSON.stringify(sortDataCopy));
 
     setLocalState(JSON.stringify(sortDataCopy));
-    // } else {
-    //   if (!localSortData) {
-    //     // generate local storage if sort data not initiated
-
-    //     const newSortData = sort(poleData);
-    //     const jsonSortData = JSON.stringify(newSortData);
-
-    //     window.localStorage.setItem("localSortData", jsonSortData);
-    //     const localSortDatas = window.localStorage.getItem("localSortData");
-
-    //     setLocalState(localSortDatas);
-    //   }
-
-    //   // update sort data
-    //   if (localSortData) {
-    //     const jsonLocalSortData = JSON.parse(localSortData);
-
-    //     const editSortData = compareSortPoles(poles, jsonLocalSortData);
-    //     if (editSortData.addArray.length || editSortData.deleteArray.length) {
-    //       const updatedSortData = sortDataUpdater(
-    //         editSortData,
-    //         jsonLocalSortData,
-    //         poles,
-    //         "year"
-    //       );
-
-    //       window.localStorage.setItem("localSortData", updatedSortData);
-
-    //       const utdLocalSortData = window.localStorage.getItem("localSortData");
-    //       setLocalState(utdLocalSortData);
-    //     }
-    //   }
-    // }
   }, [poleData]);
   return (
     <>
@@ -218,7 +185,11 @@ function TimePole({
   setSelectedPole: (_pole: StandardPoleData) => void;
   setSelectedGroupPole: (_pole: StandardPoleData[]) => void;
 
-  onMovedPole: (_pole: { id: string; yPos: number }) => void;
+  onMovedPole: (_pole: {
+    id: string;
+    yPos: number;
+    timelineId: StandardPoleData;
+  }) => void;
 }) {
   const timelineSpring = useContext(TimelineSpringContext);
 
@@ -237,7 +208,6 @@ function TimePole({
 
   const bind = useDrag(({ down, movement: [mx, _my] }) => {
     if (textBubbleTarget.current) {
-      // console.log(moving);
       const halfHeight =
         textBubbleTarget.current.getBoundingClientRect().height / 2;
 
@@ -273,21 +243,18 @@ function TimePole({
         }
 
         if (wasDragging.current) {
-          onMovedPole({ id: id, yPos: yPosRef.current });
+          onMovedPole({
+            id: id,
+            yPos: yPosRef.current,
+            timelineId: poleData.poles[0],
+          });
         }
-        // timePoleApi.start({
-        //   y: yPosRef.current,
-        //   // onResolve: () => {
-        //   //   onMovedPole({ id: id, yPos: yPosRef.current });
-        //   // },
-        // });
       }
 
       if (down) {
         if (!wasDragging.current && (_my > 5 || _my < -5)) {
           wasDragging.current = true;
         }
-        // console.log(oy);
         const offsetYPos = _my + yPosRef.current;
         timePoleApi.start({
           x: mx / 10,
@@ -296,18 +263,12 @@ function TimePole({
             offsetYPos >= 0
               ? offsetYPos - halfHeight - 5
               : offsetYPos + halfHeight + 5,
-          // onResolve: () => {
-          //   onMovedPole({ id: id, yPos: yPosRef.current });
-          // },
         });
-
-        // if()
       }
     }
   });
 
   useEffect(() => {
-    // if (!yPosRef.current) {
     let scale = 0;
     if (yPos && textBubbleTarget.current) {
       const halfHeight =

@@ -1,21 +1,27 @@
 import styles from "./DisplayTimeline.module.css";
+
+import { animated, to } from "react-spring";
+
 import { useContext, useMemo, useState } from "react";
+
 import { TimelineSpringContext } from "../Context/TimelineContext";
-// import { Timeline } from "../Timeline/Timeline";
+
+import {
+  StandardPoleData,
+  getPoleDataList,
+} from "../../../tools/utilities/timepoleUtils/timepoleUtils";
+
 import {
   TimelineCardAnimation,
   TimelineSpringValue,
 } from "../Timeline/Timeline";
-// import { TimePoleDisplay } from "../../timepole/Timepole";
-import { StandardPoleData } from "../../../tools/utilities/timepoleUtils/timepoleUtils";
 import { TimePolesTimeline } from "../TimePoles/TimePolesTimeline";
-import { Modal } from "../../elements/Links";
+import { Modal } from "../../modals/ModalComponents";
 import {
   GroupTimePoleSelectionModal,
   TimePoleModal,
 } from "../../modals/Modals";
-import { animated, to } from "react-spring";
-import { getPoleDataList } from "../../../tools/data";
+
 import { extractPoleData } from "../../../tools/utilities/timepoleUtils/timepole";
 
 export function DisplayTimeline({
@@ -37,7 +43,6 @@ export function DisplayTimeline({
     null | StandardPoleData[]
   >(null);
   const onOpenSelectedPole = (_pole: StandardPoleData) => {
-    // onCloseGroupPole();
     setSelectedPole(_pole);
   };
   const onClose = () => {
@@ -54,11 +59,6 @@ export function DisplayTimeline({
         timelineSpring={springContext!.timelineSpring}
         id="display-timeline"
       >
-        {/* <TimePoleDisplay
-          url="year"
-          poles={poles}
-          timelineSpring={springContext!.setTimelineSpring}
-        /> */}
         <TimePolesTimeline
           timelineId={timelineId}
           sortData={sortData}
@@ -111,7 +111,6 @@ export function CreateDisplayTimeline({
     >
       {Object.keys(extractedPoleDatas).map((_poleKey) => {
         const _pole = extractedPoleDatas[_poleKey];
-        // const genPoleKey = generatePoleKey(_poleKey);
         const key = Math.random();
 
         return (

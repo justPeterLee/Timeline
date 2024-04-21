@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { ViewLinks } from "../../components/elements/Links";
+import { ViewLinks } from "../../components/elements/Elements";
 import ViewTimeline from "../../components/Timelines/ViewTimeline/ViewTimeline";
 import { CreateTimeline } from "../../components/Timelines/CreateTimeline/CreateTimeline";
 import { useAppSelector } from "../../redux/redux-hooks/redux.hook";
@@ -18,10 +18,10 @@ import { useLoaderData } from "react-router-dom";
 export default function TimelinePage() {
   const user: any = useLoaderData();
   const { year, month, mode } = useParams();
+
   const currentPoles = useAppSelector(
     (store) => store.timepole.currentUserTimePole
   );
-
   const showCurrentPoles = useMemo(() => {
     if (!month) {
       return currentPoles.poles;
@@ -43,9 +43,9 @@ export default function TimelinePage() {
   }, [currentPoles, month]);
 
   useEffect(() => {
-    // console.log(user);
     yearLoader(year, user);
   }, [year]);
+
   return (
     <>
       <PoleMenu poles={currentPoles.poles} />

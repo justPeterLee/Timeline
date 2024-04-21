@@ -1,5 +1,7 @@
-import { useState } from "react";
 import styles from "./Navbar.module.css";
+
+import { useState } from "react";
+
 import { FiMenu } from "react-icons/fi";
 import { MdLockOutline } from "react-icons/md";
 import { FaRegUser } from "react-icons/fa";
@@ -10,8 +12,10 @@ import {
   useAppDispatch,
   useAppSelector,
 } from "../../redux/redux-hooks/redux.hook";
+
 import { useNavigate } from "react-router-dom";
-import { InvisibleBackdrop } from "../elements/Links";
+
+import { InvisibleBackdrop } from "../modals/ModalComponents";
 
 export default function Navbar() {
   const [togglePage, setTogglePage] = useState(false);
@@ -19,14 +23,12 @@ export default function Navbar() {
   const onClose = () => {
     setTogglePage(false);
   };
-  //   console.log(user);
   return (
     <div className={styles.Navbar}>
       <div className={styles.NavbarMenu}>
         <button
           className={styles.NavbarMenuButton}
           onClick={() => {
-            console.log("hello");
             setTogglePage(!togglePage);
           }}
         >
@@ -40,7 +42,6 @@ export default function Navbar() {
           </>
         )}
       </div>
-      {/* {user.id && <NavbarUser username={user.username} />} */}
     </div>
   );
 }

@@ -29,7 +29,7 @@ function MarkerMonth({
         transformOrigin: "center left",
         transform: to(
           [timelineSpring.scale, timelineSpring.markerX],
-          (scale, x) => `scaleX(${1 / scale}) translate(${x}px,${0}px)`
+          (scale, x) => `scaleX(${1 / (scale * 10)}) translate(${x}px,${0}px)`
         ),
       }}
       className={styles.Markers}
@@ -37,7 +37,7 @@ function MarkerMonth({
     >
       <span
         className={styles.MonthAbbr}
-        style={month === 1 ? { transform: "none" } : {}}
+        style={{ left: `${month === 1 ? "450%" : "50%"}` }}
         onClick={() => {
           if (mode === "view" || !mode) {
             navigate(`/month/${year ? year : current.year}/${month}/view`);
@@ -54,12 +54,10 @@ function MarkerWeek({
   timelineSpring,
   left,
   week,
-}: // monthPos,
-{
+}: {
   timelineSpring: TimelineSpringValue;
   left: number;
   week: number;
-  // monthPos: number;
 }) {
   return (
     <animated.div
@@ -68,7 +66,7 @@ function MarkerWeek({
         transformOrigin: "center left",
         transform: to(
           [timelineSpring.scale, timelineSpring.markerX],
-          (scale, x) => `scaleX(${1 / scale}) translate(${x}px, 0px)`
+          (scale, x) => `scaleX(${1 / (scale * 10)}) translate(${x}px, 0px)`
         ),
       }}
       className={styles.MarkerWeek}
@@ -104,7 +102,7 @@ function MarkerDay({
             transformOrigin: "center left",
             transform: to(
               [timelineSpring.scale, timelineSpring.markerX],
-              (scale, x) => `scaleX(${1 / scale}) translate(${x}px, 0px)`
+              (scale, x) => `scaleX(${1 / (scale * 10)}) translate(${x}px, 0px)`
             ),
           }}
           className={styles.MarkerDay}
@@ -162,7 +160,6 @@ export function MarkerAllContainer({
               timelineSpring={timelineSpring}
               left={left}
               week={indexWeek}
-              // monthPos={monthTracker}
             />
           );
         } else {

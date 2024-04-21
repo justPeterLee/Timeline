@@ -20,13 +20,11 @@
   flex: 1;
   border-radius: 5px;
   border: solid 1px rgb(240, 240, 240);
-  /* padding: 10px; */
   background-color: rgb(240, 240, 240);
 }
 .modalDate p {
   margin: 10px;
   font-size: 14px;
-  /* font-weight: 400; */
 }
 .modalDateYear {
   font-size: 10px;
@@ -34,7 +32,6 @@
 
 /* modal buttons */
 .modalButtonContainer {
-  /* border-top: solid 1px rgb(100, 100, 100); */
   display: flex;
   justify-content: space-between;
   padding-top: 15px;
@@ -53,7 +50,6 @@
 }
 .completeModal:hover {
   background-color: rgb(220, 220, 220);
-  /* color: white; */
 }
 
 .deleteModalIcon {
@@ -153,13 +149,11 @@
   margin-top: 10px;
   flex-direction: row;
   justify-content: flex-end;
-  /* align-items: flex-end; */
   gap: 10px;
 }
 
 .confirmationCancel,
 .confirmationAction {
-  /* background-color: antiquewhite; */
   border-radius: 5px;
   padding: 10px;
   transition: background-color ease 0.15s;
@@ -184,8 +178,6 @@
   transition: opacity 0.1s;
   z-index: 2000;
   bottom: 30px;
-
-  /* background-color: black; */
 }
 
 .inputContainer {
@@ -209,9 +201,7 @@
   align-items: center;
 }
 .button {
-  /* border: solid 1px black; */
   border-radius: 5px;
-  /* height: 2rem; */
   padding: 0.5rem;
   transition: background-color ease 0.1s;
   color: rgb(100, 100, 100);

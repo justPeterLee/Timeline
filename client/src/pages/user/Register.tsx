@@ -1,11 +1,9 @@
 import styles from "./User.module.css";
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-// import use
-// import { current } from "../../tools/data";
-
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
-import { ValidInput } from "../../components/elements/Links";
+import { ValidInput } from "../../components/elements/Elements";
+
 export default function Registar() {
   const dispatch = useDispatch();
 

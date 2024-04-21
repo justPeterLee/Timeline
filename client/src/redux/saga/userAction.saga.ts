@@ -15,7 +15,6 @@ type RegisterParams = {
 
 function* registerUser({ payload }: RegisterParams): Generator {
   try {
-    console.log("in saga", payload);
     yield axios.post("/api/v1/userAction/register", payload);
     yield put({ type: "SET_USER", payload: payload });
   } catch (err) {
@@ -34,7 +33,6 @@ const config = {
 
 function* loginUser({ payload }: LoginParams): Generator {
   try {
-    console.log("saga", payload);
     yield axios.post("/api/v1/userAction/login", payload, config);
     yield put({ type: "FETCH_USER" });
   } catch (err) {

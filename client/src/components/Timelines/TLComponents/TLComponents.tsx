@@ -122,7 +122,6 @@ export function PoleMenu({ poles }: { poles: StandardPoleData[] }) {
               dragTarget.current.style.cursor = "grab";
             }
           }}
-          //   style={{ cursor: `${isGrabbing ? "grabbing" : "grab"}` }}
         >
           <RiDraggable />
         </div>

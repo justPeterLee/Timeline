@@ -2,7 +2,6 @@
   border-radius: 5px;
   height: 5rem;
   width: 90%;
-  /* background-color: rgb(230, 230, 230); */
 
   position: absolute;
   top: 50%;
@@ -10,20 +9,13 @@
   transform: translate(-50%, -50%);
 
   overflow: hidden;
-
-  /* z-index: 1000; */
-  /* user-select: none;
-  pointer-events: none; */
 }
 
 .OriginMarker {
   width: 100%;
   position: absolute;
 
-  /* /* right: 50%; */
   top: 50%;
-
-  /* transform: translateX(10%); */
 }
 
 .Marker {

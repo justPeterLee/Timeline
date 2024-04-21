@@ -65,7 +65,6 @@ function LinkSection({
       className={styles.LinkSection}
       id={isActive ? styles.ActiveLink : styles.InactiveLink}
       onClick={() => {
-        console.log(isActive);
         if (!isActive) {
           onNavigate();
         }

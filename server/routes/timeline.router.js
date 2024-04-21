@@ -6,13 +6,11 @@ const router = express.Router();
 router.get("/get", rejectUnauthenticated, async (req, res) => {
   const user = req.user.id;
   const query = `SELECT * FROM "timeline" WHERE user_id = $1`;
-  const client = await pool.connect();
 
   try {
-    client
+    pool
       .query(query, [user])
       .then((response) => {
-        console.log(response.rows);
         res.send(response.rows);
       })
       .catch((err) => {
@@ -22,8 +20,6 @@ router.get("/get", rejectUnauthenticated, async (req, res) => {
   } catch (err) {
     console.log(err);
     res.sendStatus(500);
-  } finally {
-    client.release();
   }
 });
 
@@ -45,10 +41,8 @@ router.get("/get/all", rejectUnauthenticated, async (req, res) => {
     WHERE u.id = $1;  
   `;
 
-  const client = await pool.connect();
-
   try {
-    client
+    pool
       .query(query, [user])
       .then((response) => {
         res.send(response.rows);
@@ -60,33 +54,8 @@ router.get("/get/all", rejectUnauthenticated, async (req, res) => {
   } catch (err) {
     console.log(err);
     res.sendStatus(500);
-  } finally {
-    client.release();
   }
 });
-
-// router.get("/get/all", rejectUnauthenticated, async (req, res) => {
-//   const user = req.user.id;
-//   const query = `
-//   SELECT
-//   pd.year, pd.month, pd.date, pd.full_date, pd.time_pole_id, pd.id AS "date_id",
-//   p.id as "pole_id", p.title as "pole_title", p.description as "pole_description",
-//   y.*
-
-//   FROM "timeline" y
-//   JOIN t
-//   `;
-//   const client = await pool.connect();
-
-//   try {
-//     client;
-//   } catch (err) {
-//     console.log(err);
-//     res.sendStatus(500);
-//   } finally {
-//     client.release();
-//   }
-// });
 
 router.get("/get/id/:year", rejectUnauthenticated, async (req, res) => {
   const user = req.user.id;
@@ -95,13 +64,11 @@ router.get("/get/id/:year", rejectUnauthenticated, async (req, res) => {
   SELECT id FROM "timeline"
   WHERE user_id = $1 AND year = $2;
   `;
-  const client = await pool.connect();
 
   try {
-    client
+    pool
       .query(query, [user, year])
       .then((response) => {
-        console.log(response.rows);
         res.send(response.rows);
       })
       .catch((err) => {
@@ -111,8 +78,6 @@ router.get("/get/id/:year", rejectUnauthenticated, async (req, res) => {
   } catch (err) {
     console.log(err);
     res.sendStatus(500);
-  } finally {
-    client.release();
   }
 });
 
@@ -146,14 +111,12 @@ router.get(
       pool
         .query(PolesQuery, [user, timelineId])
         .then((response) => {
-          //   console.log(response.rows);
           resData = { ...resData, poles: response.rows };
 
           pool
             .query(SortQuery, [timelineId])
             .then((response) => {
               resData = { ...resData, sortData: response.rows };
-              // console.log(resData);
               res.send(resData);
             })
             .catch((err) => {

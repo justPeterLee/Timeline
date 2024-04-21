@@ -1,21 +1,23 @@
 import styles from "./CreateTimeline.module.css";
-import { ValidInput } from "../../elements/Links";
-import { Modal } from "../../elements/Links";
 
-import { ReactNode, useEffect, useState } from "react";
+import { ValidInput } from "../../elements/Elements";
+import { Modal } from "../../modals/ModalComponents";
+import { current } from "../../../tools/data/monthData";
+
+import React, { ReactNode, useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-import React from "react";
 import { BsCalendar3, BsTextCenter } from "react-icons/bs";
-import { useNavigate, useParams } from "react-router-dom";
+
 import {
   useAppDispatch,
   useAppSelector,
 } from "../../../redux/redux-hooks/redux.hook";
+
 import axios from "axios";
-import { current } from "../../../tools/data/monthData";
 
 export function CreateTimelineModal({
   date,
@@ -51,10 +53,10 @@ export function CreateTimelineModal({
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (validateTimePole()) {
-      throw `error`;
+      throw `error invalid input`;
     }
 
-    if (!date) {
+    if (!newTimePole.date) {
       throw "invalid date";
     }
 
@@ -69,11 +71,11 @@ export function CreateTimelineModal({
         title: newTimePole.title,
         description: newTimePole.description,
         date_data: {
-          date: date.getDate(),
-          month: date.getMonth(),
-          year: date.getFullYear(),
-          day: date.getDay(),
-          full_date: date.toISOString(),
+          date: newTimePole.date.getDate(),
+          month: newTimePole.date.getMonth(),
+          year: newTimePole.date.getFullYear(),
+          day: newTimePole.date.getDay(),
+          full_date: newTimePole.date.toISOString(),
         },
         timelineId: timelineId,
       };
@@ -85,16 +87,16 @@ export function CreateTimelineModal({
     } else {
       const payload = {
         id: Math.random().toString(),
-        year_id: date.getFullYear().toString(),
+        year_id: newTimePole.date.getFullYear().toString(),
 
         title: newTimePole.title,
         description: newTimePole.description,
         completed: false,
 
-        date: date.getDate(),
-        month: date.getMonth(),
-        year: date.getFullYear(),
-        full_date: date.toISOString(),
+        date: newTimePole.date.getDate(),
+        month: newTimePole.date.getMonth(),
+        year: newTimePole.date.getFullYear(),
+        full_date: newTimePole.date.toISOString(),
       };
 
       dispatch({
@@ -117,13 +119,9 @@ export function CreateTimelineModal({
       >
         <div className={styles.CreateTimelineModal}>
           <div className={styles.ModalTitle}>
-            {/* <div className={styles.IconContainer}></div> */}
-            <div className={styles.ModalIconContainer}>
-              {/* <BsCalendar3 className={styles.modalIcon} /> */}
-            </div>
+            <div className={styles.ModalIconContainer}></div>
             <ValidInput
               label="title"
-              // errorLabel="invalid title"
               error={{
                 label: "invalid title",
                 state: isError,
@@ -222,8 +220,8 @@ export function DatePickerModal({
           )
         }
         dateFormat="EEEE, LLLL d"
-        minDate={new Date("2024-01-01")}
-        maxDate={new Date("2024-12-31")}
+        minDate={new Date(`${date.getFullYear()}-01-02`)}
+        maxDate={new Date(`${date.getFullYear()}-12-31`)}
       />
     </>
   );

@@ -11,7 +11,6 @@ const userReducer = (
 ) => {
   switch (action.type) {
     case "SET_USER":
-      console.log("in redux", action.payload);
       return action.payload;
     case "UNSET_USER":
       return {};

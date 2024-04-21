@@ -75,10 +75,8 @@ function* createTimePoleSERVER({ payload }: PostTimePole): Generator {
 
 function* updateTimePoleSERVER({ payload }: PostTimePole): Generator {
   try {
-    console.log("in saga", payload);
     yield axios.put("/api/v1/timepole/update", payload);
 
-    console.log(payload.timelineId);
     yield put({
       type: "GET_CURRENT_TIMEPOLE_SERVER",
       payload: { timelineId: payload.timelineId },
@@ -114,7 +112,6 @@ function* deleteTimePoleSERVER({
   type: string;
 }) {
   try {
-    console.log(payload);
     yield axios.delete(`/api/v1/timepole/delete/${payload.id}`);
     yield put({
       type: "GET_CURRENT_TIMEPOLE_SERVER",

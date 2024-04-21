@@ -3,7 +3,7 @@ import { useState } from "react";
 // import { current } from "../../tools/data";
 
 import { Link } from "react-router-dom";
-import { ValidInput } from "../../components/elements/Links";
+import { ValidInput } from "../../components/elements/Elements";
 import { useDispatch, useSelector } from "react-redux";
 
 import { useEffect } from "react";

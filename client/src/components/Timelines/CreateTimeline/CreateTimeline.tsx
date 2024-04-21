@@ -1,14 +1,20 @@
 import styles from "./CreateTimeline.module.css";
+
 import { animated, useSpring, to, SpringValues } from "react-spring";
 import { useGesture } from "@use-gesture/react";
+
 import { useContext, useEffect, useRef, useState } from "react";
-import { Timeline } from "../Timeline/Timeline";
-import { CreateTimelineModal, DatePickerModal } from "./CreateTimelineModal";
 import { useParams } from "react-router-dom";
+
+import { CreateTimelineModal, DatePickerModal } from "./CreateTimelineModal";
+
 import { percentToDate } from "../../../tools/utilities/dateFunction";
 import { format } from "date-fns";
+
 import { TimelineSpringContext } from "../Context/TimelineContext";
 import { StandardPoleData } from "../../../tools/utilities/timepoleUtils/timepoleUtils";
+
+import { Timeline } from "../Timeline/Timeline";
 import { CreateDisplayTimeline } from "../DisplayTimeline/DisplayTimeline";
 
 export function CreateTimeline({ poles }: { poles: StandardPoleData[] }) {
@@ -29,9 +35,6 @@ export function CreateTimeline({ poles }: { poles: StandardPoleData[] }) {
     timelineBoundaries.current = { left: -10000, right: 10000 };
     timelineDeltaRef.current = 0;
     timelineMovementRef.current = 0;
-
-    // reset timeline animation
-    // timelineApi.set({ origin: percentValueRef.current });
 
     timelineApi.start({ scale: 1, x: 0 });
 
@@ -150,7 +153,6 @@ export function CreateTimeline({ poles }: { poles: StandardPoleData[] }) {
           !isStopped.current &&
           !month
         ) {
-          console.log("test");
           timelineStepperRef.current = requestAnimationFrame(() => {
             timelineStep(event);
           });
@@ -223,8 +225,6 @@ export function CreateTimeline({ poles }: { poles: StandardPoleData[] }) {
           timelineMovementRef.current = 0;
 
           // reset timeline animation
-          // timelineApi.set({ origin: percentValueRef.current });
-
           timelineApi.start({ scale: 1, x: 0 });
 
           // reset dot animation

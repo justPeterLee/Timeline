@@ -4,7 +4,6 @@ const { rejectUnauthenticated } = require("../modules/authenication");
 const router = express.Router();
 
 router.get("/get/:timelineId", rejectUnauthenticated, async (req, res) => {
-  // const user = req.user.id;
   const timelineId = req.params.timelineId;
   const query = `
       SELECT sort FROM "sort_data" 
@@ -59,13 +58,10 @@ router.put("/put", rejectUnauthenticated, async (req, res) => {
     RETURNING sort;
     `;
 
-  console.log(timelineId);
-
   try {
     pool
       .query(query, [sortData, timelineId])
       .then((response) => {
-        console.log(response.rows);
         res.send(response.rows);
       })
       .catch((err) => {

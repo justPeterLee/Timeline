@@ -96,12 +96,8 @@ export function TimeSpringContext({ children }: { children: ReactNode }) {
     }
 
     if (previousState.current) {
-      // transition
-      // console.log("trans");
-
       if (normalMonth) {
         //month
-
         if (!isMonthSwitch.current) {
           timelineApi.set({ origin: op });
           timelineApi.start({ scale: scale });
@@ -116,7 +112,6 @@ export function TimeSpringContext({ children }: { children: ReactNode }) {
         setTimelineApi.set({ origin: op, scale: scale });
       } else {
         // year
-
         timelineApi.set({ origin: originOffset.current });
         timelineApi.start({ scale: 1 });
         isMonthSwitch.current = false;
@@ -125,12 +120,8 @@ export function TimeSpringContext({ children }: { children: ReactNode }) {
       }
     } else {
       // render
-      // console.log("render");
-
       if (normalMonth != null) {
         //month
-
-        // console.log("render month");
         timelineApi.set({ scale: scale, origin: op });
         timelineApi.start({ opacity: 1 });
 
@@ -139,8 +130,6 @@ export function TimeSpringContext({ children }: { children: ReactNode }) {
         setTimelineApi.set({ opacity: 1, origin: op, scale: scale });
       } else {
         // year
-
-        // console.log("render year", normalMonth);
         timelineApi.set({ scale: 1, origin: 0, opacity: 1 });
         isMonthSwitch.current = false;
 

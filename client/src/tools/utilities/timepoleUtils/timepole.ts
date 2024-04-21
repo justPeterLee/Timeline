@@ -43,15 +43,12 @@ export function compareSortPoles(
   }
 
   for (const [key, value] of poleMap.entries()) {
-    // console.log(key, value);
     if (value > 0) {
       addArray.push({ sortId: key, poleId: addArrayObj[key] });
     } else if (value < 0) {
       deleteArray.push({ sortId: key, poleId: addArrayObj[key] });
     }
   }
-  // console.log("delete: ", deleteArray);
-  // console.log("add: ", addArray);
 
   return { addArray, deleteArray };
 }
@@ -236,17 +233,12 @@ export function insertSorData(
   addPoles: { sortId: string; poleId: string }[],
   localSortData: PoleCordsData
 ) {
-  // console.time("start");
-  // console.log(JSON.parse(window.localStorage.getItem("sortDataEffect")));
   let overlappingData = generateOverLappingData(allPoles, localSortData);
-  // console.log(overlappingData);
   const newSortData = localSortData;
-  // console.log(newSortData);
   const heavenBound = window.innerHeight / 2 - 30;
   const hellBound = window.innerHeight / 2 + 30;
 
   for (let i = 0; i < addPoles.length; i++) {
-    // console.log("test");
     overlappingData = generateOverLappingData(allPoles, newSortData);
     const _newPoleTarget = document.querySelector(
       `#pole-${addPoles[i].sortId}`
@@ -280,7 +272,6 @@ export function insertSorData(
       return right >= _newPoleBC.left - 10 && left <= _newPoleBC.right + 10;
     });
 
-    // console.log(overlappingData);
     for (let i = 0; i < potentialPoles.length; i++) {
       // get potential from overlapping data
       const _potentialTarget =
@@ -318,9 +309,6 @@ export function insertSorData(
     // update overlapping data
     newSortData[addPoles[i].sortId] = { yPos: generatedYPos };
   }
-
-  // return
-  // console.timeEnd("start");
   return newSortData;
 }
 
@@ -379,7 +367,6 @@ export function extractPoleData(poleData: PoleData) {
     }
   }
 
-  // console.log(polesList);
   return polesList;
 }
 

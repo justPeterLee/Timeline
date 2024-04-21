@@ -1,5 +1,4 @@
 .LinkSection {
-  /* background-color: rgb(200, 200, 200); */
   transition: background-color ease 0.2s;
   z-index: 1;
 }

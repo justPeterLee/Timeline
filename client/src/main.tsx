@@ -1,9 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 
-import YearPage from "./pages/year/YearPage.tsx";
-import MonthPage from "./pages/month/MonthPage.tsx";
-
 import "./index.css";
 
 import { Provider } from "react-redux";
@@ -31,17 +28,17 @@ const router = createBrowserRouter([
     element: <App />,
     loader: async () => {
       // await userLoader();
-      const user = await redirectURL();
+      const user: any = await redirectURL();
       return user;
     },
     children: [
       {
         path: "/year/:year/:mode",
-        element: <YearPage />,
+        element: <></>,
       },
       {
         path: "/month/:year/:month/:mode",
-        element: <MonthPage />,
+        element: <></>,
       },
     ],
   },
@@ -49,7 +46,6 @@ const router = createBrowserRouter([
     path: "/user",
     element: <UserPage />,
     loader: async () => {
-      // await userLoader();
       await rescrictedURL("/login");
       await poleLoader();
 

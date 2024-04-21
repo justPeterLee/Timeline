@@ -27,20 +27,6 @@ function* getCurrentGuest({
   payload: { year: string };
   type: string;
 }) {
-  // get sort data based off of url
-  // create / generate data if not there
-
-  /*
-
-    {
-        <year> : {
-                    timelineId : year
-                    poles: AllStandardPoles[]
-                    sortData: string
-                }
-    }
-     */
-
   const year = payload.year;
   // get guest data
   const guestData = window.localStorage.getItem("guestData");
@@ -88,24 +74,6 @@ type PostTimePole = {
 };
 
 function* createTimePoleGUEST({ payload }: PostTimePole) {
-  /*
-    
-    {
-        id: string (random);
-        year_id: string;
-        
-        title: string;
-        description: string;
-        completed: boolean (false default)
-
-        year: number
-        month: number
-        date: number
-        full_data: string
-
-    }
-    
-    */
   // create timepole
   const newPole = payload;
 
@@ -143,23 +111,19 @@ function* deleteTimePoleGUEST({
 
   parseGD[payload.timelineId].poles = newPoles;
 
-  //   window.localStorage.setItem("guestData", JSON.stringify(newPoles));
   window.localStorage.setItem("guestData", JSON.stringify(parseGD));
 
   yield put({
     type: "SET_CURRENT_USER_TIMELINE_POLE",
     payload: { poles: parseGD[payload.timelineId].poles },
   });
-  //   console.log(JSON.stringify(newPoles));
 }
 
 function* updateTimePoleGUEST({ payload }: PostTimePole) {
   const GD = window.localStorage.getItem("guestData");
   const parseGD = JSON.parse(GD!);
-  //   console.log(parseGD[payload.year_id].poles);
   for (let i = 0; i < parseGD[payload.year_id].poles.length; i++) {
     if (parseGD[payload.year_id].poles[i].id === payload.id) {
-      console.log("test");
       parseGD[payload.year_id].poles[i] = {
         ...parseGD[payload.year_id].poles[i],
         title: payload.title,

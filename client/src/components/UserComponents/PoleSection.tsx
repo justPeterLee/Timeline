@@ -13,7 +13,7 @@ import {
 import styles from "./PoleSection.module.css";
 import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
-import { InvisibleBackdrop, Modal } from "../elements/Links";
+import { InvisibleBackdrop, Modal } from "../modals/ModalComponents";
 import { current } from "../../tools/data/monthData";
 // import {format}
 
@@ -40,13 +40,11 @@ export function PoleSectionContainer({
       yearObj[poles[polesKeys[i]].year] = poles[polesKeys[i]].year;
     }
 
-    // console.log(yearObj);
     return yearObj;
   }, [poles]);
   return (
     <>
       <div className={styles.PoleSectionContainer}>
-        {/* <p>{}</p> */}
         {polesKeys.map((_timelineId) => {
           const poleData = poles[_timelineId];
           return (
@@ -110,6 +108,11 @@ function PoleSection({
     <div className={styles.PSBody}>
       <div className={styles.PSDeleteButtonContainer}>
         <button
+          style={{
+            backgroundColor: `${
+              toggleMenu ? "rgb(230, 230, 230)" : "transparent"
+            }`,
+          }}
           className={styles.PSMenu}
           onClick={() => {
             setToggleMenu(true);
@@ -167,13 +170,7 @@ function PoleSection({
         <div className={styles.Month}>
           {monthArr.map((_poleMonth) => {
             const poleDataArr = poleDataObj[_poleMonth];
-            return (
-              <MonthSection
-                key={_poleMonth}
-                poleDataArr={poleDataArr}
-                //   month={_poleMonth}
-              />
-            );
+            return <MonthSection key={_poleMonth} poleDataArr={poleDataArr} />;
           })}
         </div>
       </div>
@@ -181,19 +178,9 @@ function PoleSection({
   );
 }
 
-function MonthSection({
-  poleDataArr,
-}: //   month,
-{
-  poleDataArr: TimelinePole[];
-  //   month: string;
-}) {
-  //   console.log(poleDataArr);
+function MonthSection({ poleDataArr }: { poleDataArr: TimelinePole[] }) {
   return (
     <div className={styles.MonthSection}>
-      {/* <div className={styles.MonthTitle}>
-        <p>{month}</p>
-      </div> */}
       <div className={styles.MonthSectionContainer}>
         {poleDataArr.map((_pole) => (
           <Section key={_pole.pole_id} poleData={_pole} />
@@ -206,7 +193,6 @@ function MonthSection({
 function Section({ poleData }: { poleData: TimelinePole }) {
   return (
     <div className={styles.Section}>
-      {/* {" "} */}
       <p style={{ fontSize: "12px" }}>
         {format(new Date(poleData.full_date), "MMM io")}
       </p>
@@ -279,7 +265,6 @@ function CreateNewYearModal({
               setValue={(newYear) => {
                 setSelectedYear(newYear);
                 setFocus(false);
-                //   onClose();
               }}
               ref={listTargetRef}
             />
