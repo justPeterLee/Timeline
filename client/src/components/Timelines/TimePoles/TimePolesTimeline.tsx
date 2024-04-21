@@ -335,9 +335,17 @@ function TimePole({
       >
         {poleData.poles.map((_pole, index) => {
           return (
-            <p key={index} className={styles.TimePoleBubble}>
-              {_pole.title}
-            </p>
+            <div key={index} className={styles.TimePoleBubble}>
+              <div
+                style={{
+                  position: "relative",
+                  color: `${_pole.completed ? "rgb(175,175,175)" : ""}`,
+                }}
+              >
+                <p>{_pole.title}</p>
+                {_pole.completed && <div className={styles.CrossLine} />}
+              </div>
+            </div>
           );
         })}
       </animated.div>
