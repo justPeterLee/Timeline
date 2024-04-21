@@ -11,22 +11,36 @@ import { useAppSelector } from "../../redux/redux-hooks/redux.hook";
 export default function LoginPage() {
   const dispatch = useDispatch();
   const loginError = useAppSelector((store) => store.userAccount.userError);
-  // console.log(current);
+
   const [user, setUser] = useState<{ username: string; password: string }>({
     username: "",
     password: "",
   });
 
-  const [isError, setIsError] = useState(false);
+  const [isError, setIsError] = useState({ user: false, pass: false });
 
   const validateInput = () => {
+    let state = false;
+    const proxyError = { ...isError };
+
     if (!user.username.replace(/\s/g, "")) {
-      setIsError(true);
-      return true;
+      proxyError.user = true;
+      state = true;
     } else {
-      setIsError(false);
+      proxyError.user = false;
+      state = false;
     }
-    return false;
+
+    if (!user.password.replace(/\s/g, "")) {
+      proxyError.pass = true;
+      state = true;
+    } else {
+      proxyError.pass = false;
+      state = false;
+    }
+
+    setIsError({ ...proxyError });
+    return state;
   };
 
   const loginReq = (e: React.FormEvent<HTMLFormElement>) => {
@@ -60,7 +74,10 @@ export default function LoginPage() {
               setUser({ ...user, username: par });
             }}
             inputStyle={{ width: "250px" }}
-            error={{ label: "invalid username", state: isError }}
+            error={{
+              label: loginError.isError ? loginError.lable : "invalid username",
+              state: loginError.isError ? loginError.isError : isError.user,
+            }}
           />
 
           <ValidInput
@@ -70,6 +87,7 @@ export default function LoginPage() {
             }}
             label="password"
             inputStyle={{ width: "250px" }}
+            error={{ label: "invalid password", state: isError.pass }}
           />
         </div>
         <div className={styles.loginButton}>

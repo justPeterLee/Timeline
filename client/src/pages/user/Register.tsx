@@ -3,9 +3,11 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { ValidInput } from "../../components/elements/Elements";
+import { useAppSelector } from "../../redux/redux-hooks/redux.hook";
 
 export default function Registar() {
   const dispatch = useDispatch();
+  const registerError = useAppSelector((store) => store.userAccount.userError);
 
   const [user, setUser] = useState<{
     user: string;
@@ -99,7 +101,14 @@ export default function Registar() {
             }}
             label="email"
             inputStyle={{ width: "250px" }}
-            error={{ label: "invalid email", state: error.email }}
+            error={{
+              label: registerError.isError
+                ? registerError.lable
+                : "invalid email",
+              state: registerError.isError
+                ? registerError.isError
+                : error.email,
+            }}
           />
         </div>
         <div className={styles.loginButton}>
@@ -117,7 +126,6 @@ export default function Registar() {
           </div>
         </div>
       </form>
-      {/* <UserDateLine /> */}
     </div>
   );
 }
