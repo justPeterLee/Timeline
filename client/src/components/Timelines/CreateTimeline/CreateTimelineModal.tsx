@@ -4,7 +4,7 @@ import { ValidInput } from "../../elements/Elements";
 import { Modal } from "../../modals/ModalComponents";
 import { current } from "../../../tools/data/monthData";
 
-import React, { ReactNode, useEffect, useState } from "react";
+import { LegacyRef, ReactNode, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import DatePicker from "react-datepicker";
@@ -18,6 +18,7 @@ import {
 } from "../../../redux/redux-hooks/redux.hook";
 
 import axios from "axios";
+import * as React from "react";
 
 export function CreateTimelineModal({
   date,
@@ -189,7 +190,7 @@ export function DatePickerModal({
   const CustomInput = React.forwardRef<
     HTMLInputElement,
     { value: any; onClick: any }
-  >(({ value, onClick }, ref) => (
+  >(({ value, onClick }: any, ref: LegacyRef<HTMLInputElement> | undefined) => (
     <input
       onClick={onClick}
       value={value}
