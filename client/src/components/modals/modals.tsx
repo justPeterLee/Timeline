@@ -4,13 +4,14 @@ import { ValidInput } from "../elements/Elements";
 import format from "date-fns/format";
 import { BsTextCenter, BsCalendar3, BsTrash3 } from "react-icons/bs";
 import DatePicker from "react-datepicker";
-import React, { useState } from "react";
+import { LegacyRef, useState } from "react";
 import { StandardPoleData } from "../../tools/utilities/timepoleUtils/timepoleUtils";
 import {
   useAppDispatch,
   useAppSelector,
 } from "../../redux/redux-hooks/redux.hook";
 import { Modal } from "./ModalComponents";
+import * as React from "react";
 
 export function TimePoleModal({
   timePoleData,
@@ -41,7 +42,7 @@ export function TimePoleModal({
   const CustomInput = React.forwardRef<
     HTMLInputElement,
     { value: any; onClick: any }
-  >(({ value, onClick }, ref) => (
+  >(({ value, onClick }: any, ref: LegacyRef<HTMLInputElement> | undefined) => (
     <input
       onClick={onClick}
       value={value}

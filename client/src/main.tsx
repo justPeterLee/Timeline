@@ -1,4 +1,4 @@
-import React from "react";
+// @ts-ignore
 import ReactDOM from "react-dom/client";
 
 import "./index.css";
@@ -22,6 +22,7 @@ import {
 } from "./tools/loaders/loader.ts";
 import App from "./App.tsx";
 import NotFoundPage from "./pages/404.tsx";
+import * as React from "react";
 
 const router = createBrowserRouter([
   {
