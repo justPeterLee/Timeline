@@ -9,7 +9,7 @@ const { rejectUnauthenticated } = require("../modules/authenication");
 // router.get("/register", (req,res)=>{
 
 // })
-router.get("/", rejectUnauthenticated, async (req, res) => {
+router.get("/", rejectUnauthenticated, (req, res) => {
   res.send(req.user);
 });
 

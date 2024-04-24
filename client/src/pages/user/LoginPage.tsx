@@ -1,12 +1,9 @@
 import styles from "./User.module.css";
 import { useState } from "react";
-// import { current } from "../../tools/data";
-
 import { Link } from "react-router-dom";
 import { ValidInput } from "../../components/elements/Elements";
 import { useDispatch } from "react-redux";
 
-import { useEffect } from "react";
 import { useAppSelector } from "../../redux/redux-hooks/redux.hook";
 export default function LoginPage() {
   const dispatch = useDispatch();
@@ -55,9 +52,6 @@ export default function LoginPage() {
     });
   };
 
-  useEffect(() => {
-    dispatch({ type: "FETCH_USER" });
-  }, [dispatch]);
   return (
     <div className={styles.loginContainer}>
       <form

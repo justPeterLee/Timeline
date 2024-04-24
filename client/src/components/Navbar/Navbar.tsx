@@ -16,6 +16,7 @@ import {
 import { useNavigate } from "react-router-dom";
 
 import { InvisibleBackdrop } from "../modals/ModalComponents";
+import axios from "axios";
 
 export default function Navbar() {
   const [togglePage, setTogglePage] = useState(false);
@@ -72,8 +73,12 @@ function NavbarMenuPage() {
           <NavbarMenuButton
             icon={<PiSignOutBold size={15} color={"red"} />}
             text="Sign out"
-            link={() => {
-              dispatch({ type: "LOGOUT" });
+            link={async () => {
+              await axios.post("/api/v1/userAction/logout", {
+                headers: { "Content-Type": "application/json" },
+                withCredentials: true,
+              });
+              dispatch({ type: "UNSET_USER" });
               navigate("/login");
             }}
             style={{ color: "red" }}

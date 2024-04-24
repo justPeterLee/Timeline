@@ -15,7 +15,7 @@ const userReducer = (
     case "SET_USER":
       return action.payload;
     case "UNSET_USER":
-      return {};
+      return { id: null, username: "guest" };
     default:
       return state;
   }

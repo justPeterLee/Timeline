@@ -3,17 +3,6 @@ import { redirect, json } from "react-router-dom";
 import axios from "axios";
 import { current } from "../data/monthData";
 
-export async function userLoader() {
-  try {
-    store.dispatch({ type: "FETCH_USER" });
-  } catch (err: any) {
-    throw json(
-      { message: "Error occured while fetching user" },
-      { status: err.status }
-    );
-  }
-}
-
 export async function rescrictedURL(url: string) {
   try {
     let user = await axios.get("/api/v1/userAction");
@@ -21,16 +10,6 @@ export async function rescrictedURL(url: string) {
   } catch (err) {
     throw redirect(url);
   }
-}
-
-export async function requireUser() {
-  let user = await axios.get("/api/v1/userAction");
-
-  if (!user) {
-    console.log("no users");
-  }
-
-  return user;
 }
 
 export async function redirectURL() {
@@ -48,7 +27,6 @@ export async function yearLoader(
   user: { id: number; username: string } | null
 ) {
   try {
-    // const user = await redirectURL();
     const normalYear = year ? year : current.year.toString();
 
     if (user) {
@@ -79,9 +57,6 @@ export async function yearLoader(
 
 export async function poleLoader() {
   try {
-    // store.dispatch({
-    //   type: "GET_USER_TIMEPOLE",
-    // });
     store.dispatch({ type: "GET_TIMELINE_ALL_SERVER" });
   } catch (err: any) {
     throw json({ message: "Error getting time poles" }, { status: err.status });
