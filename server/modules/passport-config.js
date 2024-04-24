@@ -40,29 +40,38 @@ passport.use(
       passwordField: "password",
       //   passReqToCallback: true,
     },
-    (username, password, done) => {
+    async (username, password, done) => {
       console.log("in here");
+      const client = await pool.connect();
+
       const query = `
           SELECT * FROM "user" WHERE "username" = $1 OR  "email" = $2
         `;
-      pool
-        .query(query, [username, username]) // Pass username twice for both username and email
-        .then((response) => {
-          const user = response.rows[0];
-          console.log("then", user);
-          if (user && comparePassword(password, user.password)) {
-            console.log("success");
-            done(null, user); // Authentication succeeded
-          } else {
-            console.log("not user");
-            done(null, null); // Authentication failed
-          }
-        })
-        .catch((err) => {
-          console.log("failed");
-          console.log("Error with user query ", err);
-          done(err, null); // Error occurred
-        });
+      try {
+        client
+          .query(query, [username, username]) // Pass username twice for both username and email
+          .then((response) => {
+            const user = response.rows[0];
+            console.log("then", user);
+            if (user && comparePassword(password, user.password)) {
+              console.log("success");
+              done(null, user); // Authentication succeeded
+            } else {
+              console.log("not user");
+              done(null, null); // Authentication failed
+            }
+          })
+          .catch((err) => {
+            console.log("failed");
+            console.log("Error with user query ", err);
+            done(err, null); // Error occurred
+          });
+      } catch (err) {
+        console.log("failed to login");
+        done(err, null); // Error occurred
+      } finally {
+        client.release();
+      }
     }
   )
 );
