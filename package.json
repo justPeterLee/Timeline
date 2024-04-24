@@ -4,7 +4,7 @@
   "description": "Timeline",
   "main": "index.js",
   "scripts": {
-    "start": "concurrently \"cd ./server && npm run server \" \"cd ./client && npm run build",
+    "build": "concurrently \"cd ./server && npm run server \" \"cd ./client && npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
