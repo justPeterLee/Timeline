@@ -120,7 +120,7 @@ export default function Registar() {
             <Link to={"/login"} className="Link">
               login
             </Link>
-            <Link to={"/"} className="Link">
+            <Link to={"/"} className="Guest-Link">
               continue without account
             </Link>
           </div>

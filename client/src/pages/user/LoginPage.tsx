@@ -93,7 +93,7 @@ export default function LoginPage() {
             <Link to={"/register"} className="Link">
               create account
             </Link>
-            <Link to={"/"} className="Link">
+            <Link to={"/"} className="Guest-Link">
               continue without account
             </Link>
           </div>
