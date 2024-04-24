@@ -317,7 +317,7 @@ function Dot({ dotSpringValue }: { dotSpringValue: DotSpringValue }) {
           opacity: dotSpringValue.tetherOpacity,
           transform: to(
             [dotSpringValue.scale],
-            (scale) => `scaleX(${scale / 1.11}) translateY(-50%)`
+            (scale) => `scaleX(${scale}) translateY(-50%)`
           ),
         }}
       ></animated.div>
