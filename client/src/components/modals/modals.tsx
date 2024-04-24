@@ -1,15 +1,21 @@
-// @ts-ignore
 import styles from "./modals.module.css";
+
 import { ValidInput } from "../elements/Elements";
+
 import format from "date-fns/format";
+
 import { BsTextCenter, BsCalendar3, BsTrash3 } from "react-icons/bs";
+
 import DatePicker from "react-datepicker";
+
 import { LegacyRef, useState } from "react";
 import { StandardPoleData } from "../../tools/utilities/timepoleUtils/timepoleUtils";
+
 import {
   useAppDispatch,
   useAppSelector,
 } from "../../redux/redux-hooks/redux.hook";
+
 import { Modal } from "./ModalComponents";
 import * as React from "react";
 
@@ -146,7 +152,6 @@ export function TimePoleModal({
       });
     }
 
-    // deleteSortData({ id: timePoleData.id });
     onClose();
   };
 
@@ -223,7 +228,6 @@ export function TimePoleModal({
             <span className={styles.modalTitle}>
               <p>{timePoleData.title}</p>
             </span>
-            {/* <p className={styles.modalTitleView}>title</p> */}
           </div>
           <div className={styles.modalDateContainer}>
             <BsCalendar3 className={styles.modalIcon} />
@@ -243,7 +247,6 @@ export function TimePoleModal({
                 {new Date(timePoleData.full_date).getFullYear()}
               </p>
             </div>
-            {/* <p className={styles.modalTitleView}>date</p> */}
           </div>
           {timePoleData.description && (
             <div className={styles.modalDescriptionContainer}>
