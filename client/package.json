@@ -10,7 +10,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@gsap/react": "^2.1.0",
     "@reduxjs/toolkit": "^2.1.0",
     "@types/react-datepicker": "^4.19.5",
     "@use-gesture/react": "^10.3.0",
