@@ -24,12 +24,12 @@ export async function redirectURL() {
 
 export async function yearLoader(
   year: string | undefined,
-  user: { id: number; username: string } | null
+  user: { id: number; username: string }
 ) {
   try {
     const normalYear = year ? year : current.year.toString();
 
-    if (user) {
+    if (user.id) {
       const timelineIdReq = await axios.get(
         `/api/v1/timeline/get/id/${normalYear}`
       );
