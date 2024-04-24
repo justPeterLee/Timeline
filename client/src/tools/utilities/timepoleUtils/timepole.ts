@@ -1,3 +1,4 @@
+// @ts-ignore
 import sortBy from "lodash/sortBy";
 import { randomFifthyFifthy, randomNumberInRange } from "../utilities";
 import {
@@ -71,7 +72,10 @@ export function sortPoleData(poleData: PoleData) {
     });
 
     // console.log(extractedPole);
-    const sortedExtractedPoles = sortBy(extractedPole, (obj) => obj.date);
+    const sortedExtractedPoles = sortBy(
+      extractedPole,
+      (obj: { date: any }) => obj.date
+    );
     sortedPoleData[unsortedPoleDataKeys[i]] = sortedExtractedPoles;
   }
 

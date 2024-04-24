@@ -1,5 +1,6 @@
 import { animated, useSpring } from "react-spring";
 import { ReactNode, useRef } from "react";
+// @ts-ignore
 import ReactDOM from "react-dom";
 
 export function InvisibleBackdrop({ onClose }: { onClose: () => void }) {
