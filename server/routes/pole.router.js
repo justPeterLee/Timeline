@@ -5,7 +5,8 @@ require("dotenv").config();
 
 const { rejectUnauthenticated } = require("../modules/authenication");
 
-router.get("/get/:timelineId", rejectUnauthenticated, (req, res) => {
+router.get("/get/:timelineId", rejectUnauthenticated, async (req, res) => {
+  const client = await pool.connect();
   const user = req.user.id;
   const timelineId = req.params.timelineId;
 
@@ -22,23 +23,29 @@ router.get("/get/:timelineId", rejectUnauthenticated, (req, res) => {
     WHERE u.id = $1 AND p.year_id = $2;
   `;
 
-  pool
-    .query(query, [user, timelineId])
-    .then((result) => {
-      res.send(result.rows);
-    })
-    .catch((err) => {
-      console.log("ERROR: ", err);
-      res.sendStatus(500);
-    });
+  try {
+    client
+      .query(query, [user, timelineId])
+      .then((result) => {
+        res.send(result.rows);
+      })
+      .catch((err) => {
+        console.log("ERROR: ", err);
+        res.sendStatus(500);
+      });
+  } catch (err) {
+    res.sendStatus(500);
+  } finally {
+    client.release();
+  }
 });
 
 router.post("/create", rejectUnauthenticated, async (req, res) => {
+  const client = await pool.connect();
   const user = req.user.id;
   const { title, description, date_data } = req.body;
-  let timelineId = req.body.timelineId;
   const { date, month, year, day, full_date } = date_data;
-  const client = await pool.connect();
+  let timelineId = req.body.timelineId;
 
   try {
     await client.query("BEGIN");
@@ -96,7 +103,6 @@ router.post("/create", rejectUnauthenticated, async (req, res) => {
     console.log(timelineId);
     res.send(timelineId.toString());
   } catch (err) {
-    console.log(err);
     await client.query("ROLLBACK");
     res.sendStatus(500);
   } finally {
@@ -105,6 +111,7 @@ router.post("/create", rejectUnauthenticated, async (req, res) => {
 });
 
 router.put("/update", rejectUnauthenticated, async (req, res) => {
+  const client = await pool.connect();
   const user = req.user.id;
   const { id, title, description, date_data } = req.body;
   const { date, month, year, day, full_date } = date_data;
@@ -124,7 +131,6 @@ router.put("/update", rejectUnauthenticated, async (req, res) => {
       full_date = $5
   WHERE time_pole_id = $6;
   `;
-  const client = await pool.connect();
 
   try {
     await client.query("BEGIN");
@@ -150,6 +156,7 @@ router.put("/update", rejectUnauthenticated, async (req, res) => {
 });
 
 router.put("/update/completed/:id", rejectUnauthenticated, async (req, res) => {
+  const client = await pool.connect();
   const state = req.body.state;
   const timePoleId = req.params.id;
   const userId = req.user.id;
@@ -158,32 +165,47 @@ router.put("/update/completed/:id", rejectUnauthenticated, async (req, res) => {
   SET completed = $1
   WHERE id = $2 AND user_id = $3;
   `;
-  pool
-    .query(query, [state, timePoleId, userId])
-    .then(() => {
-      res.sendStatus(200);
-    })
-    .catch((err) => {
-      console.log("Error marking time pole completion: ", err);
-      res.sendStatus(500).send("Error marking time pole completion");
-    });
+
+  try {
+    client
+      .query(query, [state, timePoleId, userId])
+      .then(() => {
+        res.sendStatus(200);
+      })
+      .catch((err) => {
+        console.log("Error marking time pole completion: ", err);
+        res.sendStatus(500).send("Error marking time pole completion");
+      });
+  } catch (err) {
+    res.sendStatus(500).send("Error marking time pole completion");
+  } finally {
+    client.release();
+  }
 });
 
 router.delete("/delete/:id", rejectUnauthenticated, async (req, res) => {
+  const client = await pool.connect();
   const timePoleId = req.params.id;
   const userId = req.user.id;
   const query = `
   DELETE FROM time_pole
   WHERE id = $1 AND user_id = $2;
   `;
-  pool
-    .query(query, [timePoleId, userId])
-    .then(() => {
-      res.sendStatus(200);
-    })
-    .catch((err) => {
-      console.error("Error deleting time pole: ", err);
-      res.sendStatus(500).send("Error deleting time pole");
-    });
+
+  try {
+    client
+      .query(query, [timePoleId, userId])
+      .then(() => {
+        res.sendStatus(200);
+      })
+      .catch((err) => {
+        console.error("Error deleting time pole: ", err);
+        res.sendStatus(500).send("Error deleting time pole");
+      });
+  } catch (err) {
+    res.sendStatus(500).send("Error deleting time pole");
+  } finally {
+    client.release();
+  }
 });
 module.exports = router;

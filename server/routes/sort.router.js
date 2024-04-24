@@ -4,6 +4,7 @@ const { rejectUnauthenticated } = require("../modules/authenication");
 const router = express.Router();
 
 router.get("/get/:timelineId", rejectUnauthenticated, async (req, res) => {
+  const client = await pool.connect();
   const timelineId = req.params.timelineId;
   const query = `
       SELECT sort FROM "sort_data" 
@@ -11,7 +12,7 @@ router.get("/get/:timelineId", rejectUnauthenticated, async (req, res) => {
       `;
 
   try {
-    pool
+    client
       .query(query, [timelineId])
       .then((response) => {
         res.send(response.rows);
@@ -21,12 +22,14 @@ router.get("/get/:timelineId", rejectUnauthenticated, async (req, res) => {
         res.sendStatus(500);
       });
   } catch (err) {
-    console.log(err);
     res.sendStatus(500);
+  } finally {
+    client.release();
   }
 });
 
 router.post("/post", rejectUnauthenticated, async (req, res) => {
+  const client = await pool.connect();
   const { sortData, timelineId } = req.body;
   const query = `
     INSERT INTO "sort_data" (sort, year_id)
@@ -34,7 +37,7 @@ router.post("/post", rejectUnauthenticated, async (req, res) => {
     RETURNING sort;
     `;
   try {
-    pool
+    client
       .query(query, [sortData, timelineId])
       .then((response) => {
         res.send(response.rows);
@@ -46,10 +49,13 @@ router.post("/post", rejectUnauthenticated, async (req, res) => {
   } catch (err) {
     console.log(err);
     res.sendStatus(500);
+  } finally {
+    client.release();
   }
 });
 
 router.put("/put", rejectUnauthenticated, async (req, res) => {
+  const client = await pool.connect();
   const { timelineId, sortData } = req.body;
   const query = `
     UPDATE "sort_data"
@@ -59,7 +65,7 @@ router.put("/put", rejectUnauthenticated, async (req, res) => {
     `;
 
   try {
-    pool
+    client
       .query(query, [sortData, timelineId])
       .then((response) => {
         res.send(response.rows);
@@ -71,6 +77,8 @@ router.put("/put", rejectUnauthenticated, async (req, res) => {
   } catch (err) {
     console.log(err);
     res.sendStatus(500);
+  } finally {
+    client.release();
   }
 });
 module.exports = router;
