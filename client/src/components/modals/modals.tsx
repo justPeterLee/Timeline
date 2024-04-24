@@ -1,5 +1,5 @@
+// @ts-ignore
 import styles from "./modals.module.css";
-// timepole edit
 import { ValidInput } from "../elements/Elements";
 import format from "date-fns/format";
 import { BsTextCenter, BsCalendar3, BsTrash3 } from "react-icons/bs";
