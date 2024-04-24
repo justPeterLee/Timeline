@@ -5,10 +5,6 @@ const passport = require("../modules/passport-config");
 const { encryptPassword } = require("../modules/encryption");
 const { rejectUnauthenticated } = require("../modules/authenication");
 
-// register
-// router.get("/register", (req,res)=>{
-
-// })
 router.get("/", rejectUnauthenticated, (req, res) => {
   res.send(req.user);
 });
@@ -43,29 +39,11 @@ router.post("/register", async (req, res) => {
   }
 });
 
-// login
-// router.get('/login', (req,res)=>{
-
-// })
-
 router.post("/login", passport.authenticate("local"), (req, res) => {
   res.sendStatus(200);
 });
 
-// router.get("/logout", (req, res) => {
-//   // Regenerate the session ID
-//   req.session.regenerate((err) => {
-//     if (err) {
-//       console.error("Error regenerating session ID:", err);
-//       return res.status(500).send("Internal Server Error");
-//     }
-//     // Redirect or perform any other action after session regeneration
-//     res.redirect("/");
-//   });
-// });
-
 router.post("/logout", (req, res) => {
-  // Use passport's built-in method to log out the user
   req.logout();
   res.sendStatus(200);
 });

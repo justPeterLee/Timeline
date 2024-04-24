@@ -103,7 +103,6 @@ export function CreateTimelineModal({
         type: "CREATE_TIMEPOLE_GUEST",
         payload: payload,
       });
-      console.log("not logged");
     }
 
     onClose();

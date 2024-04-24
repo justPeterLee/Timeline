@@ -48,7 +48,6 @@ router.get("/get/all", rejectUnauthenticated, async (req, res) => {
     client
       .query(query, [user])
       .then((response) => {
-        console.log(response.rows);
         res.send(response.rows);
       })
       .catch((err) => {

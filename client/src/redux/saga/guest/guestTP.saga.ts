@@ -89,7 +89,6 @@ function* createTimePoleGUEST({ payload }: PostTimePole) {
     type: "SET_CURRENT_USER_TIMELINE_POLE",
     payload: { poles: parseGD[newPole.year_id].poles },
   });
-  console.log(payload);
 }
 
 function* deleteTimePoleGUEST({
@@ -153,10 +152,8 @@ function* updateCompleteTimePoleGuest({
 }) {
   const GD = window.localStorage.getItem("guestData");
   const parseGD = JSON.parse(GD!);
-  //   console.log(parseGD[payload.year_id].poles);
   for (let i = 0; i < parseGD[payload.timelineId].poles.length; i++) {
     if (parseGD[payload.timelineId].poles[i].id === payload.id) {
-      console.log("test");
       parseGD[payload.timelineId].poles[i] = {
         ...parseGD[payload.timelineId].poles[i],
         completed: payload.state,

@@ -100,7 +100,6 @@ router.post("/create", rejectUnauthenticated, async (req, res) => {
     ]);
 
     await client.query("COMMIT");
-    console.log(timelineId);
     res.send(timelineId.toString());
   } catch (err) {
     await client.query("ROLLBACK");
@@ -152,7 +151,6 @@ router.put("/update", rejectUnauthenticated, async (req, res) => {
   } finally {
     client.release();
   }
-  // res.sendStatus(200);
 });
 
 router.put("/update/completed/:id", rejectUnauthenticated, async (req, res) => {

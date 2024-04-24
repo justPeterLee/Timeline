@@ -95,7 +95,6 @@ export function TimePoleModal({
     if (user.id) {
       dispatch({ type: "UPDATE_TIME_POLE_SERVER", payload: newTimePole });
     } else {
-      console.log("not logged in");
       const guestPayload = {
         id: timePoleData.id,
         year_id: timePoleData.year_id,
@@ -129,7 +128,6 @@ export function TimePoleModal({
           state: !timePoleData.completed,
         },
       });
-      console.log("not logged in");
     }
     onClose();
   };
