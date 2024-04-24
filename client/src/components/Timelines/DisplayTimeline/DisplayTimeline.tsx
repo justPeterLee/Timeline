@@ -16,6 +16,7 @@ import {
   TimelineSpringValue,
 } from "../Timeline/Timeline";
 import { TimePolesTimeline } from "../TimePoles/TimePolesTimeline";
+// @ts-ignore
 import { Modal } from "../../modals/ModalComponents";
 import {
   GroupTimePoleSelectionModal,
