@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      "/api/v1": "http://localhost:5001/",
+      "/api/v1": "https://timeline-ur5t.onrender.com/",
     },
   },
 });
