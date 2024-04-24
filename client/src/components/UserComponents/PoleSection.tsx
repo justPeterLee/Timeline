@@ -83,7 +83,7 @@ export function PoleSectionContainer({
 
 import { RxDotsVertical } from "react-icons/rx";
 import { BsTrash3 } from "react-icons/bs";
-import { ConfirmationModal } from "../modals/Modals";
+import { ConfirmationModal } from "../modals/MMM";
 
 function PoleSection({
   poleDataObj,

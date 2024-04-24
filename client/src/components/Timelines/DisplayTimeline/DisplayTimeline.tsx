@@ -18,10 +18,7 @@ import {
 import { TimePolesTimeline } from "../TimePoles/TimePolesTimeline";
 // @ts-ignore
 import { Modal } from "../../modals/ModalComponents";
-import {
-  GroupTimePoleSelectionModal,
-  TimePoleModal,
-} from "../../modals/Modals";
+import { GroupTimePoleSelectionModal, TimePoleModal } from "../../modals/MMM";
 
 import { extractPoleData } from "../../../tools/utilities/timepoleUtils/timepole";
 
