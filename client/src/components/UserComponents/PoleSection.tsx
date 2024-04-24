@@ -83,7 +83,7 @@ export function PoleSectionContainer({
 
 import { RxDotsVertical } from "react-icons/rx";
 import { BsTrash3 } from "react-icons/bs";
-import { ConfirmationModal } from "../modals/Modals";
+// import { ConfirmationModal } from "../modals/Modals";
 
 function PoleSection({
   poleDataObj,
@@ -140,7 +140,7 @@ function PoleSection({
           </>
         )}
 
-        {toggleConfirmation && (
+        {/* {toggleConfirmation && (
           <Modal
             onClose={() => {
               setToggleMenu(false);
@@ -155,7 +155,7 @@ function PoleSection({
               onAction={deleteTimeline}
             />
           </Modal>
-        )}
+        )} */}
       </div>
       <div
         className={styles.PoleSection}

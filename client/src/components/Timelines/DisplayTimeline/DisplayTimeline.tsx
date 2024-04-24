@@ -16,12 +16,11 @@ import {
   TimelineSpringValue,
 } from "../Timeline/Timeline";
 import { TimePolesTimeline } from "../TimePoles/TimePolesTimeline";
-// @ts-ignore
 import { Modal } from "../../modals/ModalComponents";
-import {
-  GroupTimePoleSelectionModal,
-  TimePoleModal,
-} from "../../modals/Modals";
+// import {
+//   GroupTimePoleSelectionModal,
+//   TimePoleModal,
+// } from "../../modals/Modals";
 
 import { extractPoleData } from "../../../tools/utilities/timepoleUtils/timepole";
 
@@ -72,7 +71,7 @@ export function DisplayTimeline({
         />
       </TimelineCardAnimation>
 
-      {selectedPole && (
+      {/* {selectedPole && (
         <Modal onClose={onClose} styles={{ minWidth: "20rem" }}>
           <TimePoleModal onClose={onClose} timePoleData={selectedPole} />
         </Modal>
@@ -84,7 +83,7 @@ export function DisplayTimeline({
           setSelectedPole={onOpenSelectedPole}
           onClose={onClose}
         />
-      )}
+      )} */}
     </div>
   );
 }
