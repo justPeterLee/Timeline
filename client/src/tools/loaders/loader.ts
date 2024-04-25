@@ -28,7 +28,6 @@ export async function yearLoader(
 ) {
   try {
     const normalYear = year ? year : current.year.toString();
-
     if (user.id) {
       const timelineIdReq = await axios.get(
         `/api/v1/timeline/get/id/${normalYear}`

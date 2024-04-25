@@ -32,7 +32,10 @@ const router = createBrowserRouter([
     loader: async () => {
       // await userLoader();
       const user: any = await redirectURL();
-      return user;
+      if (user) {
+        return user.data;
+      }
+      return { id: null, username: "guest" };
     },
     children: [
       {
