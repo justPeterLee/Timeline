@@ -5,6 +5,8 @@ const app = express();
 const sessionMiddleware = require("./modules/session");
 const passport = require("./modules/passport-config");
 
+const cors = require("cors");
+
 app.use(sessionMiddleware);
 
 app.use(passport.initialize());
@@ -13,6 +15,7 @@ app.use(passport.session());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.use(cors());
 const poleRouter = require("./routes/pole.router");
 app.use("/api/v1/timepole", poleRouter);
 
