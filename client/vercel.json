@@ -1,9 +1,9 @@
 {
   "rewrites": [
-    { "source": "/(.*)", "destination": "/" },
     {
       "source": "/api/v1/:path(.*)",
       "destination": "https://timeline-server.vercel.app/api/v1/:path"
-    }
+    },
+    { "source": "/(.*)", "destination": "/" }
   ]
 }
