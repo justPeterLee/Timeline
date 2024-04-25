@@ -2,8 +2,8 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
 
-const sessionMiddleware = require("./modules/session");
-const passport = require("./modules/passport-config");
+const sessionMiddleware = require("../modules/session");
+const passport = require("../modules/passport-config");
 
 app.use(sessionMiddleware);
 
@@ -13,16 +13,16 @@ app.use(passport.session());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-const poleRouter = require("./routes/pole.router");
+const poleRouter = require("../routes/pole.router");
 app.use("/api/v1/timepole", poleRouter);
 
-const userActionRouter = require("./routes/user.router");
+const userActionRouter = require("../routes/user.router");
 app.use("/api/v1/userAction", userActionRouter);
 
-const timelineRouter = require("../server/routes/timeline.router");
+const timelineRouter = require("../routes/timeline.router");
 app.use("/api/v1/timeline", timelineRouter);
 
-const sortRouter = require("./routes/sort.router");
+const sortRouter = require("../routes/sort.router");
 app.use("/api/v1/sort/", sortRouter);
 
 const PORT = process.env.PORT || 5001;
