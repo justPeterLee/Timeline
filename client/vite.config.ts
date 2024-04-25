@@ -6,7 +6,8 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      "/api/v1": "https://timeline-ur5t.onrender.com/",
+      "/api/v1":
+        "https://timeline-server-54myje8kp-justpeterlees-projects.vercel.app/",
     },
   },
 });
