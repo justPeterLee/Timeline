@@ -4,7 +4,9 @@ const router = express.Router();
 require("dotenv").config();
 
 const { rejectUnauthenticated } = require("../modules/authenication");
-
+router.get("/get/test", (req, res) => {
+  res.sendStatus(200);
+});
 router.get("/get/:timelineId", rejectUnauthenticated, async (req, res) => {
   const client = await pool.connect();
   const user = req.user.id;
