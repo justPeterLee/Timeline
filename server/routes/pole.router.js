@@ -4,8 +4,23 @@ const router = express.Router();
 require("dotenv").config();
 
 const { rejectUnauthenticated } = require("../modules/authenication");
-router.get("/get/test", (req, res) => {
-  res.sendStatus(200);
+router.get("/get/test", async (req, res) => {
+  const client = await pool.connect();
+
+  try {
+    client
+      .query(`SELECT * FROM "user";`)
+      .then((response) => {
+        res.send(response.rows);
+      })
+      .catch(() => {
+        res.sendStatus(500);
+      });
+  } catch (err) {
+    res.sendStatus(500);
+  } finally {
+    client.release();
+  }
 });
 router.get("/get/:timelineId", rejectUnauthenticated, async (req, res) => {
   const client = await pool.connect();
