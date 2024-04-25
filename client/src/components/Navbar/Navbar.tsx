@@ -95,7 +95,7 @@ function NavbarMenuPage() {
       )}
       <button
         onClick={async () => {
-          const data = await axios.get("/api/api/v1/timepole/get/test");
+          const data = await axios.get("/api/v1/timepole/get/test");
           console.log(data.data);
         }}
       >
